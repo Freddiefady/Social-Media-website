@@ -1,6 +1,6 @@
 <script setup>
 import TextInput from '@/Components/TextInput.vue';
-import FollowingItem from '@/Components/FollowingItem.vue';
+import FollowingItem from '@/Components/app/FollowingItem.vue';
 import { ref } from "vue";
 
 const searchKeyword = ref('')

@@ -1,5 +1,5 @@
 <script setup>
-import PostItem from '@/Components/PostItem.vue';
+import PostItem from '@/Components/app/PostItem.vue';
 
 const post1 = {
     user: {

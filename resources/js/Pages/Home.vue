@@ -1,8 +1,8 @@
 <script setup>
-import CreatePost from '@/Components/CreatePost.vue';
-import FollowingList from '@/Components/FollowingList.vue';
-import GroupList from '@/Components/GroupList.vue';
-import PostList from '@/Components/PostList.vue';
+import CreatePost from '@/Components/app/CreatePost.vue';
+import FollowingList from '@/Components/app/FollowingList.vue';
+import GroupList from '@/Components/app/GroupList.vue';
+import PostList from '@/Components/app/PostList.vue';
 import { Head } from '@inertiajs/vue3';
 
 defineProps({
