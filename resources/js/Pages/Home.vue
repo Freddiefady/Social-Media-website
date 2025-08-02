@@ -1,5 +1,9 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
+import CreatePost from '@/Components/CreatePost.vue';
+import FollowingList from '@/Components/FollowingList.vue';
+import GroupList from '@/Components/GroupList.vue';
+import PostList from '@/Components/PostList.vue';
+import { Head } from '@inertiajs/vue3';
 
 defineProps({
 
@@ -9,7 +13,18 @@ defineProps({
 <template>
     <Head title="Social Media" />
 
+    <div class="grid lg:grid-cols-12 gap-3 p-4 h-full">
+        <div class="lg:col-span-3 lg:order-1 overflow-hidden h-full">
+            <GroupList />
+        </div>
+        <div class="lg:col-span-3 lg:order-3 overflow-hidden h-full">
+            <FollowingList />
+        </div>
+        <div class="lg:col-span-6 lg:order-2 overflow-hidden h-full flex flex-col">
+            <CreatePost />
+            <PostList class="flex-1" />
+        </div>
+    </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

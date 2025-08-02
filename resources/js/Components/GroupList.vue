@@ -1,26 +1,33 @@
 <script setup>
-import TextInput from '@/Components/TextInput.vue';
-import GroupItem from '@/Components/GroupItem.vue';
-import { ref } from "vue";
-
-const searchKeyword = ref('')
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
+import GroupListItems from "./app/GroupListItems.vue";
 
 </script>
 
 <template>
-    <div class="px-3">
-        <h2 class="text-2xl font-bold mb-4">My Groups</h2>
-        <TextInput model-value="" placeholder="Type to search" />
-        <div class="py-8">
-            <div v-if="false" class="text-gray-400 flex text-center">
-                you are not a member of any groups.
-            </div>
-            <div v-else>
-                <GroupItem image="https://picsum.photos/100" title="Laravel Developers"
-                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit." />
-                <GroupItem image="https://picsum.photos/100" title="Vue.js Developers"
-                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit." />
-            </div>
+    <div class="px-3 bg-white rounded border h-full py-3 overflow-hidden">
+        <div class="block lg:hidden">
+            <Disclosure v-slot="{ open }">
+                <DisclosureButton class="w-full">
+                    <div class="flex items-center justify-between cursor-pointer">
+                        <h2 class="text-xl font-bold">My Groups</h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                            class="w-6 h-6 transition-all" :class="open ? 'rotate-90 transform' : ''">
+                            <path fill-rule="evenodd"
+                                d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </DisclosureButton>
+                <DisclosurePanel>
+                    <GroupListItems />
+                </DisclosurePanel>
+            </Disclosure>
+        </div>
+
+        <div class="h-full overflow-hidden flex-col hidden lg:flex">
+            <h2 class="text-xl font-bold">My Groups</h2>
+            <GroupListItems />
         </div>
     </div>
 </template>
