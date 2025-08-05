@@ -1,12 +1,14 @@
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import {Link, usePage} from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+
+const authUser = usePage().props.auth.user;
 </script>
 
 <template>
@@ -32,14 +34,14 @@ const showingNavigationDropdown = ref(false);
                     <div class="hidden sm:ms-6 sm:flex sm:items-center">
                         <!-- Settings Dropdown -->
                         <div class="relative ms-3">
-                            <Dropdown align="right" width="48">
+                            <Dropdown v-if="authUser" align="right" width="48">
                                 <template #trigger>
                                     <span class="inline-flex rounded-md">
                                         <button
                                             type="button"
                                             class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-300"
                                         >
-                                            {{ $page.props.auth.user.name }}
+                                            {{ authUser.name }}
 
                                             <svg
                                                 class="-me-0.5 ms-2 h-4 w-4"
@@ -59,7 +61,7 @@ const showingNavigationDropdown = ref(false);
 
                                 <template #content>
                                     <DropdownLink
-                                        :href="route('profile', { username: $page.props.auth.user.username })"
+                                        :href="route('profile', { username: authUser.username })"
                                     >
                                         Profile
                                     </DropdownLink>
@@ -72,6 +74,11 @@ const showingNavigationDropdown = ref(false);
                                     </DropdownLink>
                                 </template>
                             </Dropdown>
+                            <div v-else>
+                                <Link :href="route('login')">
+                                    Login
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
@@ -128,32 +135,35 @@ const showingNavigationDropdown = ref(false);
             >
 
                 <!-- Responsive Settings Options -->
-                <div
-                    class="border-t border-gray-200 pb-1 pt-4 dark:border-gray-600"
-                >
-                    <div class="px-4">
-                        <div
-                            class="text-base font-medium text-gray-800 dark:text-gray-200"
-                        >
-                            {{ $page.props.auth.user.name }}
+                <div class="border-t border-gray-200 pb-1 pt-4 dark:border-gray-600">
+                    <template v-if="authUser">
+                        <div class="px-4">
+                            <div
+                                class="text-base font-medium text-gray-800 dark:text-gray-200"
+                            >
+                                {{ authUser.name }}
+                            </div>
+                            <div class="text-sm font-medium text-gray-500">
+                                {{ authUser.email }}
+                            </div>
                         </div>
-                        <div class="text-sm font-medium text-gray-500">
-                            {{ $page.props.auth.user.email }}
-                        </div>
-                    </div>
 
-                    <div class="mt-3 space-y-1">
-                        <ResponsiveNavLink :href="route('profile', { username: $page.props.auth.user.username })">
-                            Profile
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            :href="route('logout')"
-                            method="post"
-                            as="button"
-                        >
-                            Log Out
-                        </ResponsiveNavLink>
-                    </div>
+                        <div class="mt-3 space-y-1">
+                            <ResponsiveNavLink :href="route('profile', { username: authUser.username })">
+                                Profile
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('logout')"
+                                method="post"
+                                as="button"
+                            >
+                                Log Out
+                            </ResponsiveNavLink>
+                        </div>
+                    </template>
+                    <template>
+                        Login Button
+                    </template>
                 </div>
             </div>
         </nav>
@@ -164,13 +174,13 @@ const showingNavigationDropdown = ref(false);
             v-if="$slots.header"
         >
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <slot name="header" />
+                <slot name="header"/>
             </div>
         </header>
 
         <!-- Page Content -->
         <main class="flex-1 overflow-hidden">
-            <slot />
+            <slot/>
         </main>
     </div>
 </template>
