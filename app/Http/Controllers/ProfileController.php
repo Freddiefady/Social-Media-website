@@ -81,10 +81,14 @@ class ProfileController extends Controller
         $cover = $data['cover'] ?? null;
 
         if ($cover) {
+            if ($user->cover_path) {
+                // Delete the old cover image if it exists
+                \Storage::disk('public')->delete($user->cover_path);
+            }
             $path = $cover->store('avatars/'. $user->id, 'public');
             $user->update(['cover_path' => $path]);
         }
 
-        return to_route('profile', $user);
+        return back()->with('status', 'cover-image-update');
     }
 }
