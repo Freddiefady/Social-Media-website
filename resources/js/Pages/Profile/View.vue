@@ -1,7 +1,7 @@
 <script setup>
 import {TabGroup, TabList, Tab, TabPanels, TabPanel} from '@headlessui/vue'
 import {useForm, usePage} from '@inertiajs/vue3';
-import {XMarkIcon, CheckCircleIcon} from '@heroicons/vue/24/solid'
+import {XMarkIcon, CheckCircleIcon, CameraIcon} from '@heroicons/vue/24/solid'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "@/Pages/Profile/Partials/TabItem.vue";
 import Edit from "@/Pages/Profile/Edit.vue";
@@ -13,7 +13,9 @@ const imagesForm = useForm({
     cover: null,
 })
 
+const showNotification = ref(true);
 const coverImageScr = ref(null);
+const avatarImageScr = ref(null);
 const authUser = usePage().props.auth.user;
 const isMyProfile = computed(() => authUser && authUser.id === props.user.id)
 
@@ -23,6 +25,9 @@ const props = defineProps({
         type: Boolean,
     },
     status: {
+        type: String,
+    },
+    success: {
         type: String,
     },
     user: {
@@ -41,16 +46,46 @@ function onCoverChange(event) {
     }
 }
 
+function onAvatarChange(event) {
+    imagesForm.avatar = event.target.files[0];
+    if (imagesForm.avatar) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            avatarImageScr.value = reader.result;
+        }
+        reader.readAsDataURL(imagesForm.avatar);
+    }
+}
+
 function cancelCoverImage() {
     imagesForm.cover = null;
     coverImageScr.value = null;
 }
 
+function cancelAvatarImage() {
+    imagesForm.avatar = null;
+    avatarImageScr.value = null;
+}
+
 function submitCoverImage() {
-    imagesForm.post(route('profile.update-images'), {
-        onSuccess: () => {
+    imagesForm.post(route('profile.updateImages'), {
+        onSuccess: (user) => {
             cancelCoverImage()
-        }
+            setTimeout(() => {
+                showNotification.value = false;
+            }, 3000);
+        },
+    });
+}
+
+function submitAvatarImage() {
+    imagesForm.post(route('profile.updateImages'), {
+        onSuccess: (user) => {
+            cancelAvatarImage()
+            setTimeout(() => {
+                showNotification.value = false;
+            }, 3000);
+        },
     });
 }
 </script>
@@ -58,11 +93,22 @@ function submitCoverImage() {
 <template>
     <AuthenticatedLayout>
         <div class="max-w-[768px] mx-auto h-full overflow-auto">
-            <pre>{{ errors }}</pre>
-            <div class="relative bg-white">
+            <div
+                v-show="showNotification && success"
+                class="my-2 px-3 py-2 font-medium text-sm text-white bg-emerald-500"
+            >
+                {{ success }}
+            </div>
+            <div
+                v-show="errors.cover"
+                class="my-2 px-3 py-2 font-medium text-sm text-white bg-red-500"
+            >
+                {{ errors.cover }}
+            </div>
+            <div class="group relative bg-white">
                 <img :src="coverImageScr || user.cover_url || '/img/Desktop-BG726.webp'"
                      class="w-full h-[200px] object-cover"/>
-                <div class="absolute top-2 right-2 group">
+                <div class="absolute top-2 right-2">
                     <button
                         class="bg-gray-50 hover:bg-gray-100 text-gray-800 text-xs py-1 px-2 flex items-center opacity-0 group-hover:opacity-100"
                         v-if="!coverImageScr">
@@ -92,9 +138,36 @@ function submitCoverImage() {
                         </button>
                     </div>
                 </div>
+
+
                 <div class="flex">
-                    <img src="https://konstantoulakis-chroma.gr/wp-content/uploads/2020/12/user3.jpg"
-                         class="ml-[128px] h-[128px] left-[48px] -mt-[64px]"/>
+                    <div
+                        class="flex items-center justify-center relative group/avatar -mt-[64px] ml-[48px] h-[128px] w-[128px] rounded-full">
+                        <img :src="avatarImageScr || user.avatar_url || '/img/avatar.png'"
+                             class="w-full h-full object-cover rounded-full"/>
+                        <button
+                            v-if="!avatarImageScr"
+                            class="absolute left-0 top-0 right-0 bottom-0 flex items-center justify-center text-gray-200 rounded-full bg-black/50 text-xs py-1 px-2 opacity-0 group-hover/avatar:opacity-100"
+                        >
+                            <CameraIcon class="w-8 h-8"/>
+                            <input type="file"
+                                   class="absolute left-0 top-0 right-0 bottom-0 opacity-0 cursor-pointer"
+                                   @change="onAvatarChange"/>
+                        </button>
+                        <div v-else class="absolute top-1 right-0 flex flex-col gap-2">
+                            <button
+                                @click="cancelAvatarImage"
+                                class="w-7 h-7 flex items-center justify-center bg-red-500/80 text-white rounded-full">
+                                <XMarkIcon class="w-5 h-5"/>
+                            </button>
+                            <button
+                                @click="submitAvatarImage"
+                                class="w-7 h-7 flex items-center justify-center bg-emerald-500/80 text-white rounded-full">
+                                <CheckCircleIcon class="w-5 h-5"/>
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="flex justify-between items-center flex-1 p-4">
                         <h2 class="text-bold text-lg" v-if="authUser">{{ authUser.name }}</h2>
                         <PrimaryButton v-if="isMyProfile">
@@ -108,6 +181,7 @@ function submitCoverImage() {
                     </div>
                 </div>
             </div>
+
             <div class="border-t">
                 <TabGroup>
                     <TabList class="pl-[200px] flex bg-white">
