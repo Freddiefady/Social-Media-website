@@ -24,7 +24,7 @@ defineProps({
             </div>
             <div class="lg:col-span-6 lg:order-2 overflow-hidden h-full flex flex-col">
                 <CreatePost />
-                <PostList class="flex-1" />
+                <PostList :posts="posts.data" class="flex-1" />
             </div>
         </div>
     </AuthenticatedLayout>
