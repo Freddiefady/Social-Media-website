@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Posts;
 
+use App\Models\Post;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePostRequest extends FormRequest
@@ -9,9 +10,13 @@ class UpdatePostRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    public function authorize(Post $post): bool
     {
-        return false;
+        $post->where('id', $this->route('post'))
+            ->where('user_id', auth()->id())
+            ->exists();
+
+        return !!$post;
     }
 
     /**
@@ -22,7 +27,8 @@ class UpdatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'body' => 'required|string',
+            'user_id' => 'numeric',
         ];
     }
 }
