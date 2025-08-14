@@ -1,3 +1,98 @@
+<script setup>
+import {computed, ref, watch} from 'vue'
+import {XMarkIcon, PaperClipIcon, BookmarkIcon} from '@heroicons/vue/24/outline'
+import {
+    TransitionRoot,
+    TransitionChild,
+    Dialog,
+    DialogPanel,
+    DialogTitle,
+} from '@headlessui/vue'
+import InputTextArea from "@/Components/InputTextArea.vue";
+import PostUserHeader from "@/Components/app/PostUserHeader.vue";
+import {useForm} from "@inertiajs/vue3";
+import {isImage} from "@/helpers.js";
+
+const props = defineProps({
+    post: {
+        type: Object,
+        required: true,
+    },
+    modelValue: Boolean
+})
+
+/**
+ * {
+ *     file: File,
+ *     url: '',
+ * }
+ * @type {Ref<UnwrapRef<*[]>, UnwrapRef<*[]> | *[]>}
+ */
+const attachmentFiles = ref([])
+
+const form = useForm({
+    id: null,
+    body: '',
+})
+
+const show = computed({
+    get: () => props.modelValue,
+    set: (value) => emit('update:modelValue', value)
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+watch(() => props.post, () => {
+    form.id = props.post.id,
+        form.body = props.post.body
+})
+
+function closeModal() {
+    show.value = false
+    form.reset()
+    attachmentFiles.value = []
+}
+
+function submit() {
+    form.put(route('post.update', props.post.id), {
+        preserveScroll: true,
+        onSuccess: () => {
+            closeModal()
+        }
+    })
+}
+
+async function onAttachmentChoose($event) {
+    for (const file of $event.target.files) {
+        const myFile = {
+            file,
+            url: await readFile(file)
+        }
+        attachmentFiles.value.push(myFile)
+    }
+    $event.target.files = null
+}
+
+async function readFile(file) {
+    return new Promise((res, rej) => {
+        if (isImage(file)) {
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                res(reader.result)
+            }
+            reader.onerror = rej
+            reader.readAsDataURL(file)
+        } else {
+            res(null)
+        }
+    })
+}
+
+function removeFile(myFile) {
+    attachmentFiles.value = attachmentFiles.value.filter(f => f !== myFile)
+}
+</script>
+
 <template>
     <teleport to="body">
         <TransitionRoot appear :show="show" as="template">
@@ -44,14 +139,48 @@
                                 <div class="p-4">
                                     <PostUserHeader :post="post" :showTime="false" class="mb-4"/>
                                     <InputTextArea v-model="form.body" class="mb-3 w-full"/>
+
+                                    <div class="grid grid-cols-2 gap-3 lg:grid-cols-3 my-3">
+                                        <template v-for="(myFile, ind) of attachmentFiles">
+                                            <div
+                                                class="group bg-blue-100 aspect-square flex flex-col items-center justify-center text-gray-500 relative">
+
+                                                <button
+                                                    @click="removeFile(myFile)"
+                                                    class="absolute z-20 right-3 top-3 w-7 h-7 bg-black/30 hover:bg-black/40 text-white rounded-full flex items-center justify-center">
+                                                    <XMarkIcon class="w-5 h-5"/>
+                                                </button>
+
+                                                <img v-if="isImage(myFile.file)" :src="myFile.url"
+                                                     class="object-cover aspect-square">
+
+                                                <template v-else>
+                                                    <PaperClipIcon class="w-10 h-10 mb-3"/>
+                                                    <small class="text-center">{{ myFile.file.name }}</small>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </div>
                                 </div>
 
-                                <div class="py-3 px-4">
+                                <div class="flex gap-2 py-3 px-4">
                                     <button
                                         type="submit"
-                                        class="w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        class="flex items-center justify-center w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 relative"
                                         @click="submit"
                                     >
+                                        <PaperClipIcon class="w-4 h-4 mr-2"/>
+                                        Attach Files
+                                        <input @click.stop @change="onAttachmentChoose" multiple type="file"
+                                               class="absolute top-0 right-0 bottom-0 left-0 opacity-0">
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        class="flex items-center justify-center w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        @click="submit"
+                                    >
+                                        <BookmarkIcon class="w-4 h-4 mr-2"/>
+
                                         Submit
                                     </button>
                                 </div>
@@ -63,56 +192,3 @@
         </TransitionRoot>
     </teleport>
 </template>
-
-<script setup>
-import {computed, watch} from 'vue'
-import {XMarkIcon} from '@heroicons/vue/24/outline'
-import {
-    TransitionRoot,
-    TransitionChild,
-    Dialog,
-    DialogPanel,
-    DialogTitle,
-} from '@headlessui/vue'
-import InputTextArea from "@/Components/InputTextArea.vue";
-import PostUserHeader from "@/Components/app/PostUserHeader.vue";
-import {useForm} from "@inertiajs/vue3";
-
-const props = defineProps({
-    post: {
-        type: Object,
-        required: true,
-    },
-    modelValue: Boolean
-})
-
-const form = useForm({
-    id: null,
-    body: '',
-})
-
-const show = computed({
-    get: () => props.modelValue,
-    set: (value) => emit('update:modelValue', value)
-})
-
-const emit = defineEmits(['update:modelValue'])
-
-watch(() => props.post, () => {
-    form.id = props.post.id,
-    form.body = props.post.body
-})
-
-function closeModal() {
-    show.value = false
-}
-
-function submit() {
-    form.put(route('post.update', props.post.id), {
-        preserveScroll: true,
-        onSuccess: () => {
-            closeModal()
-        }
-    })
-}
-</script>

@@ -1,20 +1,15 @@
 <script setup>
-import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
-import {Menu, MenuButton, MenuItems, MenuItem} from '@headlessui/vue'
+import {Menu, MenuButton, MenuItems, MenuItem, Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
 import {PencilIcon, TrashIcon, EllipsisVerticalIcon} from '@heroicons/vue/20/solid'
 import PostUserHeader from "@/Components/app/PostUserHeader.vue";
 import {router} from "@inertiajs/vue3";
+import {isImage} from "@/helpers.js";
 
 const props = defineProps({
     post: Object,
 })
 
 const emit = defineEmits(['editClick']);
-
-const isImage = (attachment) => {
-    const mime = attachment.mime.split('/');
-    return mime[0].toLowerCase() === 'image';
-}
 
 function openEditModal() {
     emit('editClick', props.post);
@@ -124,7 +119,7 @@ function deletePost() {
                     </button>
                     <!-- /Download -->
 
-                    <img v-if="isImage(attachment)" :src="attachment.url" class="object-cover aspect-square">
+                    <img v-if="isImage(attachment)" :src="attachment.url" class="object-cover aspect-square" />
 
                     <template v-else>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
