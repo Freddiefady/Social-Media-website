@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Posts;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\File;
 
 class CreatePostRequest extends FormRequest
 {
@@ -23,6 +24,16 @@ class CreatePostRequest extends FormRequest
     {
         return [
             'body' => 'nullable|string|max:5000',
+            'attachments' => 'array|max:50',
+            'attachments.*' => [
+                'file',
+                File::types([
+                    'jpg', 'jpeg', 'png', 'gif', 'webp',
+                    'mp4', 'mov', 'mp3', 'wav',
+                    'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv',
+                    'zip'
+                ])->max(500 * 1024 * 1024), // 5MB max
+            ],
         ];
     }
 }

@@ -7,15 +7,27 @@ use App\Http\Requests\Posts\CreatePostRequest;
 use App\Http\Requests\Posts\UpdatePostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
     /**
      * Store a newly created resource in storage.
+     * @throws \Exception
      */
     public function store(CreatePostRequest $request)
     {
-        auth()->user()->posts()->create($request->validated());
+        DB::beginTransaction();
+        try {
+            $post = auth()->user()->posts()->create($request->validated());
+            // Handle attachments if any
+            $this->handleAttachments($request, $post);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
 
         return back();
     }
@@ -41,5 +53,27 @@ class PostController extends Controller
 
         $post->delete();
         return back();
+    }
+
+    /**
+     * @param $post
+     * @return void
+     * @Exception \Exception
+     */
+    public function handleAttachments($request, $post = null): void
+    {
+        if ($request->has('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $filePath = $file->store('attachments/' . $post->id, 'public');
+                $post->attachments()->create([
+                    'path' => $filePath,
+                    'name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                    'mime' => $file->getMimeType(),
+                    'created_by' => auth()->id(),
+                ]);
+            }
+        }
+        DB::commit();
     }
 }
