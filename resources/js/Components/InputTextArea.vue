@@ -8,6 +8,11 @@ const model = defineModel({
 });
 
 const props = defineProps({
+    modelValue: {
+        type: String,
+        required: false,
+    },
+    placeholder: String,
     autoResize: {
         type: Boolean,
         default: true,
