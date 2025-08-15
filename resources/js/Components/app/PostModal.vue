@@ -33,6 +33,7 @@ const attachmentFiles = ref([])
 const form = useForm({
     id: null,
     body: '',
+    attachments: []
 })
 
 const show = computed({
@@ -44,22 +45,36 @@ const emit = defineEmits(['update:modelValue'])
 
 watch(() => props.post, () => {
     form.id = props.post.id,
-        form.body = props.post.body
+    form.body = props.post.body
 })
 
 function closeModal() {
     show.value = false
+    resetModal();
+}
+
+function resetModal() {
     form.reset()
     attachmentFiles.value = []
 }
 
 function submit() {
-    form.put(route('post.update', props.post.id), {
-        preserveScroll: true,
-        onSuccess: () => {
-            closeModal()
-        }
-    })
+    form.attachments = attachmentFiles.value.map(myFile => myFile.file)
+    if (form.id) {
+        form.put(route('post.update', props.post.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                closeModal()
+            }
+        })
+    } else {
+        form.post(route('post.store'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                closeModal()
+            }
+        })
+    }
 }
 
 async function onAttachmentChoose($event) {
@@ -96,7 +111,7 @@ function removeFile(myFile) {
 <template>
     <teleport to="body">
         <TransitionRoot appear :show="show" as="template">
-            <Dialog as="div" @close="closeModal" class="relative z-10">
+            <Dialog as="div" @close="closeModal" class="relative z-50">
                 <TransitionChild
                     as="template"
                     enter="duration-300 ease-out"
@@ -129,7 +144,7 @@ function removeFile(myFile) {
                                     as="h3"
                                     class="flex items-center justify-between py-3 px-4 font-medium bg-gray-100 text-gray-900"
                                 >
-                                    Update Post
+                                    {{ form.id ? 'Update Post' : 'Create New Post' }}
                                     <button
                                         @click="show = false"
                                         class="w-8 h-8 rounded-full hover:bg-black/5 transition flex items-center justify-center">
@@ -140,7 +155,9 @@ function removeFile(myFile) {
                                     <PostUserHeader :post="post" :showTime="false" class="mb-4"/>
                                     <InputTextArea v-model="form.body" class="mb-3 w-full"/>
 
-                                    <div class="grid grid-cols-2 gap-3 lg:grid-cols-3 my-3">
+                                    <div class="grid gap-3 my-3" :class="[
+                                        attachmentFiles.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
+                                    ]">
                                         <template v-for="(myFile, ind) of attachmentFiles">
                                             <div
                                                 class="group bg-blue-100 aspect-square flex flex-col items-center justify-center text-gray-500 relative">
@@ -152,7 +169,7 @@ function removeFile(myFile) {
                                                 </button>
 
                                                 <img v-if="isImage(myFile.file)" :src="myFile.url"
-                                                     class="object-cover aspect-square">
+                                                     class="object-contain">
 
                                                 <template v-else>
                                                     <PaperClipIcon class="w-10 h-10 mb-3"/>
@@ -165,9 +182,8 @@ function removeFile(myFile) {
 
                                 <div class="flex gap-2 py-3 px-4">
                                     <button
-                                        type="submit"
+                                        type="button"
                                         class="flex items-center justify-center w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 relative"
-                                        @click="submit"
                                     >
                                         <PaperClipIcon class="w-4 h-4 mr-2"/>
                                         Attach Files
@@ -180,7 +196,6 @@ function removeFile(myFile) {
                                         @click="submit"
                                     >
                                         <BookmarkIcon class="w-4 h-4 mr-2"/>
-
                                         Submit
                                     </button>
                                 </div>
