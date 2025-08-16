@@ -92,8 +92,8 @@ function deletePost() {
         </div>
         <div>
             <Disclosure v-slot="{ open }">
-                <div v-if="!open" v-html="post.body.substring(0, 200)"/>
-                <template v-if="post.body.length > 200">
+                <div v-if="!open" v-html="post.body?.substring(0, 200)"/>
+                <template v-if="post.body?.length > 200">
                     <DisclosurePanel>
                         <div v-html="post.body"/>
                     </DisclosurePanel>
@@ -112,9 +112,9 @@ function deletePost() {
                 <div
                     class="group bg-blue-100 aspect-square flex flex-col items-center justify-center text-gray-500 relative">
 
-                    <div v-if="ind === 3"
+                    <div v-if="ind === 3 && post.attachments.length > 4"
                          class="absolute top-0 left-0 right-0 bottom-0 z-10 bg-black/30 text-white flex items-center justify-center text-2xl">
-                        +{{ attachmentFiles.length - 4 }} more
+                        +{{ post.attachments.length - 4 }} more
                     </div>
 
                     <!-- Download -->
