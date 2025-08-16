@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Posts;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Posts\CreatePostRequest;
+use App\Http\Requests\Posts\StorePostRequest;
 use App\Http\Requests\Posts\UpdatePostRequest;
 use App\Models\Post;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -17,7 +15,7 @@ class PostController extends Controller
      * Store a newly created resource in storage.
      * @throws \Exception
      */
-    public function store(CreatePostRequest $request)
+    public function store(StorePostRequest $request): RedirectResponse
     {
         DB::beginTransaction();
         try {
@@ -34,11 +32,31 @@ class PostController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @throws \Exception
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post): RedirectResponse
     {
-        $post->update($request->validated());
-
+        DB::beginTransaction();
+        try {
+            $post->update($request->validated());
+            $delete_ids = $request->input('deleted_file_ids', []);
+            // If there are attachments to delete, fetch them
+            if (!empty($delete_ids)) {
+                $attachments = $post->attachments()
+                    ->where('post_id', $post->id)
+                    ->whereIn('id', $delete_ids)
+                    ->get();
+            }
+            // Delete attachments
+            foreach ($attachments as $attachment) {
+                $attachment->delete();
+            }
+            // Handle attachments if any
+            $this->handleAttachments($request, $post);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
         return back();
     }
 
@@ -60,9 +78,9 @@ class PostController extends Controller
      * @return void
      * @Exception \Exception
      */
-    public function handleAttachments($request, $post = null): void
+    private function handleAttachments($request, $post = null): void
     {
-        if ($request->has('attachments')) {
+        if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
                 $filePath = $file->store('attachments/' . $post->id, 'public');
                 $post->attachments()->create([
