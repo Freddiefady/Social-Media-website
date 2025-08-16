@@ -21,6 +21,8 @@ Route::get('/u/{user:username}', [ProfileController::class, 'index'])
      Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
      Route::resource('/post', PostController::class)
         ->only(['store', 'update', 'destroy']);
+
+     Route::get('/post/download/{attachment}', [PostController::class, 'downloadAttachment'])->name('post.download');
  });
 
 require __DIR__.'/auth.php';

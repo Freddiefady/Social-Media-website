@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Posts\StorePostRequest;
 use App\Http\Requests\Posts\UpdatePostRequest;
 use App\Models\Post;
+use App\Models\PostAttachment;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -46,10 +49,10 @@ class PostController extends Controller
                     ->where('post_id', $post->id)
                     ->whereIn('id', $delete_ids)
                     ->get();
-            }
-            // Delete attachments
-            foreach ($attachments as $attachment) {
-                $attachment->delete();
+                // Delete attachments
+                foreach ($attachments as $attachment) {
+                    $attachment->delete();
+                }
             }
             // Handle attachments if any
             $this->handleAttachments($request, $post);
@@ -71,6 +74,15 @@ class PostController extends Controller
 
         $post->delete();
         return back();
+    }
+
+    /**
+     * Download the specified attachment.
+     */
+    public function downloadAttachment(PostAttachment $attachment)
+    {
+        // TODO - check if user has permission to download this attachment
+        return response()->download(Storage::disk('public')->path($attachment->path), $attachment->name);
     }
 
     /**
