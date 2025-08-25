@@ -122,7 +122,7 @@ function deletePost() {
                     </div>
 
                     <!-- Download -->
-                    <a :href="route('post.download', attachment)"
+                    <a @click.stop :href="route('post.download', attachment)"
                        class="z-20 w-8 h-8 flex flex-col items-center justify-center rounded bg-gray-700 hover:bg-gray-800 text-gray-100 absolute right-2 top-2 cursor-pointer group opacity-0 group-hover:opacity-100 transition-all">
                         <ArrowDownTrayIcon class="w-4 h-4"/>
                     </a>
