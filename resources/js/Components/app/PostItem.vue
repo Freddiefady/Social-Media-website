@@ -5,6 +5,7 @@ import {ChatBubbleLeftRightIcon, HandThumbUpIcon, ArrowDownTrayIcon, PaperClipIc
 import PostUserHeader from "@/Components/app/PostUserHeader.vue";
 import {router} from "@inertiajs/vue3";
 import {isImage} from "@/helpers.js";
+import axiosClient from "@/axiosClient.js";
 
 const props = defineProps({
     post: Object,
@@ -18,6 +19,16 @@ function openEditModal() {
 
 function openAttachment(ind) {
     emit('attachmentClick', props.post, ind);
+}
+
+function sendReaction() {
+    axiosClient.post(route('post.reaction', props.post), {
+        reaction: 'like',
+    })
+        .then(({data}) => {
+            props.post.current_user_has_reaction = data.current_user_has_reaction;
+            props.post.num_of_reactions = data.num_of_reactions;
+        })
 }
 
 function deletePost() {
@@ -139,9 +150,13 @@ function deletePost() {
         </div>
         <div class="flex gap-2">
             <button
-                class="flex gap-1 items-center justify-center px-4 py-2 flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg">
-                <HandThumbUpIcon class="w-5 h-5 mr-2"/>
-                Like
+                @click="sendReaction"
+                class="flex gap-1 items-center justify-center px-4 py-2 flex-1 text-gray-800 rounded-lg"
+                :class="post.current_user_has_reaction ? 'bg-sky-100 hover:bg-sky-200' : 'bg-gray-100 hover:bg-gray-200'"
+            >
+                <HandThumbUpIcon class="w-5 h-5"/>
+                <span class="mr-2">{{post.num_of_reactions}}</span>
+                {{post.current_user_has_reaction ? 'Unlike' : 'Like'}}
             </button>
             <button
                 class="flex gap-1 items-center justify-center px-4 py-2 flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg">

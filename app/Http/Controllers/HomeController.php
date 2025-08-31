@@ -10,9 +10,15 @@ class HomeController extends Controller
 {
     public function __invoke()
     {
-        $posts = Post::query()->latest()->paginate(20);
+        $posts = Post::query()
+            ->withCount('reactions')
+            ->with('reactions', function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->latest()
+            ->paginate(20);
 
-        return Inertia::render('Home',[
+        return Inertia::render('Home', [
             'posts' => PostResource::collection($posts),
         ]);
     }
