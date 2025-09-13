@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Posts;
 
-use App\Http\Requests\Posts\StorePostRequest;
-
-class UpdatePostRequest extends StorePostRequest
+final class UpdatePostRequest extends StorePostRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class UpdatePostRequest extends StorePostRequest
     {
         return array_merge(parent::rules(), [
             'deleted_file_ids' => 'array',
-            'deleted_file_ids.*' => 'numeric'
+            'deleted_file_ids.*' => 'numeric',
         ]);
     }
 }

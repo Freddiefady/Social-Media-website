@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Posts;
 
 use App\Enums\PostReactionEnum;
@@ -9,18 +11,19 @@ use App\Http\Requests\Posts\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\PostAttachment;
 use App\Models\PostReaction;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
-class PostController extends Controller
+final class PostController extends Controller
 {
     /**
      * Store a newly created resource in storage.
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function store(StorePostRequest $request): RedirectResponse
     {
@@ -29,7 +32,7 @@ class PostController extends Controller
             $post = auth()->user()->posts()->create($request->validated());
             // Handle attachments if any
             $this->handleAttachments($request, $post);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             throw $e;
         }
@@ -39,7 +42,8 @@ class PostController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function update(UpdatePostRequest $request, Post $post): RedirectResponse
     {
@@ -48,7 +52,7 @@ class PostController extends Controller
             $post->update($request->validated());
             $delete_ids = $request->input('deleted_file_ids', []);
             // If there are attachments to delete, fetch them
-            if (!empty($delete_ids)) {
+            if (! empty($delete_ids)) {
                 $attachments = $post->attachments()
                     ->where('post_id', $post->id)
                     ->whereIn('id', $delete_ids)
@@ -60,10 +64,11 @@ class PostController extends Controller
             }
             // Handle attachments if any
             $this->handleAttachments($request, $post);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             throw $e;
         }
+
         return back();
     }
 
@@ -77,6 +82,7 @@ class PostController extends Controller
         }
 
         $post->delete();
+
         return back();
     }
 
@@ -120,15 +126,13 @@ class PostController extends Controller
     }
 
     /**
-     * @param $post
-     * @return void
      * @Exception \Exception
      */
     private function handleAttachments($request, $post = null): void
     {
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
-                $filePath = $file->store('attachments/' . $post->id, 'public');
+                $filePath = $file->store('attachments/'.$post->id, 'public');
                 $post->attachments()->create([
                     'path' => $filePath,
                     'name' => $file->getClientOriginalName(),

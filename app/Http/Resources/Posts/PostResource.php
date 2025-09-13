@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\Posts;
 
 use App\Http\Resources\PostAttachment\PostAttachmentResource;
@@ -7,7 +9,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostResource extends JsonResource
+final class PostResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

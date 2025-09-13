@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
-class PostAttachment extends Model
+final class PostAttachment extends Model
 {
-    const UPDATED_AT = null;
+    public const UPDATED_AT = null;
 
     protected $fillable = [
         'post_id',
@@ -26,7 +28,7 @@ class PostAttachment extends Model
     protected static function boot()
     {
         parent::boot();
-        static::deleted(function (self $model) {
+        self::deleted(function (self $model) {
             Storage::disk('public')->delete($model->path);
         });
     }

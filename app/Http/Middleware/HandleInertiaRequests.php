@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use App\Http\Requests\Posts\StorePostRequest;
@@ -7,7 +9,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
-class HandleInertiaRequests extends Middleware
+final class HandleInertiaRequests extends Middleware
 {
     /**
      * The root template that is loaded on the first page visit.
@@ -36,7 +38,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user() ? new UserResource($request->user()) : null,
             ],
-            'attachmentExtensions' => StorePostRequest::$extensions
+            'attachmentExtensions' => StorePostRequest::$extensions,
         ];
     }
 }

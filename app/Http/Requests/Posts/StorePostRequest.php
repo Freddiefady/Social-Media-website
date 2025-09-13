@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Posts;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -12,7 +14,7 @@ class StorePostRequest extends FormRequest
         'jpg', 'jpeg', 'png', 'gif', 'webp',
         'mp4', 'mov', 'mp3', 'wav',
         'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv',
-        'zip'
+        'zip',
     ];
 
     /**
@@ -37,7 +39,7 @@ class StorePostRequest extends FormRequest
                 'max:50',
                 function ($attribute, $value, $fail) {
                     // custom rules to check the total size of all files
-                    $totalSize = collect($value)->sum(fn(uploadedFile $file) => $file->getSize());
+                    $totalSize = collect($value)->sum(fn (UploadedFile $file) => $file->getSize());
 
                     if ($totalSize > 1 * 1024 * 1024 * 1024) {
                         $fail('The total size of all files must not exceed 1GB.');

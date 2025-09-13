@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
@@ -12,8 +14,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Storage;
 
-class ProfileController extends Controller
+final class ProfileController extends Controller
 {
     /**
      * Display the user's profile.
@@ -85,9 +88,9 @@ class ProfileController extends Controller
         if ($cover) {
             if ($user->cover_path) {
                 // Delete the old cover image if it exists
-                \Storage::disk('public')->delete($user->cover_path);
+                Storage::disk('public')->delete($user->cover_path);
             }
-            $path = $cover->store('avatars/'. $user->id, 'public');
+            $path = $cover->store('avatars/'.$user->id, 'public');
             $user->update(['cover_path' => $path]);
             $success = 'Your cover image has been updated successfully.';
         }
@@ -95,9 +98,9 @@ class ProfileController extends Controller
         if ($avatar) {
             if ($user->avatar_path) {
                 // Delete the old avatar image if it exists
-                \Storage::disk('public')->delete($user->avatar_path);
+                Storage::disk('public')->delete($user->avatar_path);
             }
-            $path = $avatar->store('avatars/' . $user->id, 'public');
+            $path = $avatar->store('avatars/'.$user->id, 'public');
             $user->update(['avatar_path' => $path]);
             $success = 'Your avatar image has been updated successfully.';
         }
