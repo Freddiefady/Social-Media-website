@@ -12,6 +12,7 @@ import InputTextArea from "@/Components/InputTextArea.vue";
 import PostUserHeader from "@/Components/app/PostUserHeader.vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import {isImage} from "@/helpers.js";
+import IndigoButton from "@/Components/app/IndigoButton.vue";
 
 const props = defineProps({
     post: {
@@ -258,23 +259,16 @@ function undoDelete(myFile) {
                                 </div>
 
                                 <div class="flex gap-2 py-3 px-4">
-                                    <button
-                                        type="button"
-                                        class="flex items-center justify-center w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 relative"
-                                    >
+                                    <IndigoButton class="relative">
                                         <PaperClipIcon class="w-4 h-4 mr-2"/>
                                         Attach Files
                                         <input @click.stop @change="onAttachmentChoose" multiple type="file"
                                                class="absolute top-0 right-0 bottom-0 left-0 opacity-0">
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        class="flex items-center justify-center w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                        @click="submit"
-                                    >
+                                    </IndigoButton>
+                                    <IndigoButton type="submit" @click="submit">
                                         <BookmarkIcon class="w-4 h-4 mr-2"/>
                                         Submit
-                                    </button>
+                                    </IndigoButton>
                                 </div>
                             </DialogPanel>
                         </TransitionChild>

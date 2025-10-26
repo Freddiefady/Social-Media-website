@@ -32,7 +32,7 @@ defineExpose({focus: () => input.value.focus()});
 function onInputChange() {
     if (props.autoResize) {
         input.value.style.height = 'auto'; // Reset height
-        input.value.style.height = `${input.value.scrollHeight}px`; // Set height to scrollHeight
+        input.value.style.height = `${input.value.scrollHeight + 1}px`; // Set height to scrollHeight
     }
 }
 </script>

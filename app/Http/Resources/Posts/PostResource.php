@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Posts;
 
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\PostAttachment\PostAttachmentResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
@@ -27,7 +28,9 @@ final class PostResource extends JsonResource
             'group' => $this->group,
             'attachments' => PostAttachmentResource::collection($this->attachments),
             'num_of_reactions' => $this->reactions_count,
+            'num_of_comments' => $this->comments_count,
             'current_user_has_reaction' => $this->reactions->isNotEmpty(),
+            'comments' => CommentResource::collection($this->comments),
         ];
     }
 }

@@ -22,9 +22,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('/post', PostController::class)
         ->only(['store', 'update', 'destroy']);
 
-    Route::get('/post/download/{attachment}', [PostController::class, 'downloadAttachment'])->name('post.download');
+    Route::prefix('post')->controller(PostController::class)->name('post.')->group(function () {
 
-    Route::post('/post/{post}/reaction', [PostController::class, 'postReaction'])->name('post.reaction');
+        Route::get('/download/{attachment}', 'downloadAttachment')->name('download');
+
+        Route::post('/{post}/reaction', 'postReaction')->name('reaction');
+
+        Route::post('/{post}/comment', 'createComment')->name('comment.store');
+    });
 });
 
 require __DIR__.'/auth.php';

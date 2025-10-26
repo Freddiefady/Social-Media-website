@@ -6,8 +6,10 @@ namespace App\Http\Controllers\Posts;
 
 use App\Enums\PostReactionEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Posts\StoreCommentRequest;
 use App\Http\Requests\Posts\StorePostRequest;
 use App\Http\Requests\Posts\UpdatePostRequest;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\PostAttachment;
 use App\Models\PostReaction;
@@ -17,13 +19,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Throwable;
 
 final class PostController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      *
-     * @throws Exception
+     * @throws Throwable
      */
     public function store(StorePostRequest $request): RedirectResponse
     {
@@ -43,7 +46,7 @@ final class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @throws Exception
+     * @throws
      */
     public function update(UpdatePostRequest $request, Post $post): RedirectResponse
     {
@@ -125,8 +128,19 @@ final class PostController extends Controller
         ]);
     }
 
+    public function createComment(StoreCommentRequest $request, Post $post)
+    {
+        $comment = Comment::create([
+            'comment' => nl2br($request->input('comment')),
+            'post_id' => $post->id,
+            'user_id' => auth()->id(),
+        ]);
+
+        return response($comment, 201);
+    }
+
     /**
-     * @Exception \Exception
+     * @throws
      */
     private function handleAttachments($request, $post = null): void
     {
