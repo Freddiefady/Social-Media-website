@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Posts\StoreCommentRequest;
 use App\Http\Requests\Posts\StorePostRequest;
 use App\Http\Requests\Posts\UpdatePostRequest;
+use App\Http\Requests\UpdateCommentRequest;
+use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\PostAttachment;
@@ -152,6 +154,15 @@ final class PostController extends Controller
 
         $comment->delete();
         return response('', 204);
+    }
+
+    public function updateComment(UpdateCommentRequest $request, Comment $comment)
+    {
+        $comment->update([
+            'comment' => nl2br($request->string('comment')->toString()),
+        ]);
+
+        return new CommentResource($comment);
     }
 
     /**

@@ -17,6 +17,8 @@ const props = defineProps({
 
 const authUser = usePage().props.auth.user;
 
+const editingComment = ref(null);
+
 const newCommentText = ref('');
 
 const emit = defineEmits(['editClick', 'attachmentClick']);
@@ -61,8 +63,24 @@ function deleteComment(comment) {
     })
 }
 
-function startEditComment(comment) {
-    console.log(comment)
+function startCommentEdit(comment) {
+    editingComment.value = {
+        id: comment.id,
+        comment: comment.comment.replace(/<br\s*\/?>/gi, '\n') // <br />
+    }
+}
+
+function updateComment() {
+    axiosClient.put(route('post.comment.update', editingComment.value.id), editingComment.value)
+        .then(({data}) => {
+            editingComment.value = null
+            props.post.comments = props.post.comments.map((c) => {
+                if (c.id === data.id) {
+                    return data;
+                }
+                return c;
+            })
+        })
 }
 
 function deletePost() {
@@ -102,7 +120,7 @@ function deletePost() {
                     </a>
                     <!-- /Download -->
 
-                    <img v-if="isImage(attachment)" :src="attachment.url" class="object-contain aspect-square"/>
+                    <img v-if="isImage(attachment)" :src="attachment.url" class="object-contain aspect-square" alt=""/>
 
                     <div v-else class="flex items-center justify-center">
                         <PaperClipIcon class="w-4 h-4 mr-2"/>
@@ -134,7 +152,7 @@ function deletePost() {
                 <div class="flex gap-2 mb-3">
                     <a href="javascript:void(0)">
                         <img :src="authUser.avatar_url"
-                             class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500"/>
+                             class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500" alt=""/>
                     </a>
                     <div class="flex flex-1">
                         <InputTextArea v-model="newCommentText" placeholder="Enter your comment here" rows="1" class="w-full max-h-[160px] resize-none rounded-r-none"></InputTextArea>
@@ -142,12 +160,12 @@ function deletePost() {
                     </div>
                 </div>
                 <div>
-                    <div v-for="comment of post.comments" :key="comment.id">
+                    <div v-for="comment of post.comments" :key="comment.id" class="mb-4">
                         <div class="flex justify-between gap-2">
                             <div class="flex gap-2">
                                 <a href="javascript:void(0)">
                                     <img :src="comment.user.avatar_url"
-                                         class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500"/>
+                                         class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500" alt=""/>
                                 </a>
                                 <div>
                                     <h4 class="font-bold">
@@ -158,9 +176,16 @@ function deletePost() {
                                     <small class="text-xs text-gray-400">{{ comment.updated_at }}</small>
                                 </div>
                             </div>
-                            <EditDeleteDropdown :user="comment.user" @edit="startEditComment" @delete="deleteComment(comment)" />
+                            <EditDeleteDropdown :user="comment.user" @edit="startCommentEdit(comment)" @delete="deleteComment(comment)" />
                         </div>
-                        <ReadMoreReadLess :content="comment.comment" content-class="text-sm flex flex-1 ml-12"/>
+                        <div v-if="editingComment && editingComment.id === comment.id" class="ml-12">
+                            <InputTextArea v-model="editingComment.comment" rows="1" class="w-full max-h-[160px] resize-none"></InputTextArea>
+                            <div class="flex gap-2 justify-end">
+                                <button @click="editingComment = null" class="rounded-r-none text-indigo-500">cancel</button>
+                                <IndigoButton @click="updateComment" class="w-[100px]">update</IndigoButton>
+                            </div>
+                        </div>
+                        <ReadMoreReadLess v-else :content="comment.comment" content-class="text-sm flex flex-1 ml-12"/>
                     </div>
                 </div>
             </DisclosurePanel>
