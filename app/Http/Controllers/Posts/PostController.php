@@ -14,9 +14,11 @@ use App\Models\Post;
 use App\Models\PostAttachment;
 use App\Models\PostReaction;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Throwable;
@@ -137,6 +139,19 @@ final class PostController extends Controller
         ]);
 
         return response($comment, 201);
+    }
+
+    /**
+     * Update the given blog post.
+     *
+     * @throws AuthorizationException
+     */
+    public function destroyComment(Comment $comment)
+    {
+        Gate::authorize('delete', $comment);
+
+        $comment->delete();
+        return response('', 204);
     }
 
     /**

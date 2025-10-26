@@ -29,6 +29,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/{post}/reaction', 'postReaction')->name('reaction');
 
         Route::post('/{post}/comment', 'createComment')->name('comment.store');
+
+        Route::delete('/comment/{comment}', 'destroyComment')->name('comment.destroy');
     });
 });
 

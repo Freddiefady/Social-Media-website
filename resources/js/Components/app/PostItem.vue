@@ -1,6 +1,5 @@
 <script setup>
-import {Menu, MenuButton, MenuItems, MenuItem, Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
-import {PencilIcon, TrashIcon, EllipsisVerticalIcon} from '@heroicons/vue/20/solid'
+import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
 import {ChatBubbleLeftRightIcon, HandThumbUpIcon, ArrowDownTrayIcon, PaperClipIcon} from '@heroicons/vue/24/outline'
 import PostUserHeader from "@/Components/app/PostUserHeader.vue";
 import { router, usePage } from "@inertiajs/vue3";
@@ -10,6 +9,7 @@ import InputTextArea from "@/Components/InputTextArea.vue";
 import IndigoButton from "@/Components/app/IndigoButton.vue";
 import { ref } from "vue";
 import ReadMoreReadLess from "@/Components/app/ReadMoreReadLess.vue";
+import EditDeleteDropdown from "@/Components/app/EditDeleteDropdown.vue";
 
 const props = defineProps({
     post: Object,
@@ -50,6 +50,21 @@ function createComment(){
         })
 }
 
+function deleteComment(comment) {
+    if (! window.confirm("Are you sure you want to delete this post?")) {
+        return;
+    }
+    axiosClient.delete(route('post.comment.destroy', comment.id))
+    .then(() => {
+        props.post.comments = props.post.comments.filter(c => c.id !== comment.id)
+        props.post.num_of_comments--;
+    })
+}
+
+function startEditComment(comment) {
+    console.log(comment)
+}
+
 function deletePost() {
     if (window.confirm('Are you sure you want to delete this post?')) {
         router.delete(route('post.destroy', props.post), {
@@ -63,66 +78,7 @@ function deletePost() {
     <div class="bg-white p-4 rounded mb-4">
         <div class="flex items-center justify-between gap-2 mb-3">
             <PostUserHeader :post="post"/>
-            <Menu as="div" class="relative inline-block text-left z-50">
-                <div>
-                    <MenuButton
-                        class="w-8 h-8 rounded-full hover:bg-black/5 transition flex items-center justify-center"
-                    >
-                        <EllipsisVerticalIcon
-                            class="h-5 w-5"
-                            aria-hidden="true"
-                        />
-                    </MenuButton>
-                </div>
-
-                <transition
-                    enter-active-class="transition duration-100 ease-out"
-                    enter-from-class="transform scale-95 opacity-0"
-                    enter-to-class="transform scale-100 opacity-100"
-                    leave-active-class="transition duration-75 ease-in"
-                    leave-from-class="transform scale-100 opacity-100"
-                    leave-to-class="transform scale-95 opacity-0"
-                >
-                    <MenuItems
-                        class="absolute right-0 mt-2 w-32 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
-                    >
-                        <div class="px-1 py-1">
-                            <MenuItem v-slot="{ active }">
-                                <button
-                                    @click="openEditModal"
-                                    :class="[
-                                          active ? 'bg-indigo-500 text-white' : 'text-gray-900',
-                                          'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                                    ]"
-                                >
-                                    <PencilIcon
-                                        class="mr-2 h-5 w-5"
-                                        aria-hidden="true"
-                                    />
-                                    Edit
-                                </button>
-                            </MenuItem>
-                        </div>
-                        <div class="px-1 py-1">
-                            <MenuItem v-slot="{ active }">
-                                <button
-                                    @click="deletePost"
-                                    :class="[
-                                      active ? 'bg-indigo-500 text-white' : 'text-gray-900',
-                                      'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                                    ]"
-                                >
-                                    <TrashIcon
-                                        class="mr-2 h-5 w-5"
-                                        aria-hidden="true"
-                                    />
-                                    Delete
-                                </button>
-                            </MenuItem>
-                        </div>
-                    </MenuItems>
-                </transition>
-            </Menu>
+            <EditDeleteDropdown :user="post.user" @edit="openEditModal" @delete="deletePost" />
         </div>
         <div class="mb-3">
             <ReadMoreReadLess :content="post.body" />
@@ -187,19 +143,22 @@ function deletePost() {
                 </div>
                 <div>
                     <div v-for="comment of post.comments" :key="comment.id">
-                        <div class="flex items-center gap-2">
-                            <a href="javascript:void(0)">
-                                <img :src="comment.user.avatar_url"
-                                     class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500"/>
-                            </a>
-                            <div>
-                                <h4 class="font-bold">
-                                    <a href="javascript:void(0)" class="hover:underline">
-                                        {{ comment.user.name }}
-                                    </a>
-                                </h4>
-                                <small class="text-xs text-gray-400">{{ comment.updated_at }}</small>
+                        <div class="flex justify-between gap-2">
+                            <div class="flex gap-2">
+                                <a href="javascript:void(0)">
+                                    <img :src="comment.user.avatar_url"
+                                         class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500"/>
+                                </a>
+                                <div>
+                                    <h4 class="font-bold">
+                                        <a href="javascript:void(0)" class="hover:underline">
+                                            {{ comment.user.name }}
+                                        </a>
+                                    </h4>
+                                    <small class="text-xs text-gray-400">{{ comment.updated_at }}</small>
+                                </div>
                             </div>
+                            <EditDeleteDropdown :user="comment.user" @edit="startEditComment" @delete="deleteComment(comment)" />
                         </div>
                         <ReadMoreReadLess :content="comment.comment" content-class="text-sm flex flex-1 ml-12"/>
                     </div>
