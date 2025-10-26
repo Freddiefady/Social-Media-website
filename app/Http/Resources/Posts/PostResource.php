@@ -7,9 +7,27 @@ namespace App\Http\Resources\Posts;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PostAttachment\PostAttachmentResource;
 use App\Http\Resources\UserResource;
+use App\Models\Comment;
+use App\Models\PostAttachment;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property mixed $id
+ * @property mixed $body
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property User $user
+ * @property mixed $group
+ * @property Collection<int, PostAttachment> $attachments
+ * @property int $reactions_count
+ * @property int $comments_count
+ * @property mixed $reactions
+ * @property Collection<int, Comment> $comments
+ */
 final class PostResource extends JsonResource
 {
     /**
