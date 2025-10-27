@@ -4,67 +4,35 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Posts;
 
+use App\Actions\Posts\CreatePost;
+use App\Actions\Posts\DeletePost;
+use App\Actions\Posts\UpdatePost;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Comments\StoreCommentRequest;
 use App\Http\Requests\Posts\StorePostRequest;
 use App\Http\Requests\Posts\UpdatePostRequest;
-use App\Http\Requests\Comments\UpdateCommentRequest;
-use App\Http\Resources\CommentResource;
-use App\Models\Comment;
 use App\Models\Post;
-use App\Models\PostAttachment;
+use App\Models\User;
 use Exception;
-use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
-use Throwable;
 
 final class PostController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      *
-     * @throws Throwable
-     */
-    public function store(StorePostRequest $request): RedirectResponse
-    {
-        DB::beginTransaction();
-        try {
-            $post = auth()->user()->posts()->create($request->validated());
-            // Handle attachments if any
-            $this->handleAttachments($request, $post);
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
-
-        return back();
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
      * @throws
      */
-    public function update(UpdatePostRequest $request, Post $post): RedirectResponse
-    {
+    public function store(
+        StorePostRequest $request,
+        #[CurrentUser] User $loggedInUser,
+        CreatePost $action
+    ): RedirectResponse {
         DB::beginTransaction();
         try {
-            $post->update($request->validated());
-            $delete_ids = $request->input('deleted_file_ids', []);
-            // If there are attachments to delete, fetch them
-            if (! empty($delete_ids)) {
-                $attachments = $post->attachments()
-                    ->where('post_id', $post->id)
-                    ->whereIn('id', $delete_ids)
-                    ->get();
-                // Delete attachments
-                foreach ($attachments as $attachment) {
-                    $attachment->delete();
-                }
-            }
+           $post = $action->handle($loggedInUser, $request->validated());
             // Handle attachments if any
             $this->handleAttachments($request, $post);
         } catch (Exception $e) {
@@ -76,59 +44,31 @@ final class PostController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @throws Exception
      */
-    public function destroy(Post $post)
-    {
-        if (auth()->user()->id !== $post->user_id) {
-            return response("You don't have permission to delete this post.", 403);
-        }
+    public function update(
+        UpdatePostRequest $request,
+        Post $post,
+        UpdatePost $action
+    ): RedirectResponse {
+        $action->handle(
+            $post,
+            $request->validated(),
+            $request->array('deleted_file_ids')
+        );
 
-        $post->delete();
+        $this->handleAttachments($request, $post);
 
         return back();
     }
 
-    /**
-     * Download the specified attachment.
-     */
-    public function downloadAttachment(PostAttachment $attachment)
+    public function destroy(Post $post, DeletePost $action): RedirectResponse
     {
-        // TODO - check if user has permission to download this attachment
-        return response()->download(Storage::disk('public')->path($attachment->path), $attachment->name);
-    }
+        Gate::authorize('delete', $post);
 
-    public function createComment(StoreCommentRequest $request, Post $post)
-    {
-        $comment = Comment::create([
-            'comment' => nl2br($request->input('comment')),
-            'post_id' => $post->id,
-            'user_id' => auth()->id(),
-        ]);
+        $action->handle($post);
 
-        return response($comment, 201);
-    }
-
-    /**
-     * Update the given blog post.
-     *
-     * @throws AuthorizationException
-     */
-    public function destroyComment(Comment $comment)
-    {
-        Gate::authorize('delete', $comment);
-
-        $comment->delete();
-        return response('', 204);
-    }
-
-    public function updateComment(UpdateCommentRequest $request, Comment $comment)
-    {
-        $comment->update([
-            'comment' => nl2br($request->string('comment')->toString()),
-        ]);
-
-        return new CommentResource($comment);
+        return back();
     }
 
     /**
