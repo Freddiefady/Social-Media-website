@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Policies\PostPolicy;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,6 +29,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, PostReaction> $reactions
  * @property-read Collection<int, Comment> $comments
  */
+#[UsePolicy(PostPolicy::class)]
 final class Post extends Model
 {
     use SoftDeletes;
