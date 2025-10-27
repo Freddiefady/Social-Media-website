@@ -42,7 +42,7 @@ function sendReaction() {
 }
 
 function createComment(){
-    axiosClient.post(route('post.comment.store', props.post), {
+    axiosClient.post(route('comment.store', props.post), {
         comment: newCommentText.value,
     })
         .then(({data}) => {
@@ -56,7 +56,7 @@ function deleteComment(comment) {
     if (! window.confirm("Are you sure you want to delete this post?")) {
         return;
     }
-    axiosClient.delete(route('post.comment.destroy', comment.id))
+    axiosClient.delete(route('comment.destroy', comment.id))
     .then(() => {
         props.post.comments = props.post.comments.filter(c => c.id !== comment.id)
         props.post.num_of_comments--;
@@ -71,7 +71,7 @@ function startCommentEdit(comment) {
 }
 
 function updateComment() {
-    axiosClient.put(route('post.comment.update', editingComment.value.id), editingComment.value)
+    axiosClient.put(route('comment.update', editingComment.value.id), editingComment.value)
         .then(({data}) => {
             editingComment.value = null
             props.post.comments = props.post.comments.map((c) => {
