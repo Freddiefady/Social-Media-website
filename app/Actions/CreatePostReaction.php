@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Http\Requests\Posts\PostReactionRequest;
 use App\Models\Post;
 use App\Models\PostReaction;
 
 final readonly class CreatePostReaction
 {
-    public function handle(Post $post,PostReactionRequest $request): bool
+    public function handle(Post $post, string $type): bool
     {
         $reaction = PostReaction::wherePostId($post->id)
             ->whereUserId(auth()->id())
@@ -24,7 +23,7 @@ final readonly class CreatePostReaction
         PostReaction::create([
             'post_id' => $post->id,
             'user_id' => auth()->id(),
-            'type' => $request['reaction'],
+            'type' => $type,
         ]);
 
         return true;

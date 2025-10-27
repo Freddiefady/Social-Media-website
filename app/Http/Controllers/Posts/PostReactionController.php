@@ -11,7 +11,10 @@ class PostReactionController extends Controller
 {
     public function __invoke(PostReactionRequest $request, Post $post, CreatePostReaction $action)
     {
-        $hasReaction = $action->handle($post, $request);
+        $hasReaction = $action->handle(
+            $post,
+            $request->string('type')->toString()
+        );
 
         return response([
             'num_of_reactions' => $post->reactions()->count(),
