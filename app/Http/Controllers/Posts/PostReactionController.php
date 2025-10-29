@@ -13,7 +13,7 @@ class PostReactionController extends Controller
     {
         $hasReaction = $action->handle(
             $post,
-            $request->string('type')->toString()
+            $request->string('reaction')->toString()
         );
 
         return response([
