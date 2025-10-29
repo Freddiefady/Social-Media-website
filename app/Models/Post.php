@@ -26,7 +26,7 @@ use Illuminate\Support\Carbon;
  * @property-read User $deletedBy
  * @property-read Group $group
  * @property-read Collection<int, PostAttachment> $attachments
- * @property-read Collection<int, PostReaction> $reactions
+ * @property-read Collection<int, Reaction> $reactions
  * @property-read Collection<int, Comment> $comments
  */
 #[UsePolicy(PostPolicy::class)]
@@ -80,11 +80,11 @@ final class Post extends Model
     }
 
     /**
-     * @return HasMany<PostReaction, $this>
+     * @return HasMany<Reaction, $this>
      */
     public function reactions(): HasMany
     {
-        return $this->hasMany(PostReaction::class);
+        return $this->hasMany(Reaction::class);
     }
 
     /**

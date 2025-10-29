@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property-read User $user
  * @property-read Post $post
  */
-final class PostReaction extends Model
+final class Reaction extends Model
 {
     public const null UPDATED_AT = null;
 
