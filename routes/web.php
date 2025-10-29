@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Comments\CommentController;
-use App\Http\Controllers\HomeController;
+    use App\Http\Controllers\Comments\CommentReactionController;
+    use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Posts\PostAttachmentController;
 use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\PostReactionController;
@@ -27,15 +28,17 @@ Route::middleware('auth')->group(function () {
         ->only(['store', 'update', 'destroy']);
 
     Route::prefix('post')->group(function () {
-        Route::controller(PostController::class)->name('post.')->group(function () {
+        Route::name('post.')->group(function () {
             Route::get('/download/{attachment}', PostAttachmentController::class)->name('download');
             Route::post('/{post}/reaction', PostReactionController::class)->name('reaction');
         });
 
-        Route::controller(CommentController::class)->group(function () {
-            Route::post('/{post}/comment', 'store')->name('comment.store');
-            Route::put('/comment/{comment}', 'update')->name('comment.update');
-            Route::delete('/comment/{comment}', 'destroy')->name('comment.destroy');
+        Route::controller(CommentController::class)->name('comment.')->group(function () {
+            Route::post('/{post}/comment', 'store')->name('store');
+            Route::put('/comment/{comment}', 'update')->name('update');
+            Route::delete('/comment/{comment}', 'destroy')->name('destroy');
+            Route::post('/comment/{comment}/reaction', CommentReactionController::class)
+                ->name('reaction');
         });
     });
 });
