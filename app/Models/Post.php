@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -80,11 +81,11 @@ final class Post extends Model
     }
 
     /**
-     * @return HasMany<Reaction, $this>
+     * @return MorphMany<Reaction, $this>
      */
-    public function reactions(): HasMany
+    public function reactions(): MorphMany
     {
-        return $this->hasMany(Reaction::class);
+        return $this->morphMany(Reaction::class, 'actionable');
     }
 
     /**

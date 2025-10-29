@@ -6,17 +6,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
 
 /**
  * @property-read int $id
  * @property-read int $user_id
- * @property-read int $post_id
+ * @property-read int $actionable_id
+ * @property-read string $actionable_type
  * @property-read string $type
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read User $user
- * @property-read Post $post
+ * @property-read self $action
  */
 final class Reaction extends Model
 {
@@ -24,7 +26,8 @@ final class Reaction extends Model
 
     protected $fillable = [
         'user_id',
-        'post_id',
+        'actionable_id',
+        'actionable_type',
         'type',
     ];
 
@@ -37,10 +40,11 @@ final class Reaction extends Model
     }
 
     /**
-     * @return BelongsTo<Post, $this>
+     * Get the parent object models (post, comment).
+     * @return MorphTo<self, $this>
      */
-    public function post(): BelongsTo
+    public function action(): MorphTo
     {
-        return $this->belongsTo(Post::class);
+        return $this->MorphTo();
     }
 }
