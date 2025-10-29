@@ -6,7 +6,6 @@ namespace App\Actions\Posts;
 
 use App\Actions\PostAttachment\DeleteAttachments;
 use App\Models\Post;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 final readonly class UpdatePost
@@ -21,15 +20,9 @@ final readonly class UpdatePost
         array $data,
         array $deleteIds,
     ): void {
-        DB::beginTransaction();
-        try {
+        DB::transaction(function () use ($post, $data, $deleteIds) {
             $post->update($data);
-
             $this->action->handle($post, $deleteIds);
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        });
     }
 }

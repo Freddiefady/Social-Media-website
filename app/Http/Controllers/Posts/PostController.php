@@ -30,16 +30,11 @@ final class PostController extends Controller
         #[CurrentUser] User $loggedInUser,
         CreatePost $action
     ): RedirectResponse {
-        DB::beginTransaction();
-        try {
-           $post = $action->handle($loggedInUser, $request->validated());
+        DB::transaction(function () use ($request, $loggedInUser, $action): void {
+            $post = $action->handle($loggedInUser, $request->validated());
             // Handle attachments if any
             $this->handleAttachments($request, $post);
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
-
+        });
         return back();
     }
 
