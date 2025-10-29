@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Posts;
 
-use App\Actions\CreatePostReaction;
+use App\Actions\CreateReaction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Posts\PostReactionRequest;
+use App\Http\Requests\Posts\ReactionRequest;
 use App\Models\Post;
 
 class PostReactionController extends Controller
 {
-    public function __invoke(PostReactionRequest $request, Post $post, CreatePostReaction $action)
+    public function __invoke(ReactionRequest $request, Post $post, CreateReaction $action)
     {
         $hasReaction = $action->handle(
             $post,

@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests\Posts;
 
-use App\Enums\PostReactionEnum;
+use App\Enums\ReactionEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class PostReactionRequest extends FormRequest
+class ReactionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class PostReactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'reaction' => [Rule::enum(PostReactionEnum::class)],
+            'reaction' => [Rule::enum(ReactionEnum::class)],
         ];
     }
 }

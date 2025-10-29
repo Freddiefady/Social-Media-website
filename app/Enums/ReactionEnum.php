@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum PostReactionEnum: string
+enum ReactionEnum: string
 {
     case LIKE = 'like';
 }
