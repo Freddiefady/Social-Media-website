@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Models\Post;
 use App\Models\Reaction;
+use Illuminate\Database\Eloquent\Model;
 
 final readonly class CreateReaction
 {
-    public function handle(Post $post, string $type): bool
+    public function handle(Model $model, string $type): bool
     {
-        $reaction = Reaction::whereActionableIdAndActionableType($post->id, $post->getMorphClass())
+        $reaction = Reaction::whereActionableIdAndActionableType($model->id, $model->getMorphClass())
             ->whereUserId(auth()->id())
             ->first();
 
@@ -21,8 +21,8 @@ final readonly class CreateReaction
         }
 
         Reaction::query()->create([
-            'actionable_id' => $post->id,
-            'actionable_type' => $post->getMorphClass(),
+            'actionable_id' => $model->id,
+            'actionable_type' => $model->getMorphClass(),
             'user_id' => auth()->id(),
             'type' => $type,
         ]);
