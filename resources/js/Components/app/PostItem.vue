@@ -1,13 +1,13 @@
 <script setup>
-import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
-import {ChatBubbleLeftRightIcon, HandThumbUpIcon, ArrowDownTrayIcon, PaperClipIcon} from '@heroicons/vue/24/outline'
-import PostUserHeader from "@/Components/app/PostUserHeader.vue";
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
+import { ChatBubbleLeftRightIcon, HandThumbUpIcon } from '@heroicons/vue/24/outline'
 import { router } from "@inertiajs/vue3";
-import {isImage} from "@/helpers.js";
 import axiosClient from "@/axiosClient.js";
+import PostUserHeader from "@/Components/app/PostUserHeader.vue";
 import ReadMoreReadLess from "@/Components/app/ReadMoreReadLess.vue";
 import EditDeleteDropdown from "@/Components/app/EditDeleteDropdown.vue";
 import CommentList from "@/Components/app/CommentList.vue";
+import PostAttachments from "@/Components/app/PostAttachments.vue";
 
 const props = defineProps({
     post: Object,
@@ -54,33 +54,10 @@ function deletePost() {
         <div class="grid gap-3 mb-3" :class="[
                 post.attachments.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
             ]">
-            <template v-for="(attachment, ind) of post.attachments.slice(0, 4)">
-                <div @click="openAttachment(ind)"
-                    class="group bg-blue-100 aspect-square flex flex-col items-center justify-center text-gray-500 relative cursor-pointer">
-
-                    <div v-if="ind === 3 && post.attachments.length > 4"
-                         class="absolute top-0 left-0 right-0 bottom-0 z-10 bg-black/30 text-white flex items-center justify-center text-2xl">
-                        +{{ post.attachments.length - 4 }} more
-                    </div>
-
-                    <!-- Download -->
-                    <a @click.stop :href="route('post.download', attachment)"
-                       class="z-20 w-8 h-8 flex flex-col items-center justify-center rounded bg-gray-700 hover:bg-gray-800 text-gray-100 absolute right-2 top-2 cursor-pointer group opacity-0 group-hover:opacity-100 transition-all">
-                        <ArrowDownTrayIcon class="w-4 h-4"/>
-                    </a>
-                    <!-- /Download -->
-
-                    <img v-if="isImage(attachment)" :src="attachment.url" class="object-contain aspect-square" alt=""/>
-
-                    <div v-else class="flex items-center justify-center">
-                        <PaperClipIcon class="w-4 h-4 mr-2"/>
-                        <small>{{ attachment.name }}</small>
-                    </div>
-                </div>
-            </template>
+            <PostAttachments :attachments="post.attachments" @attachmentClick="openAttachment"/>
         </div>
         <!--   Likes & comments     -->
-        <Disclosure v-slot="{ open }">
+        <Disclosure v-slot="">
             <div class="flex gap-2">
                 <button
                     @click="sendReaction"
@@ -105,5 +82,3 @@ function deletePost() {
         </Disclosure>
     </div>
 </template>
-
-<style lang="scss" scoped></style>
