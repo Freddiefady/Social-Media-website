@@ -27,7 +27,8 @@ class CommentController extends Controller
     ): Response {
         $comment = $action->handle(
             $post,
-            nl2br($request->string('comment')->toString())
+            nl2br($request->string('comment')->toString()),
+            $request->input('parent_id'),
         );
 
         return response($comment, 201);

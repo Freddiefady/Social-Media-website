@@ -13,10 +13,12 @@ final class HomeController extends Controller
     public function __invoke()
     {
         $posts = Post::query()
-            ->withCount('reactions')
-            ->withCount('comments')
+            ->withCount(['reactions', 'comments'])
             ->with(
-                'comments', fn($query) => $query->latest()->limit(5)->withCount('reactions'),
+                'comments', fn($query) => $query->latest()
+                    ->limit(5)
+                    ->whereNull('parent_id')
+                    ->withCount(['reactions', 'comments']),
                 'reactions', fn($query) => $query->whereUserId(auth()->id()),
                 'comments.reactions', fn($query) => $query->whereUserId(auth()->id()),
             )

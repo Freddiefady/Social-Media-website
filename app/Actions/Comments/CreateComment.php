@@ -9,12 +9,13 @@ use App\Models\Post;
 
 final readonly class CreateComment
 {
-    public function handle(Post $post, string $content): Comment
+    public function handle(Post $post, string $content, ?string $parentId = null): Comment
     {
         return Comment::create([
             'post_id' => $post->id,
             'user_id' => auth()->id(),
             'comment' => $content,
+            'parent_id' => $parentId,
         ]);
     }
 }
