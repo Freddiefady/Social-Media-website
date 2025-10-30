@@ -28,6 +28,8 @@ use Illuminate\Support\Carbon;
 #[UsePolicy(CommentPolicy::class)]
 final class Comment extends Model
 {
+    public int $numOfComments = 0;
+    public array $childComments = [];
     /**
      * The attributes that are mass assignable.
      *

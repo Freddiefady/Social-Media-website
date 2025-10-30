@@ -96,6 +96,7 @@ function deletePost() {
                 >
                     <ChatBubbleLeftRightIcon class="w-5 h-5 mr-2"/>
                     <span class="mr-2">{{post.num_of_comments}}</span>
+                    Comments
                 </DisclosureButton>
         </div>
             <DisclosurePanel class="mt-3">
