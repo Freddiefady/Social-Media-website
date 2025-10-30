@@ -15,14 +15,12 @@ final readonly class PostRelatedReactionAndComments
     public function builder(): Builder
     {
         return Post::query()
-            ->withCount(['reactions', 'comments'])
+            ->withCount('reactions')
             ->with(
                 'comments', fn($query) => $query->latest()
                     ->limit(5)
-                    ->whereNull('parent_id')
-                    ->withCount(['reactions', 'comments']),
+                    ->withCount('reactions'),
                 'reactions', fn($query) => $query->whereUserId(auth()->id()),
-                'comments.reactions', fn($query) => $query->whereUserId(auth()->id()),
             )
             ->latest();
     }
