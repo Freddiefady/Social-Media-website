@@ -5,3 +5,27 @@
 #app {
     height: 100%;
 }
+
+/* Webkit browsers (Chrome, Safari) */
+.comment-list::-webkit-scrollbar {
+    background-color: transparent;
+    width: 8px;
+}
+
+.comment-list::-webkit-scrollbar-thumb {
+    background-color: transparent; /* Thumb Color */
+    border-radius: 6px;
+}
+
+.comment-list::-webkit-scrollbar-track {
+    background-color: transparent; /* Track Color */
+}
+
+.comment-list:hover::-webkit-scrollbar-thumb {
+    background-color: #a2c3de; /* Thumb Color */
+    border-radius: 6px;
+}
+
+.comment-list:hover::-webkit-scrollbar-track {
+    background-color: #f1f1f3; /* Track Color */
+}

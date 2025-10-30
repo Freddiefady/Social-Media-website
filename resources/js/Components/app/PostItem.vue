@@ -99,7 +99,7 @@ function deletePost() {
                     Comments
                 </DisclosureButton>
         </div>
-            <DisclosurePanel class="mt-3">
+            <DisclosurePanel class="comment-list mt-3 h-[400px] overflow-auto">
                 <CommentList :post="post" :data="{comments: post.comments}" />
             </DisclosurePanel>
         </Disclosure>
