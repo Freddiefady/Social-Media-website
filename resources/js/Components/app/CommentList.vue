@@ -24,19 +24,23 @@ const props = defineProps({
     },
 })
 
+const emit = defineEmits([
+    'commentCreate', 'commentDelete'
+]);
+
 function createComment() {
     axiosClient.post(route('comment.store', props.post), {
         comment: newCommentText.value,
         parent_id: props.parentComment?.id || null,
     })
         .then(({ data }) => {
-            console.log(data);
             newCommentText.value = ''
             props.data.comments.unshift(data)
             if (props.parentComment) {
                 props.parentComment.num_of_comments++;
             }
             props.post.num_of_comments++;
+            emit('commentCreate', data);
         })
 }
 
@@ -72,6 +76,7 @@ function deleteComment(comment) {
                 props.parentComment.num_of_comments--;
             }
             props.post.num_of_comments--;
+            emit('commentDeleted', comment);
         })
 }
 
@@ -83,6 +88,20 @@ function sendCommentReaction(comment) {
             comment.current_user_has_reaction = data.current_user_has_reaction;
             comment.num_of_reactions = data.num_of_reactions;
         })
+}
+
+function onCreateComment(comment) {
+    if (props.parentComment) {
+        props.parentComment.num_of_comments++;
+    }
+    emit("commentCreate", comment);
+}
+
+function onDeleteComment(comment) {
+    if (props.parentComment) {
+        props.parentComment.num_of_comments--;
+    }
+    emit("commentDelete", comment);
 }
 </script>
 
@@ -103,13 +122,16 @@ function sendCommentReaction(comment) {
             <div class="flex justify-between gap-2">
                 <div class="flex gap-2">
                     <a href="javascript:void(0)">
-                        <img :src="comment.user.avatar_url"
-                             class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500" alt=""/>
+                        <img
+                            :src="comment.user?.avatar_url || '/default-avatar.png'"
+                            class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500"
+                            :alt="comment.user?.name || 'User'"
+                        />
                     </a>
                     <div>
                         <h4 class="font-bold">
                             <a href="javascript:void(0)" class="hover:underline">
-                                {{ comment.user.name }}
+                                {{ comment.user?.name || 'Unknown User' }}
                             </a>
                         </h4>
                         <small class="text-xs text-gray-400">{{ comment.updated_at }}</small>
@@ -130,14 +152,14 @@ function sendCommentReaction(comment) {
                 <ReadMoreReadLess v-else :content="comment.comment" content-class="text-sm flex flex-1"/>
                 <Disclosure>
                     <div class="flex gap-2 mt-1">
-                        <Button @click="sendCommentReaction(comment)"
+                        <button @click="sendCommentReaction(comment)"
                                 class="flex items-center text-xs text-indigo-500 p-1 rounded-lg px-1 py-0.5"
                                 :class="comment.current_user_has_reaction ? 'bg-indigo-50 hover:bg-indigo-100' : 'hover:bg-indigo-50'"
                         >
                             <HandThumbUpIcon class="w-3 h-3 mr-1"/>
                             <span class="mr-2">{{ comment.num_of_reactions }}</span>
                             {{ comment.current_user_has_reaction ? 'unlike' : 'like' }}
-                        </Button>
+                        </button>
                         <DisclosureButton
                             class="flex items-center text-xs text-indigo-500 p-1 hover:bg-indigo-100 rounded-lg px-1 py-0.5">
                             <ChatBubbleLeftEllipsisIcon class="w-3 h-3 mr-1"/>
@@ -148,7 +170,10 @@ function sendCommentReaction(comment) {
                     <DisclosurePanel class="mt-3">
                         <CommentList :post="post"
                                      :data="{comments: comment.comments}"
-                                     :parent-comment="comment"/>
+                                     :parent-comment="comment"
+                                     @comment-create="onCreateComment"
+                                     @comment-delete="onDeleteComment"
+                        />
                     </DisclosurePanel>
                 </Disclosure>
             </div>
