@@ -18,7 +18,6 @@ final readonly class PostRelatedReactionAndComments
             ->withCount('reactions')
             ->with(
                 'comments', fn($query) => $query->latest()
-                    ->limit(5)
                     ->withCount('reactions'),
                 'reactions', fn($query) => $query->whereUserId(auth()->id()),
             )
