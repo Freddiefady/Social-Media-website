@@ -14,10 +14,15 @@ final class HomeController extends Controller
     {
         $query = new PostRelatedReactionAndComments();
 
-        $posts = $query->builder()->paginate(20);
+        $posts = $query->builder()->paginate(10);
+
+        $posts = PostResource::collection($posts);
+        if (request()->wantsJson()) {
+            return $posts;
+        }
 
         return Inertia::render('Home', [
-            'posts' => PostResource::collection($posts),
+            'posts' => $posts,
         ]);
     }
 }
