@@ -25,7 +25,7 @@ class StoreGroupRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'auto_approval' => 'required|boolean',
-            'about' => 'required|string|max:255',
+            'about' => 'required|string',
             'user_id' => 'exists:users,id',
         ];
     }
