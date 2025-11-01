@@ -1,7 +1,6 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import GroupListItems from "@/Components/app/GroupListItems.vue";
-import { ref } from "vue";
 </script>
 
 <template>
@@ -29,7 +28,7 @@ import { ref } from "vue";
             <div class="flex items-center justify-between cursor-pointer">
                 <h2 class="text-xl font-bold">My Groups</h2>
             </div>
-                <GroupListItems />
+            <GroupListItems />
         </div>
     </div>
 </template>
