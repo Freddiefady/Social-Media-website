@@ -3,8 +3,9 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Comments\CommentController;
-    use App\Http\Controllers\Comments\CommentReactionController;
-    use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Comments\CommentReactionController;
+use App\Http\Controllers\Group\GroupController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Posts\PostAttachmentController;
 use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\PostReactionController;
@@ -41,6 +42,8 @@ Route::middleware('auth')->group(function () {
                 ->name('reaction');
         });
     });
+
+    Route::apiResource('group', GroupController::class);
 });
 
 require __DIR__.'/auth.php';
