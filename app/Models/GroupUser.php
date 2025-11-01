@@ -22,6 +22,9 @@ use Illuminate\Support\Carbon;
  * @property-read int $created_by
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
+ * @property-read User $user
+ * @property-read Group $group
+ * @property-read User $creator
  */
 final class GroupUser extends Model
 {
@@ -56,5 +59,13 @@ final class GroupUser extends Model
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

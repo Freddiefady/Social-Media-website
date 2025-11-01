@@ -8,6 +8,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -27,6 +28,8 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read Carbon $updated_at
  * @property-read Collection<int, Post> $posts
  * @property-read Collection<int, comment> $comments
+ * @property-read Collection<int, Group> $groups
+ * @property-read Collection<int, Group> $approvedGroups
  */
 final class User extends Authenticatable implements MustVerifyEmail
 {
@@ -71,6 +74,27 @@ final class User extends Authenticatable implements MustVerifyEmail
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * All groups user is part of
+     *
+     * @return BelongsToMany<Group, $this>
+     */
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'group_users');
+    }
+
+    /**
+     * Only approved groups - THIS REPLACES YOUR QUERY BUILDER CODE
+     *
+     * @return BelongsToMany<Group, $this>
+     */
+    public function approvedGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'group_users')
+            ->withPivot(['role', 'status']);
     }
 
     public function getSlugOptions(): SlugOptions

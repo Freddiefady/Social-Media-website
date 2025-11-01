@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\GroupUserStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use phpDocumentor\Reflection\Types\This;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -36,9 +39,48 @@ final class Group extends Model
     /**
      * @return BelongsTo<User, $this>
      */
-    public function user(): BelongsTo
+    public function owner(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+
+    /**
+     * All users in the group (with pivot data)
+     *
+     * @return BelongsToMany<User, $this>
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'group_users')
+            ->withPivot(['role', 'status', 'token', 'token_expire_date', 'token_used', 'created_by'])
+            ->withTimestamps();
+    }
+
+    /**
+     * Only approved users
+     *
+     * @return BelongsToMany<User, This>
+     */
+    public function approvedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'group_users')
+            ->withPivot(['role', 'status', 'created_by'])
+            ->wherePivot('status', GroupUserStatusEnum::APPROVED)
+            ->withTimestamps();
+    }
+
+    /**
+     * Pending users
+     *
+     * @return BelongsToMany<User, $this>
+     */
+    public function pendingUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'group_users')
+            ->withPivot(['role', 'status', 'created_by'])
+            ->wherePivot('status', GroupUserStatusEnum::PENDING)
+            ->withTimestamps();
     }
 
     public function getSlugOptions(): SlugOptions
