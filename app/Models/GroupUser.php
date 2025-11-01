@@ -4,9 +4,57 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\GroupUserRoleEnum;
+use App\Enums\GroupUserStatusEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property-read int $id
+ * @property-read string $role
+ * @property-read int $user_id
+ * @property-read int $group_id
+ * @property-read string $status
+ * @property-read string $token
+ * @property-read string $token_expire_date
+ * @property-read string $token_used
+ * @property-read int $created_by
+ * @property-read Carbon $created_at
+ * @property-read Carbon $updated_at
+ */
 final class GroupUser extends Model
 {
-    //
+    public const null UPDATED_AT = null;
+
+    /**
+     * @var list<string>
+     */
+    protected $fillable = [
+        'role', 'user_id', 'group_id', 'status', 'token', 'token_expire_date', 'token_used', 'created_by'
+    ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected $casts = [
+        'role' => GroupUserRoleEnum::class,
+        'status' => GroupUserStatusEnum::class,
+    ];
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return BelongsTo<Group, $this>
+     */
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
+    }
 }
