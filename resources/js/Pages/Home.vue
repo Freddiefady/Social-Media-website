@@ -8,6 +8,7 @@ import { Head } from '@inertiajs/vue3';
 
 defineProps({
     posts: Object,
+    groups: Array,
 });
 </script>
 
@@ -17,7 +18,7 @@ defineProps({
     <AuthenticatedLayout>
         <div class="grid lg:grid-cols-12 gap-3 p-4 h-full">
             <div class="lg:col-span-3 lg:order-1 overflow-hidden h-full">
-                <GroupList />
+                <GroupList :groups="groups" />
             </div>
             <div class="lg:col-span-3 lg:order-3 overflow-hidden h-full">
                 <FollowingList />

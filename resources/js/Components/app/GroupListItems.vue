@@ -6,6 +6,14 @@ import { ref } from "vue";
 
 const searchKeyword = ref("");
 const showNewGroupModal = ref(false)
+
+const props = defineProps({
+    groups: Array,
+})
+
+function onGroupCreate(data){
+    props.groups.unshift(data)
+}
 </script>
 
 <template>
@@ -20,25 +28,10 @@ const showNewGroupModal = ref(false)
             you are not a member of any groups.
         </div>
         <div v-else>
-            <GroupItem image="https://picsum.photos/100" title="Laravel Developers"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit." />
-            <GroupItem image="https://picsum.photos/100" title="Vue.js Developers"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit." />
-            <GroupItem image="https://picsum.photos/100" title="Laravel Developers"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit." />
-            <GroupItem image="https://picsum.photos/100" title="Vue.js Developers"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit." />
-            <GroupItem image="https://picsum.photos/100" title="Laravel Developers"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit." />
-            <GroupItem image="https://picsum.photos/100" title="Vue.js Developers"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit." />
-            <GroupItem image="https://picsum.photos/100" title="Laravel Developers"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit." />
-            <GroupItem image="https://picsum.photos/100" title="Vue.js Developers"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit." />
+            <GroupItem v-for="group in groups" :group="group" />
         </div>
     </div>
-    <GroupModal v-model="showNewGroupModal" />
+    <GroupModal v-model="showNewGroupModal"  @create="onGroupCreate"/>
 </template>
 
 <style scoped></style>

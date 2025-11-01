@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\GroupResource;
 use App\Http\Resources\Posts\PostResource;
 use App\Queries\PostRelatedReactionAndComments;
 use Inertia\Inertia;
+use function Laravel\Prompts\select;
 
 final class HomeController extends Controller
 {
@@ -21,8 +23,14 @@ final class HomeController extends Controller
             return $posts;
         }
 
+        $groups = auth()->user()->approvedGroups()
+                ->orderByPivot('role')
+                ->latest('name')
+                ->get();
+
         return Inertia::render('Home', [
             'posts' => $posts,
+            'groups' => GroupResource::collection($groups),
         ]);
     }
 }

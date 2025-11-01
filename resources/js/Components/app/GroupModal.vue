@@ -20,7 +20,7 @@ const form = useForm({
     auto_approval: true,
 })
 
-const emit = defineEmits(['update:modelValue', 'hide'])
+const emit = defineEmits(['update:modelValue', 'hide', 'create'])
 
 function resetModal() {
     form.reset()
@@ -41,8 +41,9 @@ function closeModal() {
 
 function submit() {
     axiosClient.post(route('group.store'), form)
-        .then(() => {
+        .then(({ data }) => {
             resetModal()
+            emit('create', data);
         })
 }
 
