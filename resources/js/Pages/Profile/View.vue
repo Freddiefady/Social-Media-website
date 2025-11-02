@@ -5,7 +5,6 @@ import {XMarkIcon, CheckCircleIcon, CameraIcon} from '@heroicons/vue/24/solid'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "@/Pages/Profile/Partials/TabItem.vue";
 import Edit from "@/Pages/Profile/Edit.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {computed, ref} from "vue";
 
 const imagesForm = useForm({
@@ -69,7 +68,8 @@ function cancelAvatarImage() {
 
 function submitCoverImage() {
     imagesForm.post(route('profile.updateImages'), {
-        onSuccess: (user) => {
+        onSuccess: () => {
+            showNotification.value = true;
             cancelCoverImage()
             setTimeout(() => {
                 showNotification.value = false;
@@ -80,7 +80,8 @@ function submitCoverImage() {
 
 function submitAvatarImage() {
     imagesForm.post(route('profile.updateImages'), {
-        onSuccess: (user) => {
+        onSuccess: () => {
+            showNotification.value = true;
             cancelAvatarImage()
             setTimeout(() => {
                 showNotification.value = false;
@@ -107,7 +108,7 @@ function submitAvatarImage() {
             </div>
             <div class="group relative bg-white">
                 <img :src="coverImageScr || user.cover_url || '/img/Desktop-BG726.webp'"
-                     class="w-full h-[200px] object-cover"/>
+                     class="w-full h-[200px] object-cover" :alt="user.name"/>
                 <div class="absolute top-2 right-2">
                     <button
                         class="bg-gray-50 hover:bg-gray-100 text-gray-800 text-xs py-1 px-2 flex items-center opacity-0 group-hover:opacity-100"
@@ -144,7 +145,7 @@ function submitAvatarImage() {
                     <div
                         class="flex items-center justify-center relative group/avatar -mt-[64px] ml-[48px] h-[128px] w-[128px] rounded-full">
                         <img :src="avatarImageScr || user.avatar_url || '/img/avatar.png'"
-                             class="w-full h-full object-cover rounded-full"/>
+                             class="w-full h-full object-cover rounded-full" :alt="user.name"/>
                         <button
                             v-if="!avatarImageScr"
                             class="absolute left-0 top-0 right-0 bottom-0 flex items-center justify-center text-gray-200 rounded-full bg-black/50 text-xs py-1 px-2 opacity-0 group-hover/avatar:opacity-100"
@@ -200,10 +201,10 @@ function submitAvatarImage() {
                             Posts Content
                         </TabPanel>
                         <TabPanel class='bg-white p-3 shadow'>
-                            Followers Contnent
+                            Followers Content
                         </TabPanel>
                         <TabPanel class='bg-white p-3 shadow'>
-                            Followings Contnent
+                            Followings Content
                         </TabPanel>
                         <TabPanel class='bg-white p-3 shadow'>
                             Photos
