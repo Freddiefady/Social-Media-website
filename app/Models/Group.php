@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\GroupUserStatusEnum;
+use App\Policies\GroupPolicy;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -28,6 +30,7 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read Carbon $updated_at
  * @property-read Carbon $created_at
  */
+#[UsePolicy(GroupPolicy::class)]
 final class Group extends Model
 {
     use SoftDeletes, HasSlug;
