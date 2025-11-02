@@ -17,6 +17,9 @@ Route::get('/', HomeController::class)->middleware(['auth', 'verified'])
 
 Route::get('/u/{user:username}', [ProfileController::class, 'index'])
     ->name('profile');
+//
+//Route::get('/u/{group:slug}', [GroupController::class, 'index'])
+//    ->name('profile');
 
 Route::middleware('auth')->group(function () {
     Route::post('/profile/update-images', [ProfileController::class, 'updateImages'])
@@ -43,7 +46,9 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    Route::apiResource('group', GroupController::class);
+    Route::apiResource('group', GroupController::class)->except('index');
+    Route::post('/group/update-images/{group:slug}', [GroupController::class, 'updateImages'])
+        ->name('group.update-images');
 });
 
 require __DIR__.'/auth.php';
