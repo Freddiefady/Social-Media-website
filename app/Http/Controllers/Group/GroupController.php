@@ -100,11 +100,13 @@ class GroupController extends Controller
     public function invite(InviteUserRequest $request, Group $group, CreateInviteUser $action)
     {
         $user = $request->getValidatedUser();
-        $groupUser = $request->getExistsGroupUser();
+        $existsGroupUser = $request->getExistsGroupUser();
 
-        $groupUser?->delete();
+        $existsGroupUser?->delete();
 
         $action->handle($group, $user->id);
+
+        $user->notify(new InviteInGroup($group));
 
         return back()->with('success', 'User was invited to join to group.');
     }
