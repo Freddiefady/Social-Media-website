@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -22,6 +23,7 @@ use Illuminate\Support\Str;
  * @property-read Carbon $created_at
  * @property string $status
  * @property string $role
+ * @property mixed $pivot
  */
 class GroupResource extends JsonResource
 {
@@ -36,10 +38,14 @@ class GroupResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'status' => $this->pivot->status ?? 'approved',
-            'role' => $this->pivot->role ?? 'admin',
-//            'cover_path' => $this->cover_path,
-            'thumbnail_url' => 'https://picsum.photos/100',
+            'status' => $this->whenPivotLoaded('group_users', function () {
+                return $this->pivot?->status;
+            }, 'approved'),
+            'role' => $this->whenPivotLoaded('group_users', function () {
+                return $this->pivot?->role;
+            }, 'admin'),
+            'thumbnail_url' => $this->thumbnail_path ? Storage::url($this->thumbnail_path) : '/img/no_image.png',
+            'cover_url' => $this->cover_path ? Storage::url($this->cover_path) : null,
             'auto_approval' => $this->auto_approval,
             'about' => $this->about,
             'description' => Str::words($this->about, 10),

@@ -4,11 +4,18 @@ namespace App\Http\Controllers\Group;
 
 use App\Actions\Group\CreateGroup;
 use App\Actions\Group\CreateGroupUser;
+use App\Actions\Media\CreateCover;
+use App\Actions\Media\CreateThumbnail;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MediaRequest;
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
 
 class GroupController extends Controller
 {
@@ -40,7 +47,12 @@ class GroupController extends Controller
      */
     public function show(Group $group)
     {
-        //
+         $group = auth()->user()->groups()->find($group);
+
+        return Inertia::render('Group/View', [
+            'success' => session('success'),
+            'group' => new GroupResource($group),
+        ]);
     }
 
     /**
@@ -57,5 +69,28 @@ class GroupController extends Controller
     public function destroy(Group $group)
     {
         //
+    }
+
+    public function updateImages(
+        MediaRequest $request,
+        #[CurrentUser] User $user,
+        CreateCover $actionCover,
+        CreateThumbnail $actionThumbnail
+    ): RedirectResponse {
+        $messages = [];
+
+        if ($actionCover->handle($user, $request)) {
+            $messages[] = 'Your cover image has been updated successfully.';
+        }
+
+        if ($actionThumbnail->handle($user, $request)) {
+            $messages[] = 'Your avatar image has been updated successfully.';
+        }
+
+        $success = !empty($messages)
+            ? implode(' ', $messages)
+            : 'No images were updated.';
+
+        return back()->with('success', $success);
     }
 }
