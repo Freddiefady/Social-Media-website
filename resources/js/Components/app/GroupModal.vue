@@ -42,7 +42,7 @@ function closeModal() {
 function submit() {
     axiosClient.post(route('group.store'), form)
         .then(({ data }) => {
-            resetModal()
+            closeModal()
             emit('create', data);
         })
 }
