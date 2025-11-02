@@ -90,4 +90,9 @@ final class Group extends Model
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 }
