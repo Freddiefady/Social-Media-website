@@ -8,7 +8,6 @@ use App\Http\Resources\GroupResource;
 use App\Http\Resources\Posts\PostResource;
 use App\Queries\PostRelatedReactionAndComments;
 use Inertia\Inertia;
-use function Laravel\Prompts\select;
 
 final class HomeController extends Controller
 {
@@ -23,7 +22,7 @@ final class HomeController extends Controller
             return $posts;
         }
 
-        $groups = auth()->user()->approvedGroups()
+        $groups = auth()->user()->groups()
                 ->orderByPivot('role')
                 ->latest('name')
                 ->get();

@@ -77,21 +77,11 @@ final class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * All groups user is part of
+     * Only approved groups
      *
      * @return BelongsToMany<Group, $this>
      */
     public function groups(): BelongsToMany
-    {
-        return $this->belongsToMany(Group::class, 'group_users');
-    }
-
-    /**
-     * Only approved groups - THIS REPLACES YOUR QUERY BUILDER CODE
-     *
-     * @return BelongsToMany<Group, $this>
-     */
-    public function approvedGroups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class, 'group_users')
             ->withPivot(['role', 'status']);
