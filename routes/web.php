@@ -45,10 +45,14 @@ Route::middleware('auth')->group(function () {
                 ->name('reaction');
         });
     });
-
+//----- Groups -----
     Route::apiResource('group', GroupController::class)->except('index');
+
     Route::post('/group/update-images/{group:slug}', [GroupController::class, 'updateImages'])
         ->name('group.update-images');
+
+    Route::post('/group/invite/{group:slug}', [GroupController::class, 'invite'])
+        ->name('group.invite');
 });
 
 require __DIR__.'/auth.php';

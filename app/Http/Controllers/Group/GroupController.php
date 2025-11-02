@@ -4,15 +4,18 @@ namespace App\Http\Controllers\Group;
 
 use App\Actions\Group\CreateGroup;
 use App\Actions\Group\CreateGroupUser;
+use App\Actions\Group\CreateInviteUser;
 use App\Actions\Media\CreateCover;
 use App\Actions\Media\CreateThumbnail;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Group\InviteUserRequest;
 use App\Http\Requests\MediaRequest;
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Models\User;
+use App\Notifications\InviteInGroup;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -92,5 +95,17 @@ class GroupController extends Controller
             : 'No images were updated.';
 
         return back()->with('success', $success);
+    }
+
+    public function invite(InviteUserRequest $request, Group $group, CreateInviteUser $action)
+    {
+        $user = $request->getValidatedUser();
+        $groupUser = $request->getExistsGroupUser();
+
+        $groupUser?->delete();
+
+        $action->handle($group, $user->id);
+
+        return back()->with('success', 'User was invited to join to group.');
     }
 }
