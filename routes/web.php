@@ -21,6 +21,9 @@ Route::get('/u/{user:username}', [ProfileController::class, 'index'])
 //Route::get('/u/{group:slug}', [GroupController::class, 'index'])
 //    ->name('profile');
 
+Route::get('/group/approve-invitation/{token}', [GroupController::class, 'approveInvitation'])
+    ->name('group.approve');
+
 Route::middleware('auth')->group(function () {
     Route::post('/profile/update-images', [ProfileController::class, 'updateImages'])
         ->name('profile.updateImages');

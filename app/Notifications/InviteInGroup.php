@@ -40,7 +40,7 @@ class InviteInGroup extends Notification
     {
         return (new MailMessage)
             ->line('You have been invited to join "' . $this->group->name . '" group.')
-            ->action('Join to Group', route('group.invite', $this->token))
+            ->action('Join to Group', route('group.approve', $this->token))
             ->line('The link will be expired for next to ' . $this->hours . ' hours.');
     }
 
