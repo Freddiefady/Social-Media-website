@@ -104,9 +104,7 @@ class GroupController extends Controller
 
         $existsGroupUser?->delete();
 
-        $action->handle($group, $user->id);
-
-        $user->notify(new InviteInGroup($group));
+        $action->handle($group, $user);
 
         return back()->with('success', 'User was invited to join to group.');
     }

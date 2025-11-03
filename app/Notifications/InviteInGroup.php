@@ -15,8 +15,11 @@ class InviteInGroup extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Group $group)
-    {
+    public function __construct(
+        public Group $group,
+        private readonly string $token,
+        private readonly int $hours
+    ) {
         //
     }
 
@@ -37,8 +40,8 @@ class InviteInGroup extends Notification
     {
         return (new MailMessage)
             ->line('You have been invited to join "' . $this->group->name . '" group.')
-            ->action('Join to Group', url('/'))
-            ->line('The link will be expired for next to 24 hours.');
+            ->action('Join to Group', route('group.invite', $this->token))
+            ->line('The link will be expired for next to ' . $this->hours . ' hours.');
     }
 
     /**

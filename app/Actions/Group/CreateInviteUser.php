@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Group;
 
 use App\Enums\GroupUserRoleEnum;
@@ -9,21 +11,35 @@ use App\Models\GroupUser;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
-class CreateInviteUser
+final readonly class CreateInviteUser
 {
-    private int $RANDOM_LENGTH = 256;
-    private int $TOKEN_EXPIRE_TIME = 24;
+    private int $TOKEN_LENGTH;
+    private int $TOKEN_EXPIRE_TIME;
 
-    public function handle(Group $group, $userId): GroupUser
+    public function __construct(
+        protected SendInvitationToUser $invitationToUser,
+    )
     {
-        return GroupUser::query()->create([
+        $this->TOKEN_LENGTH = 256;
+        $this->TOKEN_EXPIRE_TIME = 24;
+    }
+
+    public function handle(Group $group, $user): GroupUser
+    {
+        $token = Str::random($this->TOKEN_LENGTH);
+
+        $groupUser = GroupUser::query()->create([
             'role' => GroupUserRoleEnum::USER->value,
             'status' => GroupUserStatusEnum::PENDING->value,
-            'token' => Str::random($this->RANDOM_LENGTH),
+            'token' => $token,
             'token_expire_date' => Carbon::now()->addHours($this->TOKEN_EXPIRE_TIME),
             'group_id' => $group->id,
-            'user_id' => $userId,
+            'user_id' => $user->id,
             'created_by' => auth()->id(),
         ]);
+
+        $this->invitationToUser->handle($user, $group, $token, $this->TOKEN_EXPIRE_TIME);
+
+        return $groupUser;
     }
 }
