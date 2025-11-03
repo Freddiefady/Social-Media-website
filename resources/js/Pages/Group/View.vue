@@ -1,11 +1,12 @@
 <script setup>
-import {TabGroup, TabList, Tab, TabPanels, TabPanel} from '@headlessui/vue'
-import {useForm, usePage} from '@inertiajs/vue3';
-import {XMarkIcon, CheckCircleIcon, CameraIcon} from '@heroicons/vue/24/solid'
+import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+import { useForm, usePage } from '@inertiajs/vue3';
+import { XMarkIcon, CheckCircleIcon, CameraIcon } from '@heroicons/vue/24/solid'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "@/Pages/Profile/Partials/TabItem.vue";
 import { computed, ref } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import InviteUserModal from "@/Components/app/InviteUserModal.vue";
 
 const imagesForm = useForm({
     thumbnail: null,
@@ -15,6 +16,8 @@ const imagesForm = useForm({
 const showNotification = ref(true);
 const coverImageScr = ref(null);
 const thumbnailImageScr = ref(null);
+const showInviteUserModal = ref(false);
+
 const authUser = usePage().props.auth.user;
 
 const isCurrentUserAdmin = computed(() => props.group.role === 'admin');
@@ -165,7 +168,8 @@ function submitThumbnailImage() {
 
                     <div class="flex justify-between items-center flex-1 p-4">
                         <h2 class="text-bold text-lg" v-if="authUser">{{ group.name }}</h2>
-                        <PrimaryButton v-if="isCurrentUserAdmin">Invite Users</PrimaryButton>
+                        <PrimaryButton @click="showInviteUserModal = true"
+                            v-if="isCurrentUserAdmin">Invite Users</PrimaryButton>
                         <PrimaryButton v-if="! group.role && group.auto_approval">Join to Group</PrimaryButton>
                         <PrimaryButton v-if="! group.role && ! group.auto_approval">Request to join</PrimaryButton>
                     </div>
@@ -208,6 +212,7 @@ function submitThumbnailImage() {
             </div>
         </div>
     </AuthenticatedLayout>
+    <InviteUserModal v-model="showInviteUserModal" />
 </template>
 
 <style lang="scss" scoped></style>
