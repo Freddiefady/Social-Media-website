@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\GroupUserRoleEnum;
 use App\Enums\GroupUserStatusEnum;
 use App\Policies\GroupPolicy;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use phpDocumentor\Reflection\Types\This;
@@ -29,6 +31,8 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read Carbon $deleted_at
  * @property-read Carbon $updated_at
  * @property-read Carbon $created_at
+ * @property-read User $owner
+ * @property-read User $adminUsers
  */
 #[UsePolicy(GroupPolicy::class)]
 final class Group extends Model
@@ -65,12 +69,11 @@ final class Group extends Model
      *
      * @return BelongsToMany<User, This>
      */
-    public function approvedUsers(): BelongsToMany
+    public function adminUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_users')
-            ->withPivot(['role', 'status', 'created_by'])
-            ->wherePivot('status', GroupUserStatusEnum::APPROVED)
-            ->withTimestamps();
+            ->withPivot(['role'])
+            ->wherePivot('role', GroupUserRoleEnum::ADMIN);
     }
 
     /**
@@ -84,6 +87,12 @@ final class Group extends Model
             ->withPivot(['role', 'status', 'created_by'])
             ->wherePivot('status', GroupUserStatusEnum::PENDING)
             ->withTimestamps();
+    }
+
+    public function currentUserGroup(): HasOne
+    {
+        return $this->hasOne(GroupUser::class)
+                        ->where('user_id', auth()->id());
     }
 
     public function getSlugOptions(): SlugOptions
