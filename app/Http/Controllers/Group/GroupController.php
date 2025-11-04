@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Group;
 
+use App\Actions\Group\AcceptInvitation;
 use App\Actions\Group\CreateGroup;
 use App\Actions\Group\CreateGroupUser;
 use App\Actions\Group\CreateInviteUser;
+use App\Actions\Group\ValidateGroupUserInvitation;
 use App\Actions\Media\CreateCover;
 use App\Actions\Media\CreateThumbnail;
 use App\Http\Controllers\Controller;
@@ -15,7 +17,6 @@ use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Models\User;
-use App\Notifications\InviteInGroup;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -107,5 +108,21 @@ class GroupController extends Controller
         $action->handle($group, $user);
 
         return back()->with('success', 'User was invited to join to group.');
+    }
+
+    public function AcceptInvitation(string $token, AcceptInvitation $action, ValidateGroupUserInvitation  $validation)
+    {
+        $groupUser = $action->handle($token);
+
+        $errormessage = $validation->handle($groupUser);
+
+        if ($errormessage) {
+            return inertia(component: 'Error', props: [
+                'title' => $errormessage
+            ]);
+        }
+
+        return to_route('group.show', $groupUser->group)
+            ->with('success', 'You accepted the invitation to join the group "'.$groupUser->group->name.'"');
     }
 }
