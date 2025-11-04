@@ -17,9 +17,8 @@ Route::get('/', HomeController::class)->middleware(['auth', 'verified'])
 
 Route::get('/u/{user:username}', [ProfileController::class, 'index'])
     ->name('profile');
-//
-//Route::get('/u/{group:slug}', [GroupController::class, 'index'])
-//    ->name('profile');
+
+Route::apiResource('group', GroupController::class)->except('index');
 
 Route::get('/group/approve-invitation/{token}', [GroupController::class, 'AcceptInvitation'])
     ->name('group.approve');
@@ -49,13 +48,14 @@ Route::middleware('auth')->group(function () {
         });
     });
 //----- Groups -----
-    Route::apiResource('group', GroupController::class)->except('index');
-
     Route::post('/group/update-images/{group:slug}', [GroupController::class, 'updateImages'])
         ->name('group.update-images');
 
     Route::post('/group/invite/{group:slug}', [GroupController::class, 'invite'])
         ->name('group.invite');
+
+    Route::post('/group/join/{group:slug}', [GroupController::class, 'join'])
+        ->name('group.join');
 });
 
 require __DIR__.'/auth.php';

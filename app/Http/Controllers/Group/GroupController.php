@@ -6,6 +6,7 @@ use App\Actions\Group\AcceptInvitation;
 use App\Actions\Group\CreateGroup;
 use App\Actions\Group\CreateGroupUser;
 use App\Actions\Group\CreateInviteUser;
+use App\Actions\Group\JoinToGroup;
 use App\Actions\Group\ValidateGroupUserInvitation;
 use App\Actions\Media\CreateCover;
 use App\Actions\Media\CreateThumbnail;
@@ -51,7 +52,7 @@ class GroupController extends Controller
      */
     public function show(Group $group)
     {
-         $group = auth()->user()->groups()->find($group);
+         $group->load('currentUserGroup');
 
         return Inertia::render('Group/View', [
             'success' => session('success'),
@@ -115,5 +116,12 @@ class GroupController extends Controller
 
         return to_route('group.show', $groupUser->group)
             ->with('success', 'You accepted the invitation to join the group "'.$groupUser->group->name.'"');
+    }
+
+    public function join(Group $group, joinToGroup $action)
+    {
+        $action->handle($group);
+
+        back()->with('success', 'Your request has been accepted. you will be notified once you will be approved.');
     }
 }
