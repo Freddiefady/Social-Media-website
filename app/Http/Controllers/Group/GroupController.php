@@ -81,19 +81,10 @@ class GroupController extends Controller
         CreateCover $actionCover,
         CreateThumbnail $actionThumbnail
     ): RedirectResponse {
-        $messages = [];
-
-        if ($actionCover->handle($user, $request)) {
-            $messages[] = 'Your cover image has been updated successfully.';
-        }
-
-        if ($actionThumbnail->handle($user, $request)) {
-            $messages[] = 'Your avatar image has been updated successfully.';
-        }
-
-        $success = !empty($messages)
-            ? implode(' ', $messages)
-            : 'No images were updated.';
+        $success = match (true) {
+            $actionCover->handle($user, $request) => 'Your cover image has been updated successfully.',
+            $actionThumbnail->handle($user, $request) => 'Your thumbnail image has been updated successfully.',
+        };
 
         return back()->with('success', $success);
     }
