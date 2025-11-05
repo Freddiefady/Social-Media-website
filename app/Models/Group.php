@@ -33,6 +33,8 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read Carbon $created_at
  * @property-read User $owner
  * @property-read User $adminUsers
+ * @property-read User $approvedUsers
+ * @property-read User $pendingUsers
  */
 #[UsePolicy(GroupPolicy::class)]
 final class Group extends Model
@@ -65,7 +67,7 @@ final class Group extends Model
     }
 
     /**
-     * Only approved users
+     * Only admin users.
      *
      * @return BelongsToMany<User, This>
      */
@@ -77,6 +79,18 @@ final class Group extends Model
     }
 
     /**
+     * Only approved users.
+     *
+     * @return BelongsToMany<User, $this>
+     */
+    public function approvedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'group_users')
+            ->withPivot(['status'])
+            ->wherePivot('status', GroupUserStatusEnum::APPROVED);
+    }
+
+    /**
      * Pending users
      *
      * @return BelongsToMany<User, $this>
@@ -84,9 +98,8 @@ final class Group extends Model
     public function pendingUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_users')
-            ->withPivot(['role', 'status', 'created_by'])
-            ->wherePivot('status', GroupUserStatusEnum::PENDING)
-            ->withTimestamps();
+            ->withPivot(['status'])
+            ->wherePivot('status', GroupUserStatusEnum::PENDING);
     }
 
     public function currentUserGroup(): HasOne
