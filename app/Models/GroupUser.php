@@ -43,6 +43,7 @@ final class GroupUser extends Model
     protected $casts = [
         'role' => GroupUserRoleEnum::class,
         'status' => GroupUserStatusEnum::class,
+        'token' => 'hashed',
     ];
 
     /**

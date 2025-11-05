@@ -48,13 +48,13 @@ Route::middleware('auth')->group(function () {
         });
     });
 //----- Groups -----
-    Route::post('/group/update-images/{group:slug}', [GroupController::class, 'updateImages'])
+    Route::post('/group/update-images/{group}', [GroupController::class, 'updateImages'])
         ->name('group.update-images');
 
-    Route::post('/group/invite/{group:slug}', [GroupController::class, 'invite'])
+    Route::post('/group/invite/{group}', [GroupController::class, 'invite'])
         ->name('group.invite');
 
-    Route::post('/group/join/{group:slug}', [GroupController::class, 'join'])
+    Route::post('/group/join/{group}', [GroupController::class, 'join'])
         ->name('group.join');
 });
 

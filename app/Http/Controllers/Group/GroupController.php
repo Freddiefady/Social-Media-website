@@ -20,7 +20,9 @@ use App\Models\Group;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
+use Inertia\Response;
 use Inertia\Inertia;
+use SensitiveParameter;
 
 class GroupController extends Controller
 {
@@ -102,8 +104,11 @@ class GroupController extends Controller
         return back()->with('success', 'User was invited to join to group.');
     }
 
-    public function AcceptInvitation(string $token, AcceptInvitation $action, ValidateGroupUserInvitation  $validation)
-    {
+    public function AcceptInvitation(
+        #[SensitiveParameter] string $token,
+        AcceptInvitation             $action,
+        ValidateGroupUserInvitation  $validation
+    ): RedirectResponse|Response {
         $groupUser = $action->handle($token);
 
         $errormessage = $validation->handle($groupUser);

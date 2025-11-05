@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use SensitiveParameter;
 
 class InviteInGroup extends Notification
 {
@@ -16,9 +17,9 @@ class InviteInGroup extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        public Group $group,
-        private readonly string $token,
-        private readonly int $hours
+        public Group                                  $group,
+        #[SensitiveParameter] private readonly string $token,
+        private readonly int                          $hours,
     ) {
         //
     }
