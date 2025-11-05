@@ -6,20 +6,24 @@ use App\Actions\Group\AcceptInvitation;
 use App\Actions\Group\CreateGroup;
 use App\Actions\Group\CreateGroupUser;
 use App\Actions\Group\CreateInviteUser;
+use App\Actions\Group\FirstApprovedRequests;
 use App\Actions\Group\JoinToGroup;
 use App\Actions\Group\ValidateGroupUserInvitation;
 use App\Actions\Media\CreateCover;
 use App\Actions\Media\CreateThumbnail;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Group\ApprovedRequest;
 use App\Http\Requests\Group\InviteUserRequest;
 use App\Http\Requests\MediaRequest;
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Response;
 use Inertia\Inertia;
 use SensitiveParameter;
@@ -54,11 +58,14 @@ class GroupController extends Controller
      */
     public function show(Group $group)
     {
-         $group->load('currentUserGroup');
+        $users = $group->approvedUsers()->oldest('name')->get();
+        $requests = $group->pendingUsers()->oldest('name')->get();
 
         return Inertia::render('Group/View', [
             'success' => session('success'),
-            'group' => new GroupResource($group),
+            'group' => new GroupResource($group->load('currentUserGroup')),
+            'users' => UserResource::collection($users),
+            'requests' => UserResource::collection($requests),
         ]);
     }
 
@@ -128,5 +135,18 @@ class GroupController extends Controller
         $action->handle($group);
 
         back()->with('success', 'Your request has been accepted. you will be notified once you will be approved.');
+    }
+
+    public function approveRequest(ApprovedRequest $request, Group $group, FirstApprovedRequests $action)
+    {
+//        Gate::authorize('view', [auth()->id(), $group]);
+
+        $result = $action->handle($group, $request->only(['user_id', 'action']));
+
+        $message = $result['approved']
+            ? "User \"{$result['user']->name}\" was approved"
+            : "User \"{$result['user']->name}\" was rejected";
+
+        return back()->with('success', $message);
     }
 }
