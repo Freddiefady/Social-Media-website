@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Group;
 
+use App\Enums\GroupUserStatusEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ApprovedRequest extends FormRequest
 {
@@ -24,7 +26,7 @@ class ApprovedRequest extends FormRequest
     {
         return [
             'user_id' => 'required',
-            'action' => 'required',
+            'action' => ['required', Rule::enum(GroupUserStatusEnum::class)],
         ];
     }
 }
