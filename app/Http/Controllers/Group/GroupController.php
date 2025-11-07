@@ -9,6 +9,7 @@ use App\Actions\Group\CreateGroupUser;
 use App\Actions\Group\CreateInviteUser;
 use App\Actions\Group\FirstApprovedRequests;
 use App\Actions\Group\JoinToGroup;
+use App\Actions\Group\UpdateGroup;
 use App\Actions\Group\ValidateGroupUserInvitation;
 use App\Actions\Media\CreateCover;
 use App\Actions\Media\CreateThumbnail;
@@ -32,14 +33,6 @@ use SensitiveParameter;
 
 class GroupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -74,9 +67,11 @@ class GroupController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateGroupRequest $request, Group $group)
+    public function update(UpdateGroupRequest $request, Group $group, UpdateGroup $action)
     {
-        //
+        $action->handle($group, $request->validated());
+
+        return back()->with('success', 'Group updated');
     }
 
     /**
