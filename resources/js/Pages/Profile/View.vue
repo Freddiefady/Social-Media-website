@@ -170,7 +170,7 @@ function submitAvatarImage() {
                     </div>
 
                     <div class="flex justify-between items-center flex-1 p-4">
-                        <h2 class="text-bold text-lg" v-if="authUser">{{ authUser.name }}</h2>
+                        <h2 class="text-bold text-lg" v-if="authUser">{{ props.user.name }}</h2>
                     </div>
                 </div>
             </div>
