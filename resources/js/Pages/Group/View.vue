@@ -10,6 +10,7 @@ import InviteUserModal from "@/Components/app/InviteUserModal.vue";
 import UserListItem from "@/Components/app/UserListItem.vue";
 import TextInput from "@/Components/TextInput.vue";
 import GroupForm from "@/Components/app/GroupForm.vue";
+import PostList from "@/Components/app/PostList.vue";
 
 const imagesForm = useForm({
     thumbnail: null,
@@ -35,6 +36,7 @@ const props = defineProps({
     group: {
         type: Object,
     },
+    posts: Object,
     users: Array,
     requests: Array,
 });
@@ -272,8 +274,8 @@ function updateAbout(){
                     </TabList>
 
                     <TabPanels class="mt-2">
-                        <TabPanel class='bg-white p-3 shadow'>
-                            Posts Content
+                        <TabPanel>
+                            <PostList :posts="posts.data" class="flex-1" />
                         </TabPanel>
                         <TabPanel v-if="isJoinedToGroup">
                             <div class="mb-3">
