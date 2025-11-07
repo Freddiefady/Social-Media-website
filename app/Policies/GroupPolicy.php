@@ -23,4 +23,9 @@ class GroupPolicy
             ? Response::allow()
             : Response::deny('you don\'t have permission to perform this action', 403);
     }
+
+    public function changeRole(Group $group, int $userId): bool
+    {
+        return $group->user_id === $userId;
+    }
 }
