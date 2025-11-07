@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Posts;
 
+use App\Rules\UserExists;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\Rules\File;
@@ -28,7 +30,7 @@ class StorePostRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
@@ -41,7 +43,7 @@ class StorePostRequest extends FormRequest
                     // custom rules to check the total size of all files
                     $totalSize = collect($value)->sum(fn (UploadedFile $file) => $file->getSize());
 
-                    if ($totalSize > 1 * 1024 * 1024 * 1024) {
+                    if ($totalSize > 1024 * 1024 * 1024) {
                         $fail('The total size of all files must not exceed 1GB.');
                     }
                 },
@@ -50,10 +52,11 @@ class StorePostRequest extends FormRequest
                 'file',
                 File::types(self::$extensions),
             ],
+            'group_id' => ['nullable', 'exists:groups,id', new UserExists()],
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'attachments.*.file' => 'Each attachment must be a file.',

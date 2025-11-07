@@ -1,6 +1,6 @@
 <script setup>
 import PostItem from '@/Components/app/PostItem.vue';
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import PostModal from "@/Components/app/PostModal.vue";
 import {usePage} from "@inertiajs/vue3";
 import AttachmentPreviewModal from "@/Components/app/AttachmentPreviewModal.vue";
@@ -19,9 +19,18 @@ const props = defineProps({
 });
 
 const allPosts = ref({
-    data: page.props.posts.data,
-    next: page.props.posts.links.next
+    data: [],
+    next: null,
 })
+
+watch(() => page.props.posts, () => {
+    if (page.props.posts) {
+        allPosts.value = {
+            data: page.props.posts.data,
+            next: page.props.posts.links.next
+        }
+    }
+}, {deep: true, immediate: true});
 
 function openEditModal(post) {
     editPost.value = post;

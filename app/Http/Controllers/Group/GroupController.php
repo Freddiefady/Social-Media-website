@@ -9,6 +9,7 @@ use App\Actions\Group\CreateGroupUser;
 use App\Actions\Group\CreateInviteUser;
 use App\Actions\Group\FirstApprovedRequests;
 use App\Actions\Group\JoinToGroup;
+use App\Actions\Group\showGroup;
 use App\Actions\Group\UpdateGroup;
 use App\Actions\Group\ValidateGroupUserInvitation;
 use App\Actions\Media\CreateCover;
@@ -26,7 +27,6 @@ use App\Http\Resources\Posts\PostResource;
 use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Models\User;
-use App\Queries\PostRelatedReactionAndComments;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
@@ -53,22 +53,20 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Group $group)
+    public function show(Group $group, showGroup $action)
     {
-        $query = new PostRelatedReactionAndComments();
-        $posts = $query->builder()
-            ->where('group_id', $group->id)
-            ->paginate(10);
+        $result = $action->handle($group);
 
-        $users = $group->approvedUsers()->oldest('name')->get();
-        $requests = $group->pendingUsers()->oldest('name')->get();
+        if (request()->wantsJson()) {
+            return PostResource::collection($action['posts']);
+        }
 
         return Inertia::render('Group/View', [
             'success' => session('success'),
             'group' => new GroupResource($group->load('currentUserGroup')),
-            'users' => GroupUserResource::collection($users),
-            'requests' => UserResource::collection($requests),
-            'posts' => PostResource::collection($posts),
+            'users' => GroupUserResource::collection($result['users']),
+            'requests' => UserResource::collection($result['requests']),
+            'posts' => $result['posts'] ? PostResource::collection($result['posts']) : null,
         ]);
     }
 

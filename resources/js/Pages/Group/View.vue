@@ -11,6 +11,7 @@ import UserListItem from "@/Components/app/UserListItem.vue";
 import TextInput from "@/Components/TextInput.vue";
 import GroupForm from "@/Components/app/GroupForm.vue";
 import PostList from "@/Components/app/PostList.vue";
+import CreatePost from "@/Components/app/CreatePost.vue";
 
 const imagesForm = useForm({
     thumbnail: null,
@@ -268,14 +269,20 @@ function updateAbout(){
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Photos" :selected="selected"/>
                         </Tab>
-                        <Tab v-slot="{ selected }" as="template">
+                        <Tab v-if="isCurrentUserAdmin" v-slot="{ selected }" as="template">
                             <TabItem text="About" :selected="selected"/>
                         </Tab>
                     </TabList>
 
                     <TabPanels class="mt-2">
                         <TabPanel>
-                            <PostList :posts="posts.data" class="flex-1" />
+                            <template v-if="posts">
+                                <CreatePost :group="group"/>
+                                <PostList :posts="posts.data" class="flex-1" />
+                            </template>
+                            <div v-else class="py-8 text-center">
+                                You don't have permission to view these posts.
+                            </div>
                         </TabPanel>
                         <TabPanel v-if="isJoinedToGroup">
                             <div class="mb-3">
@@ -305,7 +312,7 @@ function updateAbout(){
                         <TabPanel class='bg-white p-3 shadow'>
                             Photos
                         </TabPanel>
-                        <TabPanel class='bg-white p-3 shadow'>
+                        <TabPanel v-if="isCurrentUserAdmin" class='bg-white p-3 shadow'>
                             <GroupForm :form="aboutForm" />
                             <primary-button @click="updateAbout">Submit</primary-button>
                         </TabPanel>
