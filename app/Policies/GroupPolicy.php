@@ -4,11 +4,14 @@ namespace App\Policies;
 
 use App\Models\Group;
 use App\Models\User;
+use App\Services\GroupMembershipService;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Container\Attributes\CurrentUser;
 
-class GroupPolicy
+readonly class GroupPolicy
 {
+    public function __construct(private GroupMembershipService $membershipService) {}
+
     /**
      * Determine whether the user can view the model.
      */
@@ -16,10 +19,7 @@ class GroupPolicy
         #[CurrentUser] User $user,
         Group $group
     ): Response {
-        return $group->adminUsers()
-            ->wherePivot('user_id', $user->id)
-            ->wherePivot('group_id', $group->id)
-            ->exists()
+        return $this->membershipService->isAdmin($group, $user)
             ? Response::allow()
             : Response::deny('you don\'t have permission to perform this action', 403);
     }

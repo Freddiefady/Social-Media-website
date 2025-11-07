@@ -40,8 +40,14 @@ class GroupMembershipService
             || $this->isPendingMember($group, $user);
     }
 
-    public function hasRole(Group $group, int $userId): bool
+    /**
+     * Check if user is a member admin
+     */
+    public function isAdmin(Group $group, int|User $user): bool
     {
-        return $group->user_id === $userId;
+        return $group->adminUsers()
+            ->wherePivot('user_id', $user->id)
+            ->wherePivot('group_id', $group->id)
+            ->exists();
     }
 }
