@@ -4,7 +4,7 @@ import { ChatBubbleLeftEllipsisIcon, HandThumbUpIcon } from "@heroicons/vue/24/o
 import IndigoButton from "@/Components/app/IndigoButton.vue";
 import ReadMoreReadLess from "@/Components/app/ReadMoreReadLess.vue";
 import EditDeleteDropdown from "@/Components/app/EditDeleteDropdown.vue";
-import { usePage } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 import axiosClient from "@/axiosClient.js";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
@@ -107,10 +107,10 @@ function onDeleteComment(comment) {
 
 <template>
     <div class="flex gap-2 mb-3">
-        <a href="javascript:void(0)">
+        <Link :href="route('profile', authUser.name)">
             <img :src="authUser.avatar_url"
                  class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500" alt=""/>
-        </a>
+        </Link>
         <div class="flex flex-1">
             <InputTextArea v-model="newCommentText" placeholder="Enter your comment here" rows="1"
                            class="w-full max-h-[160px] resize-none rounded-r-none"></InputTextArea>
@@ -121,18 +121,18 @@ function onDeleteComment(comment) {
         <div v-for="comment of data.comments" :key="comment.id" class="mb-4">
             <div class="flex justify-between gap-2">
                 <div class="flex gap-2">
-                    <a href="javascript:void(0)">
+                    <Link :href="route('profile', comment.user.name)">
                         <img
                             :src="comment.user?.avatar_url || '/default-avatar.png'"
                             class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500"
                             :alt="comment.user?.name || 'User'"
                         />
-                    </a>
+                    </Link>
                     <div>
                         <h4 class="font-bold">
-                            <a href="javascript:void(0)" class="hover:underline">
+                            <Link :href="route('profile', comment.user.name)" class="hover:underline">
                                 {{ comment.user?.name || 'Unknown User' }}
-                            </a>
+                            </Link>
                         </h4>
                         <small class="text-xs text-gray-400">{{ comment.updated_at }}</small>
                     </div>
