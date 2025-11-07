@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Group;
 
 use App\Actions\Group\AcceptInvitation;
+use App\Actions\Group\ChangeRole;
 use App\Actions\Group\CreateGroup;
 use App\Actions\Group\CreateGroupUser;
 use App\Actions\Group\CreateInviteUser;
@@ -13,17 +14,18 @@ use App\Actions\Media\CreateCover;
 use App\Actions\Media\CreateThumbnail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Group\ApprovedRequest;
+use App\Http\Requests\Group\ChangeRoleRequest;
 use App\Http\Requests\Group\InviteUserRequest;
 use App\Http\Requests\MediaRequest;
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\GroupUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Gate;
 use Inertia\Response;
 use Inertia\Inertia;
 use SensitiveParameter;
@@ -64,7 +66,7 @@ class GroupController extends Controller
         return Inertia::render('Group/View', [
             'success' => session('success'),
             'group' => new GroupResource($group->load('currentUserGroup')),
-            'users' => UserResource::collection($users),
+            'users' => GroupUserResource::collection($users),
             'requests' => UserResource::collection($requests),
         ]);
     }
@@ -148,5 +150,16 @@ class GroupController extends Controller
             : "User \"{$result['user']->name}\" was rejected";
 
         return back()->with('success', $message);
+    }
+
+    public function changeRole(ChangeRoleRequest $request, Group $group, ChangeRole $action)
+    {
+        if ($request->user()->can('change-role', $request['user_id'])) {
+            return response('You cannot change the role of yourself', 403);
+        }
+
+        $action->handle($group, $request->only(['user_id', 'role']));
+
+        return back();
     }
 }

@@ -59,6 +59,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/group/approve/{group}', [GroupController::class, 'approveRequest'])
         ->name('group.approve-request');
+
+    Route::post('/group/change-role/{group}', [GroupController::class, 'changeRole'])
+        ->name('group.change-role');
 });
 
 require __DIR__.'/auth.php';

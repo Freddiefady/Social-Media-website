@@ -72,6 +72,7 @@ function cancelThumbnailImage() {
 
 function submitCoverImage() {
     imagesForm.post(route('group.update-images', props.group.slug), {
+        preserveScroll: true,
         onSuccess: () => {
             showNotification.value = true;
             cancelCoverImage()
@@ -84,6 +85,7 @@ function submitCoverImage() {
 
 function submitThumbnailImage() {
     imagesForm.post(route('group.update-images', props.group.slug), {
+        preserveScroll: true,
         onSuccess: () => {
             showNotification.value = true;
             cancelThumbnailImage()
@@ -97,7 +99,9 @@ function submitThumbnailImage() {
 function joinToGroup() {
     const form = useForm({})
 
-    form.post(route('group.join', props.group.slug))
+    form.post(route('group.join', props.group.slug), {
+        preserveScroll: true,
+    })
 }
 
 function approveUser(user) {
@@ -106,7 +110,9 @@ function approveUser(user) {
         action: 'approved',
     })
 
-    form.post(route('group.approve-request', props.group.slug))
+    form.post(route('group.approve-request', props.group.slug), {
+        preserveScroll: true,
+    })
 }
 
 function rejectedUser(user) {
@@ -115,7 +121,19 @@ function rejectedUser(user) {
         action: 'rejected',
     })
 
-    form.post(route('group.approve-request', props.group.slug))
+    form.post(route('group.approve-request', props.group.slug), {
+        preserveScroll: true,
+    })
+}
+
+function onRoleChange(user, role){
+    const form = useForm({
+        user_id: user.id,
+        role,
+    })
+    form.post(route('group.change-role', props.group.slug), {
+        preserveScroll: true,
+    })
 }
 </script>
 
@@ -226,11 +244,11 @@ function rejectedUser(user) {
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Posts" :selected="selected"/>
                         </Tab>
-                        <Tab v-if="isCurrentUserAdmin" v-slot="{ selected }" as="template">
+                        <Tab v-if="isJoinedToGroup" v-slot="{ selected }" as="template">
                             <TabItem text="Users" :selected="selected"/>
                         </Tab>
-                        <Tab v-if="isJoinedToGroup" v-slot="{ selected }" as="template">
-                            <TabItem text="Requests" :selected="selected"/>
+                        <Tab v-if="isCurrentUserAdmin" v-slot="{ selected }" as="template">
+                            <TabItem text="Pending Requests" :selected="selected"/>
                         </Tab>
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Photos" :selected="selected"/>
@@ -247,7 +265,10 @@ function rejectedUser(user) {
                             </div>
                             <div class="grid grid-cols-2 gap-3">
                                 <UserListItem v-for="user of users" :user="user" :key="user.id"
-                                              class="shadow rounded-lg"/>
+                                              class="shadow rounded-lg"
+                                              :show-role-drop-down="isCurrentUserAdmin"
+                                              :disable-role-drop-down="group.user_id === user.id"
+                                              @role-change="onRoleChange"/>
                             </div>
                         </TabPanel>
                         <TabPanel v-if="isCurrentUserAdmin">
