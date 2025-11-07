@@ -35,6 +35,7 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read User $adminUsers
  * @property-read User $approvedUsers
  * @property-read User $pendingUsers
+ * @property-read User $currentUserGroup
  */
 #[UsePolicy(GroupPolicy::class)]
 final class Group extends Model
@@ -86,7 +87,7 @@ final class Group extends Model
     public function approvedUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_users')
-            ->withPivot(['status'])
+            ->withPivot(['status', 'role'])
             ->wherePivot('status', GroupUserStatusEnum::APPROVED);
     }
 
