@@ -7,24 +7,26 @@ namespace App\Http\Resources;
 use App\Models\GroupUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
-/** @mixin GroupUser */
+/** @mixin GroupUser
+ * @property string $name
+ * @property string $username
+ * @property string $avatar_path
+ * @property mixed $pivot
+ */
 final class GroupUserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
-            'role' => $this->role,
-            'user_id' => $this->user_id,
-            'group_id' => $this->group_id,
-            'status' => $this->status,
-            'token' => $this->token,
-            'token_expire_date' => $this->token_expire_date,
-            'token_used' => $this->token_used,
-            'created_by' => $this->created_by,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'name' => $this->name,
+            'username' => $this->username,
+            'avatar_url' => Storage::url($this->avatar_path),
+            'role' => $this->whenPivotLoaded('group_users', $this->pivot->role),
+            'status' => $this->whenPivotLoaded('group_users', $this->pivot->status),
+            'group_id' => $this->whenPivotLoaded('group_users', $this->pivot->group_id),
         ];
     }
 }
