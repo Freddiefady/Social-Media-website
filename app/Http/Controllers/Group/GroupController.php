@@ -141,8 +141,6 @@ class GroupController extends Controller
 
     public function approveRequest(ApprovedRequest $request, Group $group, FirstApprovedRequests $action)
     {
-//        Gate::authorize('view', [auth()->id(), $group]);
-
         $result = $action->handle($group, $request->only(['user_id', 'action']));
 
         $message = $result['approved']
