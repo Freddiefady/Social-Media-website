@@ -39,7 +39,7 @@ final class StorePostRequest extends FormRequest
             'attachments' => [
                 'array',
                 'max:50',
-                function ($attribute, $value, $fail) {
+                function ($attribute, $value, $fail): void {
                     // custom rules to check the total size of all files
                     $totalSize = collect($value)->sum(fn (UploadedFile $file) => $file->getSize());
 

@@ -23,7 +23,7 @@ Route::apiResource('group', GroupController::class)->except('index');
 Route::get('/group/approve-invitation/{token}', [GroupController::class, 'AcceptInvitation'])
     ->name('group.approve');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function (): void {
     Route::post('/profile/update-images', [ProfileController::class, 'updateImages'])
         ->name('profile.updateImages');
     //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -33,13 +33,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('/post', PostController::class)
         ->only(['store', 'update', 'destroy']);
 
-    Route::prefix('post')->group(function () {
-        Route::name('post.')->group(function () {
+    Route::prefix('post')->group(function (): void {
+        Route::name('post.')->group(function (): void {
             Route::get('/download/{attachment}', PostAttachmentController::class)->name('download');
             Route::post('/{post}/reaction', PostReactionController::class)->name('reaction');
         });
 
-        Route::controller(CommentController::class)->name('comment.')->group(function () {
+        Route::controller(CommentController::class)->name('comment.')->group(function (): void {
             Route::post('/{post}/comment', 'store')->name('store');
             Route::put('/comment/{comment}', 'update')->name('update');
             Route::delete('/comment/{comment}', 'destroy')->name('destroy');

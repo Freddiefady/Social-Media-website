@@ -28,7 +28,7 @@ final class PostAttachment extends Model
     protected static function boot()
     {
         parent::boot();
-        self::deleted(function (self $model) {
+        self::deleted(function (self $model): void {
             Storage::disk('public')->delete($model->path);
         });
     }

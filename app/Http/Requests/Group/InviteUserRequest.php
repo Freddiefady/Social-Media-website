@@ -51,7 +51,7 @@ final class InviteUserRequest extends FormRequest
     public function after(): array
     {
         return [
-            function (Validator $validator) {
+            function (Validator $validator): void {
                 $user = $this->getValidatedUser();
                 $groupId = $this->route('group')?->id;
                 if ($user && $groupId) {

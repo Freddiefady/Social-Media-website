@@ -20,7 +20,7 @@ final readonly class UpdatePost
         array $data,
         array $deleteIds,
     ): void {
-        DB::transaction(function () use ($post, $data, $deleteIds) {
+        DB::transaction(function () use ($post, $data, $deleteIds): void {
             $post->update($data);
             $this->action->handle($post, $deleteIds);
         });
