@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use App\Models\Group;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -37,7 +36,7 @@ class InvitationApproved extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('User "'. $notifiable->name .'" has invited you to join the group"' . $this->group->name . '"')
+            ->line("User {$notifiable->name} has invited you to join the group {$this->group->name}")
             ->action('Open Group', url(route('group.show', $this->group)))
             ->line('We are happy to have you join us!');
     }
