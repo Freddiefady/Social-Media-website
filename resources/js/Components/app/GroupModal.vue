@@ -4,9 +4,8 @@ import { BookmarkIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, } from '@headlessui/vue'
 import { useForm } from "@inertiajs/vue3";
 import IndigoButton from "@/Components/app/IndigoButton.vue";
-import TextInput from "@/Components/TextInput.vue";
-import Checkbox from "@/Components/Checkbox.vue";
 import axiosClient from "@/axiosClient.js";
+import GroupForm from "@/Components/app/GroupForm.vue";
 
 const props = defineProps({
     modelValue: Boolean
@@ -86,26 +85,7 @@ function submit() {
                                     </button>
                                 </DialogTitle>
                                 <div class="p-4">
-                                    <div class="mt-3">
-                                        <label>Group Name</label>
-                                        <TextInput
-                                            type="text"
-                                            class="mt-1 block w-full"
-                                            v-model="form.name"
-                                            required
-                                            autofocus
-                                        />
-                                    </div>
-
-                                    <div class="mt-3">
-                                        <Checkbox name="remember" v-model:checked="form.auto_approval"/>
-                                        Enable Auto Approval
-                                    </div>
-
-                                    <div class="mt-3">
-                                        <label>About Group</label>
-                                        <textarea v-model="form.about" class="w-full"></textarea>
-                                    </div>
+                                    <GroupForm :form="form"/>
                                 </div>
 
                                 <div class="flex justify-end gap-2 py-3 px-4">
