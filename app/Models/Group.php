@@ -88,7 +88,8 @@ final class Group extends Model
     {
         return $this->belongsToMany(User::class, 'group_users')
             ->withPivot(['status', 'role'])
-            ->wherePivot('status', GroupUserStatusEnum::APPROVED);
+            ->where('group_id', $this->id)
+            ->wherePivot('status', GroupUserStatusEnum::APPROVED->value);
     }
 
     /**
@@ -100,13 +101,13 @@ final class Group extends Model
     {
         return $this->belongsToMany(User::class, 'group_users')
             ->withPivot(['status'])
-            ->wherePivot('status', GroupUserStatusEnum::PENDING);
+            ->wherePivot('status', GroupUserStatusEnum::PENDING->value);
     }
 
     public function currentUserGroup(): HasOne
     {
         return $this->hasOne(GroupUser::class)
-                        ->where('user_id', auth()->id());
+            ->where('user_id', auth()->id());
     }
 
     public function getSlugOptions(): SlugOptions
