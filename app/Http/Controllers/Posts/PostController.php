@@ -35,6 +35,7 @@ final class PostController extends Controller
             // Handle attachments if any
             $this->handleAttachments($request, $post);
         });
+
         return back();
     }
 

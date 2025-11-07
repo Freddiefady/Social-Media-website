@@ -10,7 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\Rules\File;
 
-class StorePostRequest extends FormRequest
+final class StorePostRequest extends FormRequest
 {
     public static array $extensions = [
         'jpg', 'jpeg', 'png', 'gif', 'webp',

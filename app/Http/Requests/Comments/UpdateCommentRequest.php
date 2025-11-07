@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Comments;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateCommentRequest extends FormRequest
+final class UpdateCommentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,6 +15,7 @@ class UpdateCommentRequest extends FormRequest
     public function authorize(): bool
     {
         $comment = $this->route('comment');
+
         return $comment->user_id === auth()->id();
     }
 

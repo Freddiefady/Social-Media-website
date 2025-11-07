@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Group;
 
 use App\Actions\Group\AcceptInvitation;
@@ -29,11 +31,11 @@ use App\Models\Group;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
-use Inertia\Response;
 use Inertia\Inertia;
+use Inertia\Response;
 use SensitiveParameter;
 
-class GroupController extends Controller
+final class GroupController extends Controller
 {
     /**
      * Store a newly created resource in storage.
@@ -116,8 +118,8 @@ class GroupController extends Controller
 
     public function AcceptInvitation(
         #[SensitiveParameter] string $token,
-        AcceptInvitation             $action,
-        ValidateGroupUserInvitation  $validation
+        AcceptInvitation $action,
+        ValidateGroupUserInvitation $validation
     ): RedirectResponse|Response {
         $groupUser = $action->handle($token);
 
@@ -125,7 +127,7 @@ class GroupController extends Controller
 
         if ($errormessage) {
             return inertia(component: 'Error', props: [
-                'title' => $errormessage
+                'title' => $errormessage,
             ]);
         }
 
@@ -133,7 +135,7 @@ class GroupController extends Controller
             ->with('success', 'You accepted the invitation to join the group "'.$groupUser->group->name.'"');
     }
 
-    public function join(Group $group, joinToGroup $action)
+    public function join(Group $group, JoinToGroup $action)
     {
         $action->handle($group);
 

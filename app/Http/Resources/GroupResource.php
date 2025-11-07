@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -15,7 +17,7 @@ use Illuminate\Support\Str;
  * @property-read string $slug
  * @property-read string $cover_path
  * @property-read string $thumbnail_path
- * @property-read boolean $auto_approval
+ * @property-read bool $auto_approval
  * @property-read int $user_id
  * @property-read int $deleted_by
  * @property-read Carbon $deleted_at
@@ -25,7 +27,7 @@ use Illuminate\Support\Str;
  * @property string $role
  * @property mixed $currentUserGroup
  */
-class GroupResource extends JsonResource
+final class GroupResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -46,8 +48,8 @@ class GroupResource extends JsonResource
             'about' => $this->about,
             'description' => Str::words($this->about, 10),
             'user_id' => $this->user_id,
-//            'deleted_at' => $this->deleted_at,
-//            'deleted_by' => $this->deleted_by,
+            //            'deleted_at' => $this->deleted_at,
+            //            'deleted_by' => $this->deleted_by,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

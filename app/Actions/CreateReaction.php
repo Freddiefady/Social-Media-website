@@ -17,6 +17,7 @@ final readonly class CreateReaction
 
         if ($reaction) {
             $reaction->delete();
+
             return false;
         }
 

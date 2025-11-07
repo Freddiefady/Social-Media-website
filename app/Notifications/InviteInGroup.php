@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Models\Group;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use SensitiveParameter;
 
-class InviteInGroup extends Notification
+final class InviteInGroup extends Notification
 {
     use Queueable;
 
@@ -17,9 +18,9 @@ class InviteInGroup extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        public Group                                  $group,
+        public Group $group,
         #[SensitiveParameter] private readonly string $token,
-        private readonly int                          $hours,
+        private readonly int $hours,
     ) {
         //
     }
@@ -40,9 +41,9 @@ class InviteInGroup extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('You have been invited to join "' . $this->group->name . '" group.')
+            ->line('You have been invited to join "'.$this->group->name.'" group.')
             ->action('Join to Group', route('group.approve', $this->token))
-            ->line('The link will be expired for next to ' . $this->hours . ' hours.');
+            ->line('The link will be expired for next to '.$this->hours.' hours.');
     }
 
     /**

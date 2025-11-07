@@ -17,6 +17,6 @@ final readonly class DeleteAttachments
         $post->attachments()
             ->whereIn('id', $deleteIds)
             ->get()
-            ->each(fn($attachment) => $attachment->delete());
+            ->each(fn ($attachment) => $attachment->delete());
     }
 }

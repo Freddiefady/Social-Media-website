@@ -14,12 +14,12 @@ use Illuminate\Support\Str;
 final readonly class CreateInviteUser
 {
     private int $TOKEN_LENGTH;
+
     private int $TOKEN_EXPIRE_TIME;
 
     public function __construct(
-        protected SendInvitationToUser $invitationToUser,
-    )
-    {
+        private SendInvitationToUser $invitationToUser,
+    ) {
         $this->TOKEN_LENGTH = 256;
         $this->TOKEN_EXPIRE_TIME = 24;
     }

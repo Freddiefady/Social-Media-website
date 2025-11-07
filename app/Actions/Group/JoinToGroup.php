@@ -22,7 +22,7 @@ final readonly class JoinToGroup
             $this->toGroupJoin->handle($group);
         }
 
-       return GroupUser::query()->create([
+        return GroupUser::query()->create([
             'role' => GroupUserRoleEnum::USER->value,
             'status' => $status,
             'group_id' => $group->id,

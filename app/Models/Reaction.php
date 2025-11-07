@@ -41,6 +41,7 @@ final class Reaction extends Model
 
     /**
      * Get the parent object models (post, comment).
+     *
      * @return MorphTo<self, $this>
      */
     public function action(): MorphTo

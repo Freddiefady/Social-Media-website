@@ -10,6 +10,6 @@ final readonly class DeleteComment
 {
     public function handle(Comment $comment): bool
     {
-         return $comment->delete();
+        return $comment->delete();
     }
 }

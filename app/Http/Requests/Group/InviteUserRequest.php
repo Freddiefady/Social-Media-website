@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Group;
 
 use App\Enums\GroupUserStatusEnum;
@@ -14,11 +16,11 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Validator;
 
-class InviteUserRequest extends FormRequest
+final class InviteUserRequest extends FormRequest
 {
-    private ExistsInUsernameOrEmail $inUsernameOrEmail;
-
     protected ?GroupUser $existingGroupUser = null;
+
+    private ExistsInUsernameOrEmail $inUsernameOrEmail;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -45,7 +47,6 @@ class InviteUserRequest extends FormRequest
 
     /**
      * Optional: Check if user is already in the group
-     *
      */
     public function after(): array
     {
@@ -64,7 +65,7 @@ class InviteUserRequest extends FormRequest
                         $validator->errors()->add('email', 'This user is already a member of the group.');
                     }
                 }
-            }
+            },
         ];
     }
 

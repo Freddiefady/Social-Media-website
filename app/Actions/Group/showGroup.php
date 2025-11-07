@@ -18,14 +18,13 @@ final readonly class showGroup
     public function handle(Group $group): array
     {
         // Check if current user is an approved member
-        if (!$this->membershipService->isApprovedMember($group, auth()->id())) {
+        if (! $this->membershipService->isApprovedMember($group, auth()->id())) {
             return $this->emptyResponse();
         }
 
         $posts = $this->query->builder()
             ->where('group_id', $group->id)
             ->paginate(10);
-
 
         return [
             'requests' => $group->pendingUsers()->oldest('name')->get(),

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Group;
 
 use App\Enums\GroupUserStatusEnum;
 use App\Models\GroupUser;
 
-class UpdateToApprovedInvitation
+final class UpdateToApprovedInvitation
 {
     public function handle(GroupUser $groupUser): bool
     {

@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class PostPolicy
+final class PostPolicy
 {
     /**
      * Determine whether the user can delete the model.

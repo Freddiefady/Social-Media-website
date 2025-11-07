@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
 use App\Models\Group;
@@ -8,7 +10,7 @@ use App\Services\GroupMembershipService;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Container\Attributes\CurrentUser;
 
-readonly class GroupPolicy
+final readonly class GroupPolicy
 {
     public function __construct(private GroupMembershipService $membershipService) {}
 

@@ -11,7 +11,7 @@ final readonly class UpdateComment
     public function handle(Comment $comment, string $content): bool
     {
         return $comment->update([
-            'comment' => $content
+            'comment' => $content,
         ]);
     }
 }

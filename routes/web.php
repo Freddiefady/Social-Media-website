@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
                 ->name('reaction');
         });
     });
-//----- Groups -----
+    // ----- Groups -----
     Route::post('/group/update-images/{group}', [GroupController::class, 'updateImages'])
         ->name('group.update-images');
 

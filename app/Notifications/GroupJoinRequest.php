@@ -1,15 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class GroupJoinRequest extends Notification
+final class GroupJoinRequest extends Notification
 {
-    public function __construct(private $group)
-    {
-    }
+    public function __construct(private $group) {}
 
     public function via($notifiable): array
     {

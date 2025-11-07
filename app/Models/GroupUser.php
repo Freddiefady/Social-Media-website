@@ -34,7 +34,7 @@ final class GroupUser extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'role', 'user_id', 'group_id', 'status', 'token', 'token_expire_date', 'token_used', 'created_by'
+        'role', 'user_id', 'group_id', 'status', 'token', 'token_expire_date', 'token_used', 'created_by',
     ];
 
     /**

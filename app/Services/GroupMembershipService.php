@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\Group;
 use App\Models\User;
 
-class GroupMembershipService
+final class GroupMembershipService
 {
     /**
      * Check if user is an approved member of the group

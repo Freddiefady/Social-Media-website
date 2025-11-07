@@ -32,14 +32,14 @@ final readonly class FirstApprovedRequests
             return [
                 'groupUser' => $query,
                 'user' => $query->user,
-                'approved' => $approved
+                'approved' => $approved,
             ];
         }
 
         return [
             'groupUser' => null,
             'user' => null,
-            'approved' => false
+            'approved' => false,
         ];
     }
 }

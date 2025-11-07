@@ -29,7 +29,9 @@ use Illuminate\Support\Carbon;
 final class Comment extends Model
 {
     public int $numOfComments = 0;
+
     public array $childComments = [];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -64,7 +66,7 @@ final class Comment extends Model
     /**
      * @return HasMany<self, $this>
      */
-    public function comments():HasMany
+    public function comments(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
     }

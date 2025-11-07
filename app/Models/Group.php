@@ -25,7 +25,7 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read string $slug
  * @property-read string $cover_path
  * @property-read string $thumbnail_path
- * @property-read boolean $auto_approval
+ * @property-read bool $auto_approval
  * @property-read int $user_id
  * @property-read int $deleted_by
  * @property-read Carbon $deleted_at
@@ -40,7 +40,7 @@ use Spatie\Sluggable\SlugOptions;
 #[UsePolicy(GroupPolicy::class)]
 final class Group extends Model
 {
-    use SoftDeletes, HasSlug;
+    use HasSlug, SoftDeletes;
 
     protected $fillable = [
         'name', 'slug', 'about', 'cover_path', 'thumbnail_path', 'user_id', 'auto_approval', 'deleted_by', 'deleted_at',
@@ -53,7 +53,6 @@ final class Group extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-
 
     /**
      * All users in the group (with pivot data)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Comments;
 
 use App\Actions\Comments\CreateComment;
@@ -15,7 +17,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
-class CommentController extends Controller
+final class CommentController extends Controller
 {
     /**
      * Store a newly created resource in storage.
@@ -33,7 +35,6 @@ class CommentController extends Controller
 
         return response($comment, 201);
     }
-
 
     /**
      * Update the specified resource in storage.

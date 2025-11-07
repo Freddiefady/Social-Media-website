@@ -23,9 +23,9 @@ final class HomeController extends Controller
         }
 
         $groups = auth()->user()->groups()
-                ->orderByPivot('role')
-                ->latest('name')
-                ->get();
+            ->orderByPivot('role')
+            ->latest('name')
+            ->get();
 
         return Inertia::render('Home', [
             'posts' => $posts,

@@ -13,10 +13,10 @@ final class CommentReactionController extends Controller
 {
     public function __invoke(ReactionRequest $request, Comment $comment, CreateReaction $action)
     {
-          $hasReaction = $action->handle(
-              $comment,
-              $request->string('reaction')->toString()
-          );
+        $hasReaction = $action->handle(
+            $comment,
+            $request->string('reaction')->toString()
+        );
 
         return response([
             'num_of_reactions' => $comment->reactions()->count(),

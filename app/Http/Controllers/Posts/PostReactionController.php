@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Posts;
 
 use App\Actions\CreateReaction;
@@ -7,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Posts\ReactionRequest;
 use App\Models\Post;
 
-class PostReactionController extends Controller
+final class PostReactionController extends Controller
 {
     public function __invoke(ReactionRequest $request, Post $post, CreateReaction $action)
     {

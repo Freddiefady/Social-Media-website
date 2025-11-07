@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Models\Group;
@@ -7,7 +9,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RequestApproved extends Notification
+final class RequestApproved extends Notification
 {
     use Queueable;
 
@@ -16,7 +18,7 @@ class RequestApproved extends Notification
      */
     public function __construct(
         private readonly Group $group,
-        public  bool $approved
+        public bool $approved
     ) {
         //
     }
