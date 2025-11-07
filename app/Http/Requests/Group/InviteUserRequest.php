@@ -8,7 +8,6 @@ use App\Models\GroupUser;
 use App\Models\User;
 use App\Rules\ExistsInUsernameOrEmail;
 use Illuminate\Auth\Access\Response;
-use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Container\Attributes\RouteParameter;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,9 +25,8 @@ class InviteUserRequest extends FormRequest
      */
     public function authorize(
         #[RouteParameter('group')] Group $group,
-        #[CurrentUser] User $user,
     ): Response {
-        return Gate::authorize('view', [$group, $user]);
+        return Gate::authorize('view-any', $group);
     }
 
     /**
