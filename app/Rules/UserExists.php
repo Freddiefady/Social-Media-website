@@ -3,24 +3,12 @@
 namespace App\Rules;
 
 use App\Enums\GroupUserStatusEnum;
-use App\Models\GroupUser;
-use App\Models\User;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
 class UserExists implements ValidationRule
 {
-    Public ?User $user = null;
-
-    public function __construct(public int $groupId {
-        get {
-            return $this->groupId;
-        }
-    })
-    {
-    }
-
     /**
      * Run the validation rule.
      *
@@ -28,14 +16,9 @@ class UserExists implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $groupUser = GroupUser::query()
-            ->where('group_id', $this->groupId)
-            ->where('user_id', $this->user->id)
-            ->whereStatus(GroupUserStatusEnum::APPROVED->value)
-            ->first();
-
-        if ($groupUser) {
-            $fail('This user is already a member of the group.');
-        }
+        auth()->user()->groups()
+            ->wherePivot('group_id', $value)
+            ->wherePivot('status', GroupUserStatusEnum::APPROVED->value)
+            ->existsOr(fn() => $fail('You don\'t have permission to create post in this group.'));
     }
 }
