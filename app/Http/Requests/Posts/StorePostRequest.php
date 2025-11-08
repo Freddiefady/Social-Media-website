@@ -35,7 +35,7 @@ final class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'body' => 'nullable|string|max:5000',
+            'body' => ['nullable', 'string', 'max:5000'],
             'attachments' => [
                 'array',
                 'max:50',

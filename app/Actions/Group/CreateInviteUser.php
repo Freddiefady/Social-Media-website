@@ -8,7 +8,8 @@ use App\Enums\GroupUserRoleEnum;
 use App\Enums\GroupUserStatusEnum;
 use App\Models\Group;
 use App\Models\GroupUser;
-use Illuminate\Support\Carbon;
+use App\Models\User;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 
 final readonly class CreateInviteUser
@@ -24,7 +25,7 @@ final readonly class CreateInviteUser
         $this->TOKEN_EXPIRE_TIME = 24;
     }
 
-    public function handle(Group $group, $user): GroupUser
+    public function handle(Group $group, User $user): GroupUser
     {
         $token = Str::random($this->TOKEN_LENGTH);
 
@@ -32,7 +33,7 @@ final readonly class CreateInviteUser
             'role' => GroupUserRoleEnum::USER->value,
             'status' => GroupUserStatusEnum::PENDING->value,
             'token' => $token,
-            'token_expire_date' => Carbon::now()->addHours($this->TOKEN_EXPIRE_TIME),
+            'token_expire_date' => Date::now()->addHours($this->TOKEN_EXPIRE_TIME),
             'group_id' => $group->id,
             'user_id' => $user->id,
             'created_by' => auth()->id(),

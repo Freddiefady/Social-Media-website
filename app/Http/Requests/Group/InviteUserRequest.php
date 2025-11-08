@@ -18,7 +18,7 @@ use Illuminate\Validation\Validator;
 
 final class InviteUserRequest extends FormRequest
 {
-    protected ?GroupUser $existingGroupUser = null;
+    private ?GroupUser $existingGroupUser = null;
 
     private ExistsInUsernameOrEmail $inUsernameOrEmail;
 
@@ -52,7 +52,7 @@ final class InviteUserRequest extends FormRequest
     {
         return [
             function (Validator $validator): void {
-                $user = $this->getValidatedUser();
+                $user = $this->inUsernameOrEmail->user;
                 $groupId = $this->route('group')?->id;
                 if ($user && $groupId) {
                     $this->existingGroupUser = GroupUser::query()
@@ -61,7 +61,7 @@ final class InviteUserRequest extends FormRequest
                         ->whereStatus(GroupUserStatusEnum::APPROVED->value)
                         ->first();
 
-                    if ($this->existingGroupUser) {
+                    if ($this->existingGroupUser instanceof GroupUser) {
                         $validator->errors()->add('email', 'This user is already a member of the group.');
                     }
                 }

@@ -85,7 +85,7 @@ final class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Group $group)
+    public function destroy(Group $group): void
     {
         //
     }
@@ -135,7 +135,7 @@ final class GroupController extends Controller
             ->with('success', 'You accepted the invitation to join the group "'.$groupUser->group->name.'"');
     }
 
-    public function join(Group $group, JoinToGroup $action)
+    public function join(Group $group, JoinToGroup $action): void
     {
         $action->handle($group);
 

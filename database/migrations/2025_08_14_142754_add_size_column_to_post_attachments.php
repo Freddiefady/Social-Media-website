@@ -10,14 +10,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('post_attachments', function (Blueprint $table) {
+        Schema::table('post_attachments', function (Blueprint $table): void {
             $table->integer('size')->after('mime');
         });
     }
 
     public function down(): void
     {
-        Schema::table('post_attachments', function (Blueprint $table) {
+        Schema::table('post_attachments', function (Blueprint $table): void {
             $table->dropColumn('size');
         });
     }

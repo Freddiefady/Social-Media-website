@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('post_reactions', function (Blueprint $table) {
+        Schema::table('post_reactions', function (Blueprint $table): void {
             $table->rename('reactions');
         });
     }

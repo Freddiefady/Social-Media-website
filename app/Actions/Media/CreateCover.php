@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 final class CreateCover
 {
-    public function handle(Model $model, $data): bool
+    public function handle(Model $model, array $data): bool
     {
         if (! $data['cover']) {
             return false;

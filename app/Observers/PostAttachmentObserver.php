@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Observers;
 
 use App\Models\PostAttachment;
 use Illuminate\Support\Facades\Storage;
 
-class PostAttachmentObserver
+final class PostAttachmentObserver
 {
     /**
      * Handle the PostAttachment "deleted" event.

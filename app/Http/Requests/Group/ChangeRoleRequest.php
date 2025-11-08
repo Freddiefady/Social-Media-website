@@ -30,7 +30,7 @@ final class ChangeRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required',
+            'user_id' => ['required'],
             'role' => ['required', Rule::enum(GroupUserRoleEnum::class)],
         ];
     }

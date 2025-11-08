@@ -30,7 +30,7 @@ final class ApprovedRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required',
+            'user_id' => ['required'],
             'action' => ['required', Rule::enum(GroupUserStatusEnum::class)],
         ];
     }

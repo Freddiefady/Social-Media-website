@@ -70,7 +70,7 @@ final class PostController extends Controller
     /**
      * @throws
      */
-    private function handleAttachments($request, $post = null): void
+    private function handleAttachments(StorePostRequest|UpdatePostRequest $request, $post = null): void
     {
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {

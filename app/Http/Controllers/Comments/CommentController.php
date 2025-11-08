@@ -43,7 +43,7 @@ final class CommentController extends Controller
         UpdateCommentRequest $request,
         Comment $comment,
         UpdateComment $action
-    ) {
+    ): CommentResource {
         $action->handle(
             $comment,
             nl2br($request->string('comment')->toString())

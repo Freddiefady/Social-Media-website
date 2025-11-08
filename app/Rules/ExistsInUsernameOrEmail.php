@@ -29,7 +29,7 @@ final class ExistsInUsernameOrEmail implements ValidationRule
             ->orWhere('email', $value)
             ->first();
 
-        if (! $this->user) {
+        if (! $this->user instanceof User) {
             $fail('The user does not exist.');
         }
     }

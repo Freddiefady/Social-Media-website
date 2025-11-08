@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('group_users', function (Blueprint $table) {
+        Schema::create('group_users', function (Blueprint $table): void {
             $table->id();
             $table->string('role', 25);
             $table->string('status', 25); // e.g., 'approved', 'pending', 'banned'

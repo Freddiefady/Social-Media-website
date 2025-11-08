@@ -8,6 +8,7 @@ use App\Enums\GroupUserRoleEnum;
 use App\Enums\GroupUserStatusEnum;
 use App\Policies\GroupPolicy;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -40,7 +41,7 @@ use Spatie\Sluggable\SlugOptions;
 #[UsePolicy(GroupPolicy::class)]
 final class Group extends Model
 {
-    use HasSlug, SoftDeletes;
+    use HasSlug, SoftDeletes, HasFactory;
 
     protected $fillable = [
         'name', 'slug', 'about', 'cover_path', 'thumbnail_path', 'user_id', 'auto_approval', 'deleted_by', 'deleted_at',

@@ -13,7 +13,7 @@ final class CreateGroupUser
 {
     public function handle(Group $group)
     {
-        return GroupUser::create([
+        return GroupUser::query()->create([
             'status' => GroupUserStatusEnum::APPROVED->value,
             'role' => GroupUserRoleEnum::ADMIN->value,
             'group_id' => $group->id,

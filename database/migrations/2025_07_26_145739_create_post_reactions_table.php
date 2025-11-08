@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_reactions', function (Blueprint $table) {
+        Schema::create('post_reactions', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('post_id')->constrained('posts');
             $table->string('type', 50); // e.g., 'like', 'sad', 'love'

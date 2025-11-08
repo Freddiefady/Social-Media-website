@@ -38,8 +38,11 @@ final class GroupMembershipService
      */
     public function isMember(Group $group, int|User $user): bool
     {
-        return $this->isApprovedMember($group, $user)
-            || $this->isPendingMember($group, $user);
+        if ($this->isApprovedMember($group, $user)) {
+            return true;
+        }
+
+        return $this->isPendingMember($group, $user);
     }
 
     /**

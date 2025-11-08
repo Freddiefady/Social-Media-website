@@ -25,10 +25,10 @@ final class StoreGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'auto_approval' => 'required|boolean',
-            'about' => 'required|string',
-            'user_id' => 'exists:users,id',
+            'name' => ['required', 'string', 'max:255'],
+            'auto_approval' => ['required', 'boolean'],
+            'about' => ['required', 'string'],
+            'user_id' => ['exists:users,id'],
         ];
     }
 }

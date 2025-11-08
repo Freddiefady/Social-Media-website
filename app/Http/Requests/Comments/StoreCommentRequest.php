@@ -11,9 +11,9 @@ final class StoreCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'comment' => 'required|string',
-            'post_id' => 'exists:posts,id',
-            'user_id' => 'exists:users,id',
+            'comment' => ['required', 'string'],
+            'post_id' => ['exists:posts,id'],
+            'user_id' => ['exists:users,id'],
             'parent_id' => ['nullable', 'integer', 'exists:comments,id'],
         ];
     }

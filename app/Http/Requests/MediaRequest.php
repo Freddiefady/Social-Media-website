@@ -25,9 +25,9 @@ final class MediaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'avatar' => 'nullable|image|max:2048',
-            'thumbnail' => 'nullable|image|max:2048',
-            'cover' => 'nullable|image|max:2048',
+            'avatar' => ['nullable', 'image', 'max:2048'],
+            'thumbnail' => ['nullable', 'image', 'max:2048'],
+            'cover' => ['nullable', 'image', 'max:2048'],
         ];
     }
 }

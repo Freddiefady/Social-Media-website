@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('reactions', function (Blueprint $table) {
+        Schema::table('reactions', function (Blueprint $table): void {
             $table->dropColumn('post_id');
             $table->morphs('actionable');
         });
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('reactions', function (Blueprint $table) {
+        Schema::table('reactions', function (Blueprint $table): void {
             $table->dropMorphs('actionable');
             $table->foreignId('post_id')->constrained('posts')->onDelete('cascade');
         });

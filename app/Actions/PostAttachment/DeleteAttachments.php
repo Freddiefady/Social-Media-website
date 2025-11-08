@@ -10,7 +10,7 @@ final readonly class DeleteAttachments
 {
     public function handle(Post $post, array $deleteIds): void
     {
-        if (empty($deleteIds)) {
+        if ($deleteIds === []) {
             return;
         }
 
