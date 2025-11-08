@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Observers\PostAttachmentObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[ObservedBy(PostAttachmentObserver::class)]
 final class PostAttachment extends Model
 {
-    public const UPDATED_AT = null;
+    public const null UPDATED_AT = null;
 
     protected $fillable = [
         'post_id',
@@ -20,16 +23,8 @@ final class PostAttachment extends Model
         'size',
     ];
 
-    public function post()
+    public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-        self::deleted(function (self $model): void {
-            Storage::disk('public')->delete($model->path);
-        });
     }
 }
