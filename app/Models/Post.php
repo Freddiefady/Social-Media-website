@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Policies\PostPolicy;
+use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,6 +35,7 @@ use Illuminate\Support\Carbon;
 #[UsePolicy(PostPolicy::class)]
 final class Post extends Model
 {
+    /** @use HasFactory<PostFactory> */
     use HasFactory, SoftDeletes;
 
     /**

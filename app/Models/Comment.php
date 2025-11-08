@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Policies\CommentPolicy;
+use Database\Factories\CommentFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,6 +30,7 @@ use Illuminate\Support\Carbon;
 #[UsePolicy(CommentPolicy::class)]
 final class Comment extends Model
 {
+    /** @use HasFactory<CommentFactory> */
     use HasFactory;
 
     public int $numOfComments = 0;
