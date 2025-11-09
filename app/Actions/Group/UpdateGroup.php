@@ -8,8 +8,11 @@ use App\Models\Group;
 
 final readonly class UpdateGroup
 {
-    public function handle(Group $group, array $data): bool
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    public function handle(Group $group, array $validated): bool
     {
-        return $group->update($data);
+        return $group->update($validated);
     }
 }

@@ -11,7 +11,7 @@ use App\Models\GroupUser;
 
 final class CreateGroupUser
 {
-    public function handle(Group $group)
+    public function handle(Group $group): GroupUser
     {
         return GroupUser::query()->create([
             'status' => GroupUserStatusEnum::APPROVED->value,

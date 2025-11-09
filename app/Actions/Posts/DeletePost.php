@@ -8,7 +8,7 @@ use App\Models\Post;
 
 final readonly class DeletePost
 {
-    public function handle(Post $post): bool
+    public function handle(Post $post): ?bool
     {
         return $post->delete();
     }

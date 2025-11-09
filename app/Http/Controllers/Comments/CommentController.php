@@ -14,6 +14,7 @@ use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
@@ -26,14 +27,14 @@ final class CommentController extends Controller
         StoreCommentRequest $request,
         Post $post,
         CreateComment $action
-    ): Response {
+    ): JsonResponse {
         $comment = $action->handle(
             $post,
             nl2br($request->string('comment')->toString()),
-            $request->input('parent_id'),
+            $request->integer('parent_id'),
         );
 
-        return response($comment, 201);
+        return response()->json(new CommentResource($comment), 201);
     }
 
     /**

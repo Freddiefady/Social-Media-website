@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use phpDocumentor\Reflection\Types\This;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -72,7 +72,7 @@ final class Group extends Model
     /**
      * Only admin users.
      *
-     * @return BelongsToMany<User, This>
+     * @return BelongsToMany<User, $this>
      */
     public function adminUsers(): BelongsToMany
     {
@@ -106,6 +106,9 @@ final class Group extends Model
             ->wherePivot('status', GroupUserStatusEnum::PENDING->value);
     }
 
+    /**
+     * @return HasOne<GroupUser, $this>
+     */
     public function currentUserGroup(): HasOne
     {
         return $this->hasOne(GroupUser::class)

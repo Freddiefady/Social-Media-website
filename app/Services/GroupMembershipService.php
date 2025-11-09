@@ -12,9 +12,13 @@ final class GroupMembershipService
     /**
      * Check if user is an approved member of the group
      */
-    public function isApprovedMember(Group $group, int|User $user): bool
+    public function isApprovedMember(Group $group, User|int $user): bool
     {
         $userId = $user instanceof User ? $user->id : $user;
+
+        if ($userId === null) {
+            return false;
+        }
 
         return $group->approvedUsers()
             ->where('user_id', $userId)
@@ -51,7 +55,7 @@ final class GroupMembershipService
     public function isAdmin(Group $group, int|User $user): bool
     {
         return $group->adminUsers()
-            ->wherePivot('user_id', $user->id)
+            ->wherePivot('user_id', $user)
             ->wherePivot('group_id', $group->id)
             ->exists();
     }

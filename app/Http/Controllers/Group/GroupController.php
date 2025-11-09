@@ -30,7 +30,9 @@ use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
 use Inertia\Response;
 use SensitiveParameter;
@@ -44,23 +46,23 @@ final class GroupController extends Controller
         StoreGroupRequest $request,
         CreateGroup $action,
         CreateGroupUser $groupUser
-    ) {
+    ): JsonResponse {
         $group = $action->handle($request->validated());
 
         $groupUser->handle($group);
 
-        return response(new GroupResource($group), 201);
+        return response()->json(new GroupResource($group), 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Group $group, showGroup $action)
+    public function show(Group $group, showGroup $action): AnonymousResourceCollection|Response
     {
         $result = $action->handle($group);
 
         if (request()->wantsJson()) {
-            return PostResource::collection($action['posts']);
+            return PostResource::collection($result['posts'] ?? []);
         }
 
         return Inertia::render('Group/View', [
@@ -75,7 +77,7 @@ final class GroupController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateGroupRequest $request, Group $group, UpdateGroup $action)
+    public function update(UpdateGroupRequest $request, Group $group, UpdateGroup $action): RedirectResponse
     {
         $action->handle($group, $request->validated());
 
@@ -97,16 +99,22 @@ final class GroupController extends Controller
         CreateThumbnail $actionThumbnail
     ): RedirectResponse {
         $success = match (true) {
-            $actionCover->handle($user, $request) => 'Your cover image has been updated successfully.',
-            $actionThumbnail->handle($user, $request) => 'Your thumbnail image has been updated successfully.',
+            $actionCover->handle($user, $request->validated()) => 'Your cover image has been updated successfully.',
+            $actionThumbnail->handle($user, $request->validated()) => 'Your thumbnail image has been updated successfully.',
+            default => 'Your thumbnail image was not updated.',
         };
 
         return back()->with('success', $success);
     }
 
-    public function invite(InviteUserRequest $request, Group $group, CreateInviteUser $action)
+    public function invite(InviteUserRequest $request, Group $group, CreateInviteUser $action): RedirectResponse
     {
         $user = $request->getValidatedUser();
+
+        if (! $user instanceof User) {
+            return back()->withErrors(['email' => 'User not found']);
+        }
+
         $existsGroupUser = $request->getExistsGroupUser();
 
         $existsGroupUser?->delete();
@@ -126,40 +134,43 @@ final class GroupController extends Controller
         $errormessage = $validation->handle($groupUser);
 
         if ($errormessage) {
-            return inertia(component: 'Error', props: [
+            return Inertia::render(component: 'Error', props: [
                 'title' => $errormessage,
             ]);
         }
 
         return to_route('group.show', $groupUser->group)
-            ->with('success', 'You accepted the invitation to join the group "'.$groupUser->group->name.'"');
+            ->with('success', "You accepted the invitation to join the group \"$groupUser->group->name\"");
     }
 
-    public function join(Group $group, JoinToGroup $action): void
+    public function join(Group $group, JoinToGroup $action): RedirectResponse
     {
         $action->handle($group);
 
-        back()->with('success', 'Your request has been accepted. you will be notified once you will be approved.');
+        return back()->with('success', 'Your request has been accepted. you will be notified once you will be approved.');
     }
 
-    public function approveRequest(ApprovedRequest $request, Group $group, FirstApprovedRequests $action)
+    public function approveRequest(ApprovedRequest $request, Group $group, FirstApprovedRequests $action): RedirectResponse
     {
-        $result = $action->handle($group, $request->only(['user_id', 'action']));
+        $result = $action->handle($group, $request->validated());
 
         $message = $result['approved']
-            ? "User \"{$result['user']->name}\" was approved"
-            : "User \"{$result['user']->name}\" was rejected";
+            ? "User \"{$result['user']}\" was approved"
+            : "User \"{$result['user']}\" was rejected";
 
         return back()->with('success', $message);
     }
 
-    public function changeRole(ChangeRoleRequest $request, Group $group, ChangeRole $action)
-    {
-        if ($request->user()->can('change-role', $request['user_id'])) {
+    public function changeRole(
+        ChangeRoleRequest $request,
+        Group $group,
+        ChangeRole $action
+    ): \Illuminate\Http\Response|RedirectResponse {
+        if ($request->user()?->can('change-role', $request['user_id'])) {
             return response('You cannot change the role of yourself', 403);
         }
 
-        $action->handle($group, $request->only(['user_id', 'role']));
+        $action->handle($group, $request->validated());
 
         return back();
     }

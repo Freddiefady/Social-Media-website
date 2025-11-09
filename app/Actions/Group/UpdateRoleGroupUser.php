@@ -8,6 +8,9 @@ use App\Models\GroupUser;
 
 final readonly class UpdateRoleGroupUser
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function handle(GroupUser $groupUser, array $data): bool
     {
         return $groupUser->update(['role' => $data['role']]);

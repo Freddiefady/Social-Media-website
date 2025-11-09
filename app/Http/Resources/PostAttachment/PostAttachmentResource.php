@@ -8,8 +8,24 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @property int $id
+ * @property int $post_id
+ * @property int $created_by
+ * @property string $name
+ * @property string $path
+ * @property string $mime
+ * @property string $size
+ * @property mixed $created_at
+ * @property mixed $updated_at
+ */
 final class PostAttachmentResource extends JsonResource
 {
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
     public function toArray(Request $request): array
     {
         return [

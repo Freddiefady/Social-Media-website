@@ -7,11 +7,13 @@ namespace App\Http\Controllers;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\Posts\PostResource;
 use App\Queries\PostRelatedReactionAndComments;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 final class HomeController extends Controller
 {
-    public function __invoke()
+    public function __invoke(): AnonymousResourceCollection|Response
     {
         $query = new PostRelatedReactionAndComments();
 
@@ -22,7 +24,7 @@ final class HomeController extends Controller
             return $posts;
         }
 
-        $groups = auth()->user()->groups()
+        $groups = auth()->user()?->groups()
             ->orderByPivot('role')
             ->latest('name')
             ->get();

@@ -8,10 +8,11 @@ use App\Actions\CreateReaction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Posts\ReactionRequest;
 use App\Models\Post;
+use Illuminate\Http\Response;
 
 final class PostReactionController extends Controller
 {
-    public function __invoke(ReactionRequest $request, Post $post, CreateReaction $action)
+    public function __invoke(ReactionRequest $request, Post $post, CreateReaction $action): Response
     {
         $hasReaction = $action->handle(
             $post,

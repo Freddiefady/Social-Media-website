@@ -4,24 +4,27 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Posts;
 
-use Illuminate\Contracts\Validation\ValidationRule;
+use App\Models\Post;
 
 final class UpdatePostRequest extends StorePostRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    public function authorize(): true
     {
+        /** @var Post $post */
         $post = $this->route('post');
 
-        return auth()->id() === $post->user_id;
+        abort_if(auth()->id() !== $post->user_id, 403, 'Unauthorized');
+
+        return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array|string>
+     * @return array<string, mixed>
      */
     public function rules(): array
     {

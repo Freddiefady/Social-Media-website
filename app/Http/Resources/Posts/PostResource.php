@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Resources\Posts;
 
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\GroupResource;
 use App\Http\Resources\PostAttachment\PostAttachmentResource;
 use App\Http\Resources\UserResource;
+use App\Models\Comment;
 use App\Models\PostAttachment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,7 +27,7 @@ use Illuminate\Support\Carbon;
  * @property int $reactions_count
  * @property int $comments_count
  * @property mixed $reactions
- * @property mixed $comments
+ * @property Collection<int, Comment> $comments
  */
 final class PostResource extends JsonResource
 {
@@ -37,6 +39,10 @@ final class PostResource extends JsonResource
     public function toArray(Request $request): array
     {
         $comment = $this->comments;
+        $reaction = $this->reactions;
+        $hasReaction = $reaction instanceof Collection && $reaction->isNotEmpty()
+            ? $reaction
+            : null;
 
         return [
             'id' => $this->id,
@@ -44,16 +50,22 @@ final class PostResource extends JsonResource
             'created_at' => $this->created_at->format('y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('y-m-d H:i:s'),
             'user' => new UserResource($this->user),
-            'group' => $this->group,
+            'group' => new GroupResource($this->group),
             'attachments' => PostAttachmentResource::collection($this->attachments),
             'num_of_reactions' => $this->reactions_count,
-            'num_of_comments' => count($comment),
-            'current_user_has_reaction' => $this->reactions->isNotEmpty(),
+            'num_of_comments' => is_countable($comment) ? count($comment) : 0,
+            'current_user_has_reaction' => $hasReaction,
             'comments' => self::convertCommentsIntoTree($comment),
         ];
     }
 
-    private function convertCommentsIntoTree($comments, $parentId = null): array
+    /**
+     * Convert flat comments into a tree structure
+     *
+     * @param  Collection<int, Comment>  $comments
+     * @return array<int, CommentResource>
+     */
+    private static function convertCommentsIntoTree(Collection $comments, ?int $parentId = null): array
     {
         $commentTree = [];
 
@@ -62,7 +74,7 @@ final class PostResource extends JsonResource
                 // find all comment which has parentId as $comment->id
                 $children = self::convertCommentsIntoTree($comments, $comment->id);
                 $comment->childComments = $children;
-                $comment->numOfComments = collect($children)->sum('numOfComments') + count($children);
+                $comment->numOfComments = (int) collect($children)->sum(fn ($child): int => ($child->childComments ? count($child->childComments) : 0)) + count($children);
                 $commentTree[] = new CommentResource($comment);
             }
         }

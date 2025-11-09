@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Models\Group;
+use App\Models\GroupUser;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
@@ -23,9 +26,7 @@ use Illuminate\Support\Str;
  * @property-read Carbon $deleted_at
  * @property-read Carbon $updated_at
  * @property-read Carbon $created_at
- * @property string $status
- * @property string $role
- * @property mixed $currentUserGroup
+ * @property-read HasOne<GroupUser, Group> $currentUserGroup
  */
 final class GroupResource extends JsonResource
 {
@@ -40,8 +41,8 @@ final class GroupResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'status' => $this->currentUserGroup?->status,
-            'role' => $this->currentUserGroup?->role,
+            'status' => property_exists($this->currentUserGroup, 'status') && $this->currentUserGroup->status !== null,
+            'role' => property_exists($this->currentUserGroup, 'role') && $this->currentUserGroup->role !== null,
             'thumbnail_url' => $this->thumbnail_path ? Storage::url($this->thumbnail_path) : '/img/no_image.png',
             'cover_url' => $this->cover_path ? Storage::url($this->cover_path) : null,
             'auto_approval' => $this->auto_approval,

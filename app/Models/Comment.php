@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Http\Resources\CommentResource;
 use App\Policies\CommentPolicy;
 use Database\Factories\CommentFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
@@ -35,6 +36,9 @@ final class Comment extends Model
 
     public int $numOfComments = 0;
 
+    /**
+     * @var array<int, CommentResource>
+     */
     public array $childComments = [];
 
     /**
@@ -45,7 +49,7 @@ final class Comment extends Model
     protected $fillable = ['comment', 'post_id', 'user_id', 'parent_id'];
 
     /**
-     * @return BelongsTo<Post, $this>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {

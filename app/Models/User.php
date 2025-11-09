@@ -21,13 +21,13 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read string $name
  * @property-read string $username
  * @property-read string $email
- * @property-read string $cover_path
- * @property-read string $cover_avatar
+ * @property-read string|null $cover_path
+ * @property-read string|null $avatar_path
  * @property-read string $password
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Collection<int, Post> $posts
- * @property-read Collection<int, comment> $comments
+ * @property-read Collection<int, Comment> $comments
  * @property-read Collection<int, Group> $groups
  * @property-read Collection<int, Group> $approvedGroups
  */

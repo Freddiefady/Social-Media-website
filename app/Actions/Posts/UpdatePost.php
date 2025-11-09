@@ -7,13 +7,17 @@ namespace App\Actions\Posts;
 use App\Actions\PostAttachment\DeleteAttachments;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 final readonly class UpdatePost
 {
     public function __construct(private DeleteAttachments $action) {}
 
     /**
-     * @throws
+     * @param  array<string, mixed>  $data
+     * @param  array<string|int, mixed>  $deleteIds
+     *
+     * @throws Throwable
      */
     public function handle(
         Post $post,

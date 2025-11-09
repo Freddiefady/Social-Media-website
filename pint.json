@@ -1,5 +1,6 @@
 {
     "preset": "laravel",
+    "notPath": ["app/Http/Requests/Posts/StorePostRequest.php"],
     "rules": {
         "array_push": true,
         "backtick_to_shell_exec": true,

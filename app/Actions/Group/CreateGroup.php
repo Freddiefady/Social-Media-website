@@ -8,6 +8,9 @@ use App\Models\Group;
 
 final class CreateGroup
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function handle(array $data): Group
     {
         return Group::query()->create([

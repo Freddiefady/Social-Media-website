@@ -14,12 +14,15 @@ final readonly class ChangeRole
         private SendChangeRole $sendChangeRole,
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function handle(Group $group, array $data): GroupUser
     {
         $query = GroupUser::query()
             ->where('user_id', $data['user_id'])
             ->where('group_id', $group->id)
-            ->first();
+            ->firstOrFail();
 
         $this->changeRole->handle($query, $data);
         // Send an email regarding the status of the role

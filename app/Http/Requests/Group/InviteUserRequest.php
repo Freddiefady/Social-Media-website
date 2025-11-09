@@ -9,9 +9,9 @@ use App\Models\Group;
 use App\Models\GroupUser;
 use App\Models\User;
 use App\Rules\ExistsInUsernameOrEmail;
+use Closure;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Container\Attributes\RouteParameter;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Validator;
@@ -34,7 +34,7 @@ final class InviteUserRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array|string>
+     * @return array<string, mixed>
      */
     public function rules(): array
     {
@@ -47,19 +47,24 @@ final class InviteUserRequest extends FormRequest
 
     /**
      * Optional: Check if user is already in the group
+     *
+     * @return array<Closure>
      */
     public function after(): array
     {
         return [
             function (Validator $validator): void {
                 $user = $this->inUsernameOrEmail->user;
-                $groupId = $this->route('group')?->id;
+
+                /** @var Group $groupId */
+                $groupId = $this->route('group');
+
                 if ($user && $groupId) {
                     $this->existingGroupUser = GroupUser::query()
-                        ->where('group_id', $groupId)
+                        ->where('group_id', $groupId->id)
                         ->where('user_id', $user->id)
                         ->whereStatus(GroupUserStatusEnum::APPROVED->value)
-                        ->first();
+                        ->firstOrFail();
 
                     if ($this->existingGroupUser instanceof GroupUser) {
                         $validator->errors()->add('email', 'This user is already a member of the group.');

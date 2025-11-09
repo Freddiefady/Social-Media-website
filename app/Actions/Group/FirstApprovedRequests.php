@@ -7,6 +7,7 @@ namespace App\Actions\Group;
 use App\Enums\GroupUserStatusEnum;
 use App\Models\Group;
 use App\Models\GroupUser;
+use App\Models\User;
 
 final readonly class FirstApprovedRequests
 {
@@ -15,13 +16,17 @@ final readonly class FirstApprovedRequests
         private SendResponseApproval $sendResponseApproval,
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array{groupUser: GroupUser|null, user: string|null, approved: bool}
+     */
     public function handle(Group $group, array $data): array
     {
         $query = GroupUser::query()
             ->where('user_id', $data['user_id'])
             ->where('group_id', $group->id)
             ->where('status', GroupUserStatusEnum::PENDING->value)
-            ->first();
+            ->firstOrFail();
 
         if ($query) {
             $this->updateStatusGroupUser->handle($query, $data);
@@ -31,7 +36,7 @@ final readonly class FirstApprovedRequests
 
             return [
                 'groupUser' => $query,
-                'user' => $query->user,
+                'user' => $query->user->name,
                 'approved' => $approved,
             ];
         }

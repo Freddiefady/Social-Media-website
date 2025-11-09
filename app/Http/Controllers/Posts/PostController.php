@@ -12,18 +12,18 @@ use App\Http\Requests\Posts\StorePostRequest;
 use App\Http\Requests\Posts\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\User;
-use Exception;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Throwable;
 
 final class PostController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      *
-     * @throws
+     * @throws Throwable
      */
     public function store(
         StorePostRequest $request,
@@ -40,7 +40,7 @@ final class PostController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws Throwable
      */
     public function update(
         UpdatePostRequest $request,
@@ -68,14 +68,14 @@ final class PostController extends Controller
     }
 
     /**
-     * @throws
+     * @throws Throwable
      */
-    private function handleAttachments(StorePostRequest|UpdatePostRequest $request, $post = null): void
+    private function handleAttachments(StorePostRequest|UpdatePostRequest $request, ?Post $post = null): void
     {
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
-                $filePath = $file->store('attachments/'.$post->id, 'public');
-                $post->attachments()->create([
+                $filePath = $file->store("attachments/$post?->id", 'public');
+                $post?->attachments()->create([
                     'path' => $filePath,
                     'name' => $file->getClientOriginalName(),
                     'size' => $file->getSize(),

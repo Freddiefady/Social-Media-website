@@ -11,7 +11,6 @@ use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +26,7 @@ final class ProfileController extends Controller
     public function index(User $user): Response
     {
         return Inertia::render('Profile/View', [
-            'mustVerifyEmail' => $user instanceof MustVerifyEmail,
+            'mustVerifyEmail' => true,
             'status' => session('status'),
             'success' => session('success'),
             'user' => new UserResource($user),
@@ -39,13 +38,13 @@ final class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $request->user()?->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
+        if ($request->user()?->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $request->user()?->save();
 
         return to_route('profile', $request->user())->with('success', 'Your profile details were updated.');
     }
@@ -63,7 +62,7 @@ final class ProfileController extends Controller
 
         Auth::logout();
 
-        $user->delete();
+        $user?->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -81,8 +80,9 @@ final class ProfileController extends Controller
         CreateThumbnail $actionThumbnail
     ): RedirectResponse {
         $success = match (true) {
-            $actionCover->handle($user, $request) => 'Your cover image has been updated successfully.',
-            $actionThumbnail->handle($user, $request) => 'Your avatar image has been updated successfully.',
+            $actionCover->handle($user, $request->validated()) => 'Your cover image has been updated successfully.',
+            $actionThumbnail->handle($user, $request->validated()) => 'Your avatar image has been updated successfully.',
+            default => 'Your thumbnail image was not updated.',
         };
 
         return back()->with('success', $success);

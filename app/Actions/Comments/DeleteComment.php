@@ -8,7 +8,7 @@ use App\Models\Comment;
 
 final readonly class DeleteComment
 {
-    public function handle(Comment $comment): bool
+    public function handle(Comment $comment): ?bool
     {
         return $comment->delete();
     }

@@ -20,14 +20,12 @@ final class PostAttachment extends Model
     public const null UPDATED_AT = null;
 
     protected $fillable = [
-        'post_id',
-        'created_by',
-        'name',
-        'path',
-        'mime',
-        'size',
+        'post_id', 'created_by', 'name', 'path', 'mime', 'size',
     ];
 
+    /**
+     * @return BelongsTo<Post, $this>
+     */
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);

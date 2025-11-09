@@ -9,6 +9,9 @@ use App\Models\GroupUser;
 
 final readonly class UpdateStatusGroupUser
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function handle(GroupUser $groupUser, array $data): bool
     {
         return $groupUser->update([

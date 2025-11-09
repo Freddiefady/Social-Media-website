@@ -8,6 +8,9 @@ use App\Models\Post;
 
 final readonly class DeleteAttachments
 {
+    /**
+     * @param  array<string|int, mixed>  $deleteIds
+     */
     public function handle(Post $post, array $deleteIds): void
     {
         if ($deleteIds === []) {

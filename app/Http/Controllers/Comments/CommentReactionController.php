@@ -8,10 +8,11 @@ use App\Actions\CreateReaction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Posts\ReactionRequest;
 use App\Models\Comment;
+use Illuminate\Http\Response;
 
 final class CommentReactionController extends Controller
 {
-    public function __invoke(ReactionRequest $request, Comment $comment, CreateReaction $action)
+    public function __invoke(ReactionRequest $request, Comment $comment, CreateReaction $action): Response
     {
         $hasReaction = $action->handle(
             $comment,

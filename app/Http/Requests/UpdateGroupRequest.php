@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Models\Group;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Container\Attributes\RouteParameter;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 final class UpdateGroupRequest extends FormRequest
 {
@@ -16,14 +17,14 @@ final class UpdateGroupRequest extends FormRequest
      */
     public function authorize(
         #[RouteParameter('group')] Group $group
-    ): true {
-        return request()->user()->can('view-any', $group);
+    ): Response {
+        return Gate::authorize('view-any', $group);
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array|string>
+     * @return array<string, mixed>
      */
     public function rules(): array
     {

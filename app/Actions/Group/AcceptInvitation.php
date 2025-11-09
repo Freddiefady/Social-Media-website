@@ -13,11 +13,11 @@ final readonly class AcceptInvitation
         private SendInvitationApproved $sendInvitationApproved,
     ) {}
 
-    public function handle(string $token): ?GroupUser
+    public function handle(string $token): GroupUser
     {
         $groupUser = GroupUser::query()
             ->where('token', $token)
-            ->first();
+            ->firstOrFail();
 
         $this->updateToApprovedInvitation->handle($groupUser);
 

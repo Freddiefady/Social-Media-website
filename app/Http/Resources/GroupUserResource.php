@@ -4,19 +4,25 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
-use App\Models\GroupUser;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
-/** @mixin GroupUser
+/**
+ * @property int $id
  * @property string $name
  * @property string $username
  * @property string $avatar_path
- * @property mixed $pivot
+ * @property Pivot|null $pivot
  */
 final class GroupUserResource extends JsonResource
 {
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
     public function toArray(Request $request): array
     {
         return [
@@ -24,9 +30,9 @@ final class GroupUserResource extends JsonResource
             'name' => $this->name,
             'username' => $this->username,
             'avatar_url' => Storage::url($this->avatar_path),
-            'role' => $this->whenPivotLoaded('group_users', $this->pivot->role),
-            'status' => $this->whenPivotLoaded('group_users', $this->pivot->status),
-            'group_id' => $this->whenPivotLoaded('group_users', $this->pivot->group_id),
+            'role' => isset($this->pivot->role),
+            'status' => isset($this->pivot->status),
+            'group_id' => isset($this->pivot->group_id),
         ];
     }
 }

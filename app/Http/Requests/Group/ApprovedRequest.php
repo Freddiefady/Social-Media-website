@@ -6,9 +6,10 @@ namespace App\Http\Requests\Group;
 
 use App\Enums\GroupUserStatusEnum;
 use App\Models\Group;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Container\Attributes\RouteParameter;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 final class ApprovedRequest extends FormRequest
@@ -18,14 +19,14 @@ final class ApprovedRequest extends FormRequest
      */
     public function authorize(
         #[RouteParameter('group')] Group $group,
-    ): true {
-        return request()->user()->can('view-any', $group);
+    ): Response {
+        return Gate::authorize('view-any', $group);
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array|string>
+     * @return array<string, mixed>
      */
     public function rules(): array
     {

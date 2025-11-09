@@ -10,6 +10,11 @@ use Illuminate\Auth\Access\Response;
 
 final class PostPolicy
 {
+    public function update(Post $post): bool
+    {
+        return auth()->id() === $post->user_id;
+    }
+
     /**
      * Determine whether the user can delete the model.
      */

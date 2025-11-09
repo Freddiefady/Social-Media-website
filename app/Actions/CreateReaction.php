@@ -11,7 +11,7 @@ final readonly class CreateReaction
 {
     public function handle(Model $model, string $type): bool
     {
-        $reaction = Reaction::whereActionableIdAndActionableType($model->id, $model->getMorphClass())
+        $reaction = Reaction::whereActionableIdAndActionableType($model->getKey(), $model->getMorphClass())
             ->whereUserId(auth()->id())
             ->first();
 
@@ -22,7 +22,7 @@ final readonly class CreateReaction
         }
 
         Reaction::query()->create([
-            'actionable_id' => $model->id,
+            'actionable_id' => $model->getKey(),
             'actionable_type' => $model->getMorphClass(),
             'user_id' => auth()->id(),
             'type' => $type,

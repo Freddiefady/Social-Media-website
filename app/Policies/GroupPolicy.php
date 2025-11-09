@@ -21,7 +21,7 @@ final readonly class GroupPolicy
         #[CurrentUser] User $user,
         Group $group
     ): Response {
-        return $this->membershipService->isAdmin($group, $user)
+        return $this->membershipService->isAdmin($group, $user->id)
             ? Response::allow()
             : Response::deny('you don\'t have permission to perform this action', 403);
     }

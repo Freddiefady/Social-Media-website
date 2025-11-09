@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Comments;
 
-use Illuminate\Contracts\Validation\ValidationRule;
+use App\Models\Comment;
 use Illuminate\Foundation\Http\FormRequest;
 
 final class UpdateCommentRequest extends FormRequest
@@ -14,6 +14,7 @@ final class UpdateCommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        /** @var Comment $comment */
         $comment = $this->route('comment');
 
         return $comment->user_id === auth()->id();
@@ -22,7 +23,7 @@ final class UpdateCommentRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array|string>
+     * @return array<string, array<string>>
      */
     public function rules(): array
     {

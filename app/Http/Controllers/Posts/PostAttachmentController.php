@@ -7,13 +7,14 @@ namespace App\Http\Controllers\Posts;
 use App\Http\Controllers\Controller;
 use App\Models\PostAttachment;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 final class PostAttachmentController extends Controller
 {
     /**
      * Download the specified attachment.
      */
-    public function __invoke(PostAttachment $attachment)
+    public function __invoke(PostAttachment $attachment): BinaryFileResponse
     {
         // TODO - check if user has permission to download this attachment
         return response()->download(Storage::disk('public')->path($attachment->path), $attachment->name);

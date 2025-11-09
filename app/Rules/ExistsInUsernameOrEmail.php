@@ -27,7 +27,7 @@ final class ExistsInUsernameOrEmail implements ValidationRule
         $this->user = User::query()
             ->where('username', $value)
             ->orWhere('email', $value)
-            ->first();
+            ->firstOrFail();
 
         if (! $this->user instanceof User) {
             $fail('The user does not exist.');

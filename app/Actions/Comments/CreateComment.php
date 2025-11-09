@@ -9,7 +9,7 @@ use App\Models\Post;
 
 final readonly class CreateComment
 {
-    public function handle(Post $post, string $content, ?string $parentId = null): Comment
+    public function handle(Post $post, string $content, ?int $parentId = null): Comment
     {
         return $post->comments()->create([
             'user_id' => auth()->id(),
