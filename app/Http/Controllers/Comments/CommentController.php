@@ -28,11 +28,11 @@ final class CommentController extends Controller
         Post $post,
         CreateComment $action
     ): JsonResponse {
-        $comment = $action->handle(
-            $post,
-            nl2br($request->string('comment')->toString()),
-            $request->integer('parent_id'),
-        );
+        /** @var int|null $parentId */
+        $parentId = $request->input('parent_id');
+        $comment = nl2br($request->string('comment')->toString());
+
+        $comment = $action->handle($post, $comment, $parentId);
 
         return response()->json(new CommentResource($comment), 201);
     }
