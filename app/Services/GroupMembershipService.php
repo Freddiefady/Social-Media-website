@@ -59,4 +59,9 @@ final class GroupMembershipService
             ->wherePivot('group_id', $group->id)
             ->exists();
     }
+
+    public function isOwner(Group $group, int $userId): bool
+    {
+        return $group->user_id === $userId;
+    }
 }
