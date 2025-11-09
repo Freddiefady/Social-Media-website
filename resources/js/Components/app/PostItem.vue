@@ -46,7 +46,7 @@ function deletePost() {
     <div class="bg-white p-4 rounded mb-4">
         <div class="flex items-center justify-between gap-2 mb-3">
             <PostUserHeader :post="post"/>
-            <EditDeleteDropdown :user="post.user" @edit="openEditModal" @delete="deletePost" />
+            <EditDeleteDropdown :user="post.user" :post="post" @edit="openEditModal" @delete="deletePost" />
         </div>
         <div class="mb-3">
             <ReadMoreReadLess :content="post.body" />
