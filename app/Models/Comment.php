@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Http\Resources\CommentResource;
+use App\Observers\CommentObserver;
 use App\Policies\CommentPolicy;
 use Database\Factories\CommentFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,8 +29,10 @@ use Illuminate\Support\Carbon;
  * @property-read User $user
  * @property-read Post $post
  * @property-read Collection<int, Reaction> $reactions
+ * @property-read Collection<int, self> $comments
  */
 #[UsePolicy(CommentPolicy::class)]
+#[ObservedBy(CommentObserver::class)]
 final class Comment extends Model
 {
     /** @use HasFactory<CommentFactory> */
