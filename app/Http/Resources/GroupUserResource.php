@@ -30,9 +30,9 @@ final class GroupUserResource extends JsonResource
             'name' => $this->name,
             'username' => $this->username,
             'avatar_url' => Storage::url($this->avatar_path),
-            'role' => isset($this->pivot->role),
-            'status' => isset($this->pivot->status),
-            'group_id' => isset($this->pivot->group_id),
+            'role' => empty($this->pivot->role) ? null : $this->pivot->role,
+            'status' => empty($this->pivot->status) ? null : $this->pivot->status,
+            'group_id' => empty($this->pivot->group_id) ? null : $this->pivot->group_id,
         ];
     }
 }
