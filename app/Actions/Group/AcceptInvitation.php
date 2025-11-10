@@ -17,7 +17,11 @@ final readonly class AcceptInvitation
     {
         $groupUser = GroupUser::query()
             ->where('token', $token)
-            ->firstOrFail();
+            ->first();
+
+        if (! $groupUser) {
+            response('Invalid token.', 404);
+        }
 
         $this->updateToApprovedInvitation->handle($groupUser);
 
