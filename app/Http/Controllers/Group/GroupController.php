@@ -14,11 +14,13 @@ use App\Actions\Group\JoinToGroup;
 use App\Actions\Group\showGroup;
 use App\Actions\Group\UpdateGroup;
 use App\Actions\Group\ValidateGroupUserInvitation;
+use App\Actions\GroupUser\DeleteUser;
 use App\Actions\Media\CreateCover;
 use App\Actions\Media\CreateThumbnail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Group\ApprovedRequest;
 use App\Http\Requests\Group\ChangeRoleRequest;
+use App\Http\Requests\Group\DeleteUserRequest;
 use App\Http\Requests\Group\InviteUserRequest;
 use App\Http\Requests\MediaRequest;
 use App\Http\Requests\StoreGroupRequest;
@@ -90,6 +92,20 @@ final class GroupController extends Controller
     public function destroy(Group $group): void
     {
         //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroyUser(
+        DeleteUserRequest $request, Group $group, DeleteUser $action
+    ): \Illuminate\Http\Response|RedirectResponse {
+        if ($request->user()?->can('change-role', $request['user_id'])) {
+            return response('You cannot remove yourself from the group.', 403);
+        }
+        $action->handle($group, $request->validated());
+
+        return back();
     }
 
     public function updateImages(
