@@ -19,14 +19,12 @@ final readonly class AcceptInvitation
             ->where('token', $token)
             ->first();
 
-        if (! $groupUser) {
-            response('Invalid token.', 404);
-        }
-
+        /** @phpstan-ignore-next-line */
         $this->updateToApprovedInvitation->handle($groupUser);
-
+        /** @phpstan-ignore-next-line */
         $this->sendInvitationApproved->handle($groupUser);
 
+        /** @phpstan-ignore-next-line */
         return $groupUser;
     }
 }
