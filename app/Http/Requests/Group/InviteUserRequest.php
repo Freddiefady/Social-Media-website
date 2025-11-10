@@ -64,11 +64,13 @@ final class InviteUserRequest extends FormRequest
                         ->where('group_id', $groupId->id)
                         ->where('user_id', $user->id)
                         ->whereStatus(GroupUserStatusEnum::APPROVED->value)
-                        ->firstOrFail();
+                        ->first();
 
-                    if ($this->existingGroupUser instanceof GroupUser) {
-                        $validator->errors()->add('email', 'This user is already a member of the group.');
+                    if (! $this->existingGroupUser instanceof GroupUser) {
+                        return;
                     }
+
+                    $validator->errors()->add('email', 'This user is already a member of the group.');
                 }
             },
         ];
