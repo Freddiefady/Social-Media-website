@@ -40,9 +40,9 @@ final class PostResource extends JsonResource
     {
         $comment = $this->comments;
         $reaction = $this->reactions;
-        $hasReaction = $reaction instanceof Collection && $reaction->isNotEmpty()
+        $hasReaction = $reaction instanceof Collection && $reaction->where('user_id', auth()->id())->isNotEmpty()
             ? $reaction
-            : null;
+            : false;
 
         return [
             'id' => $this->id,
