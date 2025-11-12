@@ -10,16 +10,29 @@ use App\Actions\Posts\UpdatePost;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Posts\StorePostRequest;
 use App\Http\Requests\Posts\UpdatePostRequest;
+use App\Http\Resources\Posts\PostResource;
 use App\Models\Post;
 use App\Models\User;
+use App\Queries\PostRelatedReactionAndComments;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
 use Throwable;
 
 final class PostController extends Controller
 {
+    public function show(Post $post)
+    {
+       $post->loadCount('reactions');
+       $post->load(['comments' => fn ($query) => $query->latest()->withCount('reactions')]);
+
+        return Inertia::render('Posts/Show', [
+            'post' => new PostResource($post),
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

@@ -30,8 +30,8 @@ Route::middleware('auth')->group(function (): void {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('/post', PostController::class)
-        ->only(['store', 'update', 'destroy']);
+    Route::apiResource('/post', PostController::class)
+        ->except('index');
 
     Route::prefix('post')->group(function (): void {
         Route::name('post.')->group(function (): void {
