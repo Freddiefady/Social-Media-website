@@ -281,7 +281,7 @@ function updateAbout(){
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Photos" :selected="selected"/>
                         </Tab>
-                        <Tab v-if="isCurrentUserAdmin" v-slot="{ selected }" as="template">
+                        <Tab v-slot="{ selected }" as="template">
                             <TabItem text="About" :selected="selected"/>
                         </Tab>
                     </TabList>
@@ -325,9 +325,14 @@ function updateAbout(){
                         <TabPanel class='bg-white p-3 shadow'>
                             Photos
                         </TabPanel>
-                        <TabPanel v-if="isCurrentUserAdmin" class='bg-white p-3 shadow'>
-                            <GroupForm :form="aboutForm" />
-                            <primary-button @click="updateAbout">Submit</primary-button>
+                        <TabPanel class='bg-white p-3 shadow'>
+                            <template v-if="isCurrentUserAdmin">
+                                <GroupForm :form="aboutForm" />
+                                <primary-button @click="updateAbout">Submit</primary-button>
+                            </template>
+                            <div v-else v-html="group.about">
+
+                            </div>
                         </TabPanel>
                     </TabPanels>
                 </TabGroup>
