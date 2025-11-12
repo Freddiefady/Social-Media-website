@@ -22,12 +22,12 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property User $user
- * @property mixed $group
- * @property Collection<int, PostAttachment> $attachments
- * @property int $reactions_count
- * @property int $comments_count
- * @property mixed $reactions
- * @property Collection<int, Comment> $comments
+ * @property-read mixed $group
+ * @property-read Collection<int, PostAttachment> $attachments
+ * @property-read int $reactions_count
+ * @property-read int $comments_count
+ * @property-read mixed $reactions
+ * @property-read Collection<int, Comment> $comments
  */
 final class PostResource extends JsonResource
 {
