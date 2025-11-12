@@ -10,6 +10,7 @@ use App\Http\Requests\MediaRequest;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\FollowerService;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,13 +24,15 @@ final class ProfileController extends Controller
     /**
      * Display the user's profile.
      */
-    public function index(User $user): Response
+    public function index(User $user, FollowerService $service): Response
     {
         return Inertia::render('Profile/View', [
             'mustVerifyEmail' => true,
             'status' => session('status'),
             'success' => session('success'),
             'user' => new UserResource($user),
+            'isCurrentUserFollower' => $service->isFollowing($user),
+            'followerCount' => $service->followersCount($user),
         ]);
     }
 

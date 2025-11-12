@@ -6,6 +6,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "@/Pages/Profile/Partials/TabItem.vue";
 import Edit from "@/Pages/Profile/Edit.vue";
 import {computed, ref} from "vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
 
 const imagesForm = useForm({
     avatar: null,
@@ -31,7 +33,9 @@ const props = defineProps({
     },
     user: {
         type: Object,
-    }
+    },
+    isCurrentUserFollower: Boolean,
+    followerCount: Number,
 });
 
 function onCoverChange(event) {
@@ -88,6 +92,12 @@ function submitAvatarImage() {
             }, 3000);
         },
     });
+}
+function followerUser(){
+   const form = useForm({})
+   form.post(route('user.follower', props.user.id), {
+       preserveScroll: true,
+   })
 }
 </script>
 
@@ -170,7 +180,16 @@ function submitAvatarImage() {
                     </div>
 
                     <div class="flex justify-between items-center flex-1 p-4">
-                        <h2 class="text-bold text-lg" v-if="authUser">{{ props.user.name }}</h2>
+                        <div>
+                            <h2 class="text-bold text-lg" v-if="authUser">{{ props.user.name }}</h2>
+                            <div class="text-xs text-gray-500">{{ followerCount }} follower(s)</div>
+                        </div>
+                        <primary-button v-if="! isCurrentUserFollower" @click="followerUser">
+                            Follow User
+                        </primary-button>
+                        <DangerButton v-else @click="followerUser">
+                            Unfollow User
+                        </DangerButton>
                     </div>
                 </div>
             </div>
@@ -178,7 +197,6 @@ function submitAvatarImage() {
             <div class="border-t">
                 <TabGroup>
                     <TabList class="pl-[200px] flex bg-white">
-
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Posts" :selected="selected"/>
                         </Tab>
