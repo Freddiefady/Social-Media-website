@@ -9,6 +9,9 @@ use App\Rules\UserExists;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\File;
 
+/**
+ * @property string $body
+ */
 class StorePostRequest extends FormRequest
 {
     /**
@@ -42,6 +45,13 @@ class StorePostRequest extends FormRequest
             'attachments.*' => ['file', File::types(...self::$extensions)],
             'group_id' => ['nullable', 'exists:groups,id', new UserExists()],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+           'body' => nl2br($this->body)
+        ]);
     }
 
     /**
