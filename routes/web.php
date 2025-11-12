@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Comments\CommentController;
 use App\Http\Controllers\Comments\CommentReactionController;
+use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\Group\GroupController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Posts\PostAttachmentController;
@@ -65,6 +66,10 @@ Route::middleware('auth')->group(function (): void {
 
     Route::post('/group/change-role/{group}', [GroupController::class, 'changeRole'])
         ->name('group.change-role');
+
+    // ------ followers -----
+    Route::post('/user/follower/{user}', FollowerController::class)
+        ->name('user.follower');
 });
 
 require __DIR__.'/auth.php';
