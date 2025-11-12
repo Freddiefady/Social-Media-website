@@ -6,6 +6,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property string $about
+ */
 final class StoreGroupRequest extends FormRequest
 {
     /**
@@ -29,5 +32,12 @@ final class StoreGroupRequest extends FormRequest
             'about' => ['required', 'string'],
             'user_id' => ['exists:users,id'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'about' => nl2br($this->about),
+        ]);
     }
 }

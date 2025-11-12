@@ -10,6 +10,9 @@ use Illuminate\Container\Attributes\RouteParameter;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+/**
+ * @property string $about
+ */
 final class UpdateGroupRequest extends FormRequest
 {
     /**
@@ -34,5 +37,11 @@ final class UpdateGroupRequest extends FormRequest
             'about' => ['required', 'string'],
             'user_id' => ['exists:users,id'],
         ];
+    }
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'about' => nl2br($this->about),
+        ]);
     }
 }
