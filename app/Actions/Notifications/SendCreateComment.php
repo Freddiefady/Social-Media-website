@@ -11,6 +11,6 @@ final class SendCreateComment
 {
     public function handle(Comment $comment): void
     {
-        $comment->user->notify(new CommentCreated($comment));
+        $comment->user->notify(new CommentCreated($comment, $comment->post));
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Notifications;
 
 use App\Models\Comment;
+use App\Models\Post;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -17,7 +18,7 @@ final class CommentCreated extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(private readonly Comment $comment)
+    public function __construct(private readonly Comment $comment, private readonly Post $post)
     {
         //
     }
@@ -43,7 +44,7 @@ final class CommentCreated extends Notification
             ->greeting('Hello My Friend!')
             ->line('New comment was added on your post. Please see your comment below')
             ->line("$comment")
-            ->action('View Post', url('/'))
+            ->action('View Post', route('post.show', $this->post->id))
             ->line('Thank you for using our application!');
     }
 }

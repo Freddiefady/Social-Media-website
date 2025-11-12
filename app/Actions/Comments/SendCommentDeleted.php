@@ -12,7 +12,7 @@ final class SendCommentDeleted
     public function handle(Comment $comment): void
     {
         if ($comment->user_id !== auth()->id()) {
-            $comment->user->notify(new CommentDeleted($comment));
+            $comment->user->notify(new CommentDeleted($comment, $comment->post));
         }
     }
 }

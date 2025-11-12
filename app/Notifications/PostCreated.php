@@ -36,7 +36,7 @@ final class PostCreated extends Notification
     {
         return (new MailMessage)
             ->line("New Post was added in {$this->group->name}")
-            ->action('View Post', url('/'))
+            ->action('View Post', route('post.show', $this->post->id))
             ->line('Thank you for using our application!');
     }
 }

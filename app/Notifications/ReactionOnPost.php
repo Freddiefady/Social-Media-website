@@ -39,7 +39,7 @@ final class ReactionOnPost extends Notification
     {
         return (new MailMessage)
             ->line("Use {<a href='{{ route(\"profile\", $this->user->username) }}'>$this->user->name<a/>} liked your post.")
-            ->action('View Post', url('/'))
+            ->action('View Post', route('post.show', $this->post->id))
             ->line('Thank you for using our application!');
     }
 }
