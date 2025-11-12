@@ -42,7 +42,7 @@ final class CommentCreated extends Notification
 
         return (new MailMessage)
             ->greeting('Hello My Friend!')
-            ->line('New comment was added on your post. Please see your comment below')
+            ->line("User {$this->comment->user->name} has made a comment on your post. Please see your comment below")
             ->line("$comment")
             ->action('View Post', route('post.show', $this->post->id))
             ->line('Thank you for using our application!');
