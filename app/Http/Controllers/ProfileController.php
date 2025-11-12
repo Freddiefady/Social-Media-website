@@ -8,24 +8,36 @@ use App\Actions\Media\CreateCover;
 use App\Actions\Media\CreateThumbnail;
 use App\Http\Requests\MediaRequest;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Resources\Posts\PostResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Queries\PostRelatedReactionAndComments;
 use App\Services\FollowerService;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+
+use function request;
 
 final class ProfileController extends Controller
 {
     /**
      * Display the user's profile.
      */
-    public function index(User $user, FollowerService $service): Response
+    public function index(User $user, FollowerService $service, PostRelatedReactionAndComments $query): AnonymousResourceCollection|Response
     {
+        $posts = PostResource::collection($query->builder()
+            ->where('user_id', $user->id)
+            ->paginate(10));
+        if (request()->wantsJson()) {
+            return $posts;
+        }
+
         return Inertia::render('Profile/View', [
             'mustVerifyEmail' => true,
             'status' => session('status'),
@@ -33,6 +45,9 @@ final class ProfileController extends Controller
             'user' => new UserResource($user),
             'isCurrentUserFollower' => $service->isFollowing($user),
             'followerCount' => $service->followersCount($user),
+            'followers' => UserResource::collection($user->followers()->get()),
+            'followings' => UserResource::collection($user->following()->get()),
+            'posts' => $posts,
         ]);
     }
 
