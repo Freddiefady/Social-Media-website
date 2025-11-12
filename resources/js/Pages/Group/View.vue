@@ -45,7 +45,7 @@ const props = defineProps({
 const aboutForm = useForm({
     name: usePage().props.group.name,
     auto_approval: !! parseInt(usePage().props.group.auto_approval),
-    about: usePage().props.group.about,
+    about: usePage().props.group.about.replace(/<br\s*\/?>/gi, '\n'),
 })
 
 function onCoverChange(event) {
@@ -290,7 +290,10 @@ function updateAbout(){
                         <TabPanel>
                             <template v-if="posts">
                                 <CreatePost :group="group"/>
-                                <PostList :posts="posts.data" class="flex-1" />
+                                <PostList v-if="posts.data.length" :posts="posts.data" class="flex-1" />
+                                <div v-else class="text-center py-8">
+                                    There are no posts in this group. Be the first and create it.
+                                </div>
                             </template>
                             <div v-else class="py-8 text-center">
                                 You don't have permission to view these posts.
