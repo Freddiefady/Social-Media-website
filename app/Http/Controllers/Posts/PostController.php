@@ -13,20 +13,23 @@ use App\Http\Requests\Posts\UpdatePostRequest;
 use App\Http\Resources\Posts\PostResource;
 use App\Models\Post;
 use App\Models\User;
-use App\Queries\PostRelatedReactionAndComments;
 use Illuminate\Container\Attributes\CurrentUser;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
+use Inertia\Response;
 use Throwable;
 
 final class PostController extends Controller
 {
-    public function show(Post $post)
+    public function show(Post $post): Response
     {
-       $post->loadCount('reactions');
-       $post->load(['comments' => fn ($query) => $query->latest()->withCount('reactions')]);
+        $post->loadCount('reactions')
+            ->load(['comments' => fn (HasMany $query) => $query->latest()
+                ->withCount('reactions'),
+            ]);
 
         return Inertia::render('Posts/Show', [
             'post' => new PostResource($post),

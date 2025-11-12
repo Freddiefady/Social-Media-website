@@ -22,7 +22,6 @@ final readonly class showGroup
     public function handle(Group $group): array
     {
         $userId = auth()->id();
-        abort_if($userId === null, 401, 'Unauthenticated');
 
         // Check if current user is an approved member
         $this->membershipService->isApprovedMember($group, (int) $userId);

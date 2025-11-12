@@ -44,7 +44,7 @@ final class ReactionOnComment extends Notification
         return (new MailMessage)
             ->line("User {$this->user->name} has liked your comment. Your Comment: ")
             ->line("{$this->comment->comment}")
-            ->action('View Post',  route('post.show', $this->post->id))
+            ->action('View Post', route('post.show', $this->post->id))
             ->line('Thank you for using our application!');
     }
 }

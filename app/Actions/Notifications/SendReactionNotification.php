@@ -6,7 +6,6 @@ namespace App\Actions\Notifications;
 
 use App\Models\Comment;
 use App\Models\Post;
-use App\Models\User;
 use App\Notifications\ReactionOnComment;
 use App\Notifications\ReactionOnPost;
 use Illuminate\Database\Eloquent\Model;
@@ -29,7 +28,7 @@ final class SendReactionNotification
             return;
         }
 
-        $post->user->notify(new ReactionOnPost($post, auth()->user()));
+        $post->user->notify(new ReactionOnPost($post, $post->user));
     }
 
     private function sendCommentReaction(Comment $comment): void
@@ -39,6 +38,6 @@ final class SendReactionNotification
             return;
         }
 
-        $comment->user->notify(new ReactionOnComment($comment, auth()->user(), $comment->post));
+        $comment->user->notify(new ReactionOnComment($comment, $comment->user, $comment->post));
     }
 }
