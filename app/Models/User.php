@@ -30,6 +30,8 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read Collection<int, Comment> $comments
  * @property-read Collection<int, Group> $groups
  * @property-read Collection<int, Group> $approvedGroups
+ * @property-read Collection<int, self> $followers
+ * @property-read Collection<int, self> $following
  */
 final class User extends Authenticatable implements MustVerifyEmail
 {
@@ -85,6 +87,26 @@ final class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Group::class, 'group_users')
             ->withPivot(['role', 'status']);
+    }
+
+    /**
+     * Users that this user follows
+     *
+     * @return BelongsToMany<self, $this>
+     */
+    public function following(): BelongsToMany
+    {
+        return $this->belongsToMany(self::class, 'followers', 'follower_id', 'user_id');
+    }
+
+    /**
+     * Users that follow this user
+     *
+     * @return BelongsToMany<self, $this>
+     */
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(self::class, 'followers', 'user_id', 'follower_id');
     }
 
     public function getSlugOptions(): SlugOptions

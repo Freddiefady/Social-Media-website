@@ -38,6 +38,7 @@ final class UpdateGroupRequest extends FormRequest
             'user_id' => ['exists:users,id'],
         ];
     }
+
     protected function prepareForValidation(): void
     {
         $this->merge([
