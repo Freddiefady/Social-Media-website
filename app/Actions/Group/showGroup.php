@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Actions\Group;
 
 use App\Models\Group;
-use App\Models\User;
 use App\Queries\PostRelatedReactionAndComments;
 use App\Services\GroupMembershipService;
 
