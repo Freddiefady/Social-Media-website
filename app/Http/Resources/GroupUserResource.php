@@ -29,7 +29,7 @@ final class GroupUserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'username' => $this->username,
-            'avatar_url' => Storage::url($this->avatar_path),
+            'avatar_url' => $this->avatar_path ? Storage::url($this->avatar_path) : asset('img/avatar.png'),
             'role' => empty($this->pivot->role) ? null : $this->pivot->role,
             'status' => empty($this->pivot->status) ? null : $this->pivot->status,
             'group_id' => empty($this->pivot->group_id) ? null : $this->pivot->group_id,
