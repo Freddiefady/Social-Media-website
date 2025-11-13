@@ -9,6 +9,7 @@ import { Head } from '@inertiajs/vue3';
 defineProps({
     posts: Object,
     groups: Array,
+    followers: Array,
 });
 </script>
 
@@ -21,7 +22,7 @@ defineProps({
                 <GroupList :groups="groups" />
             </div>
             <div class="lg:col-span-3 lg:order-3 overflow-hidden h-full">
-                <FollowingList />
+                <FollowingList :users="followers" />
             </div>
             <div class="lg:col-span-6 lg:order-2 overflow-hidden h-full flex flex-col">
                 <CreatePost />

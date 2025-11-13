@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\Posts\PostResource;
+use App\Http\Resources\UserResource;
 use App\Queries\RelevantPostsTimeline;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
@@ -32,6 +33,7 @@ final class HomeController extends Controller
         return Inertia::render('Home', [
             'posts' => $posts,
             'groups' => GroupResource::collection($groups),
+            'followers' => UserResource::collection(auth()->user()->followers),
         ]);
     }
 }
