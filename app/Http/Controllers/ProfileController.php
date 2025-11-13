@@ -8,8 +8,10 @@ use App\Actions\Media\CreateCover;
 use App\Actions\Media\CreateThumbnail;
 use App\Http\Requests\MediaRequest;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Resources\PostAttachment\PostAttachmentResource;
 use App\Http\Resources\Posts\PostResource;
 use App\Http\Resources\UserResource;
+use App\Models\PostAttachment;
 use App\Models\User;
 use App\Queries\PostRelatedReactionAndComments;
 use App\Services\FollowerService;
@@ -38,6 +40,11 @@ final class ProfileController extends Controller
             return $posts;
         }
 
+        $photos = PostAttachment::query()
+            ->where('created_by', $user->id)
+            ->whereLike('mime', 'image/%')
+            ->get();
+
         return Inertia::render('Profile/View', [
             'mustVerifyEmail' => true,
             'status' => session('status'),
@@ -48,6 +55,7 @@ final class ProfileController extends Controller
             'followers' => UserResource::collection($user->followers()->get()),
             'followings' => UserResource::collection($user->following()->get()),
             'posts' => $posts,
+            'photos' => PostAttachmentResource::collection($photos),
         ]);
     }
 

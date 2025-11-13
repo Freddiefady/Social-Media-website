@@ -4,6 +4,7 @@ import {useForm, usePage} from '@inertiajs/vue3';
 import {XMarkIcon, CheckCircleIcon, CameraIcon} from '@heroicons/vue/24/solid'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "@/Pages/Profile/Partials/TabItem.vue";
+import TabPhoto from "@/Pages/Profile/TabPhoto.vue";
 import Edit from "@/Pages/Profile/Edit.vue";
 import {computed, ref} from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -45,6 +46,7 @@ const props = defineProps({
     followers: Array,
     followings: Array,
     posts: Array,
+    photos: Array,
 });
 
 function onCoverChange(event) {
@@ -262,7 +264,7 @@ function followerUser(){
                             </div>
                         </TabPanel>
                         <TabPanel>
-                            Photos
+                            <TabPhoto :photos="photos"/>
                         </TabPanel>
                         <TabPanel v-if="isMyProfile">
                             <Edit :must-verify-email="mustVerifyEmail" :status="status"/>
