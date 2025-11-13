@@ -30,8 +30,10 @@ use App\Http\Resources\GroupUserResource;
 use App\Http\Resources\Posts\PostResource;
 use App\Http\Resources\UserResource;
 use App\Models\Group;
+use App\Models\PostAttachment;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -66,6 +68,18 @@ final class GroupController extends Controller
         if (request()->wantsJson()) {
             return PostResource::collection($result['posts'] ?? []);
         }
+
+        // PostAttachment::query()
+        //     ->whereHas('post', function (Builder $query) use ($post): void {
+        //         $query->where('id', $post->id);
+        //     })
+        //     ->whereHas('post.group.approvedUsers', function (Builder $query) use ($group): void {
+        //         $query->where('id', $group->id)
+        //             ->where('user_id', auth()->id())
+        //             ->where('status', 'approved');
+        //     })
+        //     ->whereLike('mime', 'image/%')
+        //     ->get();
 
         return Inertia::render('Group/View', [
             'success' => session('success'),
