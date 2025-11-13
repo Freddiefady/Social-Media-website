@@ -19,9 +19,7 @@ final readonly class CreatePost
     {
         $post = $user->posts()->create($data);
 
-        if ($post->group) {
-            $this->sendCreatePost->handle($post->group, $post);
-        }
+        $this->sendCreatePost->handle($post, $user);
 
         return $post;
     }

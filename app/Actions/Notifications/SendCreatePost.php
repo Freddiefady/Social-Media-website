@@ -6,14 +6,18 @@ namespace App\Actions\Notifications;
 
 use App\Models\Group;
 use App\Models\Post;
+use App\Models\User;
 use App\Notifications\PostCreated;
 use Illuminate\Support\Facades\Notification;
 
 final class SendCreatePost
 {
-    public function handle(Group $group, Post $post): void
+    public function handle(Post $post, User $user, ?Group $group = null): void
     {
-        $users = $group->approvedUsers()->whereKeyNot(auth()->id())->get();
-        Notification::send($users, new PostCreated($post, $group));
+        if ($group instanceof Group) {
+            $users = $group->approvedUsers()->whereKeyNot(auth()->id())->get();
+            Notification::send($users, new PostCreated($post, $user, $group));
+        }
+        Notification::send($user->followers, new PostCreated($post, $user));
     }
 }
