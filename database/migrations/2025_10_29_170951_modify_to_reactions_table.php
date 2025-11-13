@@ -14,6 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('reactions', function (Blueprint $table): void {
+            $table->dropForeign('post_reactions_post_id_foreign');
             $table->dropColumn('post_id');
             $table->morphs('actionable');
         });
