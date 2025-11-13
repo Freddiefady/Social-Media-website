@@ -34,7 +34,7 @@ final class UserResource extends JsonResource
             'name' => $this->name,
             'username' => $this->username,
             'cover_url' => $this->cover_path ? Storage::url($this->cover_path) : null,
-            'avatar_url' => $this->avatar_path ? Storage::url($this->avatar_path) : null,
+            'avatar_url' => $this->avatar_path ? Storage::url($this->avatar_path) : asset('img/avatar.png'),
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
             'created_at' => $this->created_at,
