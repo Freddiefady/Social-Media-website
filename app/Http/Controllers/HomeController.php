@@ -33,7 +33,7 @@ final class HomeController extends Controller
         return Inertia::render('Home', [
             'posts' => $posts,
             'groups' => GroupResource::collection($groups),
-            'followers' => UserResource::collection(auth()->user()->followers),
+            'followers' => UserResource::collection(auth()->user()?->followers),
         ]);
     }
 }
