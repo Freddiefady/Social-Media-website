@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Actions\PostAttachment;
 
-use App\Enums\GroupUserStatusEnum;
 use App\Models\Group;
 use App\Models\PostAttachment;
 use Illuminate\Database\Eloquent\Builder;
