@@ -11,7 +11,7 @@ use Illuminate\Http\Response;
 
 final class GeneratePostController extends Controller
 {
-    public function __construct(private GenerateAiService $generate) {}
+    public function __construct(private readonly GenerateAiService $generate) {}
 
     /**
      * Handle the incoming request.
