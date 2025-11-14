@@ -15,7 +15,7 @@ final class GenerateAiService
     public function __invoke(string $prompt): Response
     {
         $response = OpenAI::responses()->create([
-            'model' => 'gpt-5',
+            'model' => 'gpt-4.1-mini-2025-04-14',
             'input' => [
                 [
                     'role' => 'user',
