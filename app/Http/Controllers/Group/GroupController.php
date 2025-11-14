@@ -17,6 +17,7 @@ use App\Actions\Group\ValidateGroupUserInvitation;
 use App\Actions\GroupUser\DeleteUser;
 use App\Actions\Media\CreateCover;
 use App\Actions\Media\CreateThumbnail;
+use App\Actions\PostAttachment\GetPhotosInGroup;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Group\ApprovedRequest;
 use App\Http\Requests\Group\ChangeRoleRequest;
@@ -27,13 +28,12 @@ use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\GroupUserResource;
+use App\Http\Resources\PostAttachment\PostAttachmentResource;
 use App\Http\Resources\Posts\PostResource;
 use App\Http\Resources\UserResource;
 use App\Models\Group;
-use App\Models\PostAttachment;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -61,7 +61,7 @@ final class GroupController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Group $group, showGroup $action): AnonymousResourceCollection|Response
+    public function show(Group $group, showGroup $action, GetPhotosInGroup $actionPhotos): AnonymousResourceCollection|Response
     {
         $result = $action->handle($group);
 
@@ -69,17 +69,7 @@ final class GroupController extends Controller
             return PostResource::collection($result['posts'] ?? []);
         }
 
-        // PostAttachment::query()
-        //     ->whereHas('post', function (Builder $query) use ($post): void {
-        //         $query->where('id', $post->id);
-        //     })
-        //     ->whereHas('post.group.approvedUsers', function (Builder $query) use ($group): void {
-        //         $query->where('id', $group->id)
-        //             ->where('user_id', auth()->id())
-        //             ->where('status', 'approved');
-        //     })
-        //     ->whereLike('mime', 'image/%')
-        //     ->get();
+        $postAttachments = $actionPhotos->handle($group);
 
         return Inertia::render('Group/View', [
             'success' => session('success'),
@@ -87,6 +77,7 @@ final class GroupController extends Controller
             'users' => GroupUserResource::collection($result['users']),
             'requests' => UserResource::collection($result['requests']),
             'posts' => $result['posts'] ? PostResource::collection($result['posts']) : null,
+            'photos' => PostAttachmentResource::collection($postAttachments),
         ]);
     }
 

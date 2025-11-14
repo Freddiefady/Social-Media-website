@@ -4,6 +4,7 @@ import { useForm, usePage } from '@inertiajs/vue3';
 import { CameraIcon, CheckCircleIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "@/Pages/Profile/Partials/TabItem.vue";
+import TabPhoto from "@/Pages/Profile/TabPhoto.vue";
 import { computed, ref } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InviteUserModal from "@/Components/app/InviteUserModal.vue";
@@ -40,6 +41,7 @@ const props = defineProps({
     posts: Object,
     users: Array,
     requests: Array,
+    photos: Array,
 });
 
 const aboutForm = useForm({
@@ -326,7 +328,7 @@ function updateAbout(){
                             </div>
                         </TabPanel>
                         <TabPanel class='bg-white p-3 shadow'>
-                            Photos
+                            <TabPhoto :photos="photos"/>
                         </TabPanel>
                         <TabPanel class='bg-white p-3 shadow'>
                             <template v-if="isCurrentUserAdmin">
