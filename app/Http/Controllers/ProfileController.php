@@ -6,12 +6,12 @@ namespace App\Http\Controllers;
 
 use App\Actions\Media\CreateCover;
 use App\Actions\Media\CreateThumbnail;
+use App\Actions\PostAttachment\GetPhotos;
 use App\Http\Requests\MediaRequest;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Resources\PostAttachment\PostAttachmentResource;
 use App\Http\Resources\Posts\PostResource;
 use App\Http\Resources\UserResource;
-use App\Models\PostAttachment;
 use App\Models\User;
 use App\Queries\PostRelatedReactionAndComments;
 use App\Services\FollowerService;
@@ -31,19 +31,22 @@ final class ProfileController extends Controller
     /**
      * Display the user's profile.
      */
-    public function index(User $user, FollowerService $service, PostRelatedReactionAndComments $query): AnonymousResourceCollection|Response
-    {
+    public function index(
+        User $user,
+        FollowerService $service,
+        PostRelatedReactionAndComments $query,
+        GetPhotos $getPhotos
+    ): AnonymousResourceCollection|Response {
         $posts = PostResource::collection($query->builder()
             ->where('user_id', $user->id)
-            ->paginate(10));
+            ->paginate(10)
+        );
+
         if (request()->wantsJson()) {
             return $posts;
         }
 
-        $photos = PostAttachment::query()
-            ->where('created_by', $user->id)
-            ->whereLike('mime', 'image/%')
-            ->get();
+        $photos = $getPhotos->handle($user);
 
         return Inertia::render('Profile/View', [
             'mustVerifyEmail' => true,
