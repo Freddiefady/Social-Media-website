@@ -11,6 +11,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $post_id
+ * @property int $created_by
+ * @property string $name
+ * @property string $path
+ * @property string $mime
+ * @property int $size
+ * @property-read Post $post
+ */
 #[ObservedBy(PostAttachmentObserver::class)]
 final class PostAttachment extends Model
 {
