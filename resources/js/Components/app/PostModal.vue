@@ -1,6 +1,6 @@
 <script setup>
-import {computed, ref, watch} from 'vue'
-import {XMarkIcon, PaperClipIcon, BookmarkIcon, ArrowUturnLeftIcon} from '@heroicons/vue/24/outline'
+import { computed, ref, watch } from 'vue'
+import { XMarkIcon, PaperClipIcon, BookmarkIcon, ArrowUturnLeftIcon, SparklesIcon } from '@heroicons/vue/24/outline'
 import {
     TransitionRoot,
     TransitionChild,
@@ -10,9 +10,10 @@ import {
 } from '@headlessui/vue'
 import InputTextArea from "@/Components/InputTextArea.vue";
 import PostUserHeader from "@/Components/app/PostUserHeader.vue";
-import {useForm, usePage} from "@inertiajs/vue3";
-import {isImage} from "@/helpers.js";
+import { useForm, usePage } from "@inertiajs/vue3";
+import { isImage } from "@/helpers.js";
 import IndigoButton from "@/Components/app/IndigoButton.vue";
+import axiosClient from "@/axiosClient.js";
 
 const props = defineProps({
     post: {
@@ -37,6 +38,7 @@ const attachmentExtensions = usePage().props.attachmentExtensions;
  */
 const attachmentFiles = ref([])
 const attachmentErrors = ref([])
+const aiButtonLoading = ref(false);
 const formErrors = ref({})
 
 const form = useForm({
@@ -171,6 +173,22 @@ function undoDelete(myFile) {
     myFile.deleted = false
     form.deleted_file_ids = form.deleted_file_ids.filter(id => id !== myFile.id)
 }
+
+function GenerateAIContent() {
+    if (!form.body) return;
+    aiButtonLoading.value = true;
+    axiosClient.post(route('post.generate.ai'), {
+        prompt: form.body
+    })
+    .then(({ data }) => {
+        form.body = data.content;
+        aiButtonLoading.value = false;
+    })
+    .catch(error => {
+        console.error('Error generating content:', error);
+        aiButtonLoading.value = false;
+    });
+}
 </script>
 
 <template>
@@ -223,7 +241,16 @@ function undoDelete(myFile) {
                                         {{ formErrors.group_id }}
                                     </div>
 
-                                    <InputTextArea v-model="form.body" class="mb-3 w-full"/>
+                                    <div class="relative group">
+                                        <InputTextArea v-model="form.body" class="mb-3 w-full"/>
+
+                                        <button class="absolute h-8 w-8 right-1 top-5 p-1 rounded bg-indigo-500 hover:bg-indigo-600 text-white flex justify-center items-center opacity-0 group-hover:opacity-100 transition disabled:cursor-not-allowed disabled:bg-indigo-400 disabled:hover:bg-indigo-400"
+                                        :disabled="aiButtonLoading"
+                                        @click="GenerateAIContent">
+                                            <svg v-if="aiButtonLoading" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                            <SparklesIcon v-else class="h-5 w-5"/>
+                                        </button>
+                                    </div>
 
                                     <div v-if="showExtensionsText" class="border-l-4 border-amber-500 px-3 py-2 mt-3 text-gray-800 bg-amber-100">
                                         Files must be one of the following extensions <br>

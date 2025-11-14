@@ -7,6 +7,7 @@ use App\Http\Controllers\Comments\CommentReactionController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\Group\GroupController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Posts\GeneratePostController;
 use App\Http\Controllers\Posts\PostAttachmentController;
 use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\PostReactionController;
@@ -31,13 +32,14 @@ Route::middleware('auth')->group(function (): void {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // ----- Posts -----
     Route::apiResource('/post', PostController::class)
         ->except('index');
-
     Route::prefix('post')->group(function (): void {
         Route::name('post.')->group(function (): void {
             Route::get('/download/{attachment}', PostAttachmentController::class)->name('download');
             Route::post('/{post}/reaction', PostReactionController::class)->name('reaction');
+            Route::post('/generate-post', GeneratePostController::class)->name('generate.ai');
         });
 
         Route::controller(CommentController::class)->name('comment.')->group(function (): void {
