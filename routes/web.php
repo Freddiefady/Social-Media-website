@@ -6,7 +6,12 @@ use App\Http\Controllers\Comments\CommentController;
 use App\Http\Controllers\Comments\CommentReactionController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\Global\SearchController;
+use App\Http\Controllers\Group\ApprovedRequestController;
+use App\Http\Controllers\Group\ChangeRoleController;
+use App\Http\Controllers\Group\DestroyUserController;
 use App\Http\Controllers\Group\GroupController;
+use App\Http\Controllers\Group\InviteController;
+use App\Http\Controllers\Group\JoinController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Posts\GeneratePostController;
 use App\Http\Controllers\Posts\PostAttachmentController;
@@ -25,7 +30,7 @@ Route::get('/u/{user:username}', [ProfileController::class, 'index'])
 
 Route::apiResource('group', GroupController::class)->except('index');
 
-Route::get('/group/approve-invitation/{token}', [GroupController::class, 'AcceptInvitation'])
+Route::get('/group/approve-invitation/{token}', ApprovedRequestController::class)
     ->name('group.approve');
 
 Route::middleware('auth')->group(function (): void {
@@ -38,6 +43,7 @@ Route::middleware('auth')->group(function (): void {
     // ----- Posts -----
     Route::apiResource('/post', PostController::class)
         ->except('index');
+
     Route::prefix('post')->group(function (): void {
         Route::name('post.')->group(function (): void {
             Route::get('/download/{attachment}', PostAttachmentController::class)->name('download');
@@ -53,24 +59,27 @@ Route::middleware('auth')->group(function (): void {
                 ->name('reaction');
         });
     });
+
     // ----- Groups -----
-    Route::post('/group/update-images/{group}', [GroupController::class, 'updateImages'])
-        ->name('group.update-images');
+    Route::prefix('/group')->name('group.')->group(function (): void {
+        Route::post('/update-images/{group}', [GroupController::class, 'updateImages'])
+            ->name('update-images');
 
-    Route::post('/group/invite/{group}', [GroupController::class, 'invite'])
-        ->name('group.invite');
+        Route::post('/invite/{group}', InviteController::class)
+            ->name('invite');
 
-    Route::post('/group/join/{group}', [GroupController::class, 'join'])
-        ->name('group.join');
+        Route::post('/join/{group}', JoinController::class)
+            ->name('join');
 
-    Route::post('/group/approve/{group}', [GroupController::class, 'approveRequest'])
-        ->name('group.approve-request');
+        Route::post('/approve/{group}', ApprovedRequestController::class)
+            ->name('approve-request');
 
-    Route::delete('/group/destroy-user/{group}', [GroupController::class, 'destroyUser'])
-        ->name('group.destroy-user');
+        Route::delete('/destroy-user/{group}', DestroyUserController::class)
+            ->name('destroy-user');
 
-    Route::post('/group/change-role/{group}', [GroupController::class, 'changeRole'])
-        ->name('group.change-role');
+        Route::post('/change-role/{group}', ChangeRoleController::class)
+            ->name('change-role');
+    });
 
     // ------ followers -----
     Route::post('/user/follower/{user}', FollowerController::class)
