@@ -13,7 +13,7 @@ defineProps({
 
 <template>
     <AuthenticatedLayout>
-        <div class="p-4">
+        <div class="p-4 overflow-auto h-full">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div class="shadow bg-white rounded p-3 mb-3">
                     <h2 class="text-lg font-bold">Users</h2>
