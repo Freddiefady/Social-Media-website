@@ -76,7 +76,7 @@ const showExtensionsText = computed(() => {
 const emit = defineEmits(['update:modelValue', 'hide'])
 
 watch(() => props.post, () => {
-    form.body = props.post.body || ''
+    form.body = props.post.body.replace(/<br\s*\/?>/gi, '\n') || ''
 })
 
 function closeModal() {
