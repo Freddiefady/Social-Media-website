@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Actions\Group;
 
+use App\Actions\GroupUser\UpdateStatusGroupUser;
 use App\Enums\GroupUserStatusEnum;
 use App\Models\Group;
 use App\Models\GroupUser;
-use App\Models\User;
 
 final readonly class FirstApprovedRequests
 {

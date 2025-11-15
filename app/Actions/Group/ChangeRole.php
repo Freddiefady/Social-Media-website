@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Group;
 
+use App\Actions\GroupUser\UpdateRoleGroupUser;
 use App\Models\Group;
 use App\Models\GroupUser;
 

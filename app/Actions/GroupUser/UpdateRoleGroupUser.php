@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Group;
+namespace App\Actions\GroupUser;
 
 use App\Models\GroupUser;
 

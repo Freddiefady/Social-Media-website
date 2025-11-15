@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Group;
 
-use App\Actions\Group\AcceptInvitation;
 use App\Actions\Group\ChangeRole;
 use App\Actions\Group\CreateGroup;
-use App\Actions\Group\CreateGroupUser;
 use App\Actions\Group\CreateInviteUser;
 use App\Actions\Group\FirstApprovedRequests;
 use App\Actions\Group\JoinToGroup;
 use App\Actions\Group\showGroup;
 use App\Actions\Group\UpdateGroup;
-use App\Actions\Group\ValidateGroupUserInvitation;
+use App\Actions\GroupUser\AcceptInvitation;
+use App\Actions\GroupUser\CreateGroupUser;
 use App\Actions\GroupUser\DeleteUser;
+use App\Actions\GroupUser\ValidateGroupUserInvitation;
 use App\Actions\Media\CreateCover;
 use App\Actions\Media\CreateThumbnail;
 use App\Actions\PostAttachment\GetPhotosInGroup;
