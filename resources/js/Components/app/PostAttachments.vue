@@ -1,7 +1,8 @@
 <script setup>
 import { ArrowDownTrayIcon } from '@heroicons/vue/24/outline'
 import { PaperClipIcon } from '@heroicons/vue/24/solid'
-import { isImage } from "@/helpers.js";
+import { isImage, isVideo } from "@/helpers.js";
+import { PlayCircleIcon } from "@heroicons/vue/24/solid/index.js";
 
 defineProps({
     attachments: Array,
@@ -24,8 +25,14 @@ defineEmits(["attachmentClick"]);
                class="z-20 w-8 h-8 flex flex-col items-center justify-center rounded bg-gray-700 hover:bg-gray-800 text-gray-100 absolute right-2 top-2 cursor-pointer group opacity-0 group-hover:opacity-100 transition-all">
                 <ArrowDownTrayIcon class="w-4 h-4"/>
             </a>
-            <!-- /Download -->
+            <!-- IMAGE -->
             <img v-if="isImage(attachment)" :src="attachment.url" class="object-contain aspect-square" alt=""/>
+            <!-- VIDEO -->
+            <div v-else-if="isVideo(attachment)" class="relative flex justify-center items-center">
+                <video :src="attachment.url"></video>
+                <PlayCircleIcon class="z-20 absolute h-16 w-16 text-gray-100 opacity-70"/>
+                <div class="absolute top-0 left-0 w-full h-full bg-black/50 z-10"></div>
+            </div>
 
             <div v-else class="flex items-center justify-center">
                 <PaperClipIcon class="w-4 h-4 mr-2"/>
