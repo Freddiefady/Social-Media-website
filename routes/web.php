@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Comments\CommentController;
 use App\Http\Controllers\Comments\CommentReactionController;
 use App\Http\Controllers\FollowerController;
+use App\Http\Controllers\Global\SearchController;
 use App\Http\Controllers\Group\GroupController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Posts\GeneratePostController;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::get('/search/{search}', SearchController::class)->name('search');
 
 Route::get('/u/{user:username}', [ProfileController::class, 'index'])
     ->name('profile');
