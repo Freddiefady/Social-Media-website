@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\GroupUser;
 
+use App\Actions\Notifications\SendDeleteUser;
 use App\Models\Group;
 use App\Models\GroupUser;
 

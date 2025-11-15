@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\GroupUser;
+namespace App\Actions\Notifications;
 
 use App\Models\GroupUser;
 use App\Notifications\DeletedUserFromGroup;

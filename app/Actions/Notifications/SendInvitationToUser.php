@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Group;
+namespace App\Actions\Notifications;
 
 use App\Models\Group;
 use App\Models\User;

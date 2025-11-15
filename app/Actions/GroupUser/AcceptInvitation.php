@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\GroupUser;
 
-use App\Actions\Group\SendInvitationApproved;
+use App\Actions\Notifications\SendInvitationApproved;
 use App\Models\GroupUser;
 
 final readonly class AcceptInvitation

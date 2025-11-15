@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Group;
 
+use App\Actions\Notifications\SendRequestToGroupJoin;
 use App\Enums\GroupUserRoleEnum;
 use App\Enums\GroupUserStatusEnum;
 use App\Models\Group;
