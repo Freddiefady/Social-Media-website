@@ -29,3 +29,9 @@
 .comment-list:hover::-webkit-scrollbar-track {
     background-color: #f1f1f3; /* Track Color */
 }
+
+a.hashtag {
+    text-decoration: #4b9afa;
+    color: #4156e2;
+    background-color: #eaf4ff;
+}
