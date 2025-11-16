@@ -7,20 +7,27 @@ namespace App\Http\Controllers\Post;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PreviewUrlRequest;
 use DOMDocument;
-use Illuminate\Http\Request;
-use RuntimeException;
+use Illuminate\Http\JsonResponse;
 
 final class UrlPreviewController extends Controller
 {
     /**
      * Handle the incoming request.
+     *
+     * @return array<string, string>|JsonResponse
      */
-    public function __invoke(PreviewUrlRequest $request): array
+    public function __invoke(PreviewUrlRequest $request): array|JsonResponse
     {
         $url = $request->string('url')->toString();
 
         $html = file_get_contents($url);
-        throw_if($html === false, RuntimeException::class, "Failed to fetch content from URL: {$url}");
+
+        if ($html === false) {
+            return response()->json([
+                'error' => 'Failed to fetch URL content',
+            ], 400);
+        }
+
         $dom = new DOMDocument();
 
         // Suppress warnings for malformed HTML
