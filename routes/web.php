@@ -13,11 +13,11 @@ use App\Http\Controllers\Group\GroupController;
 use App\Http\Controllers\Group\InviteController;
 use App\Http\Controllers\Group\JoinController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Post\UrlPreviewController;
 use App\Http\Controllers\Posts\GeneratePostController;
 use App\Http\Controllers\Posts\PostAttachmentController;
 use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\PostReactionController;
+use App\Http\Controllers\Posts\UrlPreviewController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
