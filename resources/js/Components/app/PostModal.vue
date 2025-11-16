@@ -14,6 +14,7 @@ import { useForm, usePage } from "@inertiajs/vue3";
 import { isImage } from "@/helpers.js";
 import IndigoButton from "@/Components/app/IndigoButton.vue";
 import axiosClient from "@/axiosClient.js";
+import UrlPreview from "@/Components/app/UrlPreview.vue";
 
 const props = defineProps({
     post: {
@@ -46,6 +47,8 @@ const form = useForm({
     group_id: null,
     attachments: [],
     deleted_file_ids: [],
+    preview: {},
+    preview_url: null,
     _method: 'POST'
 })
 
@@ -77,6 +80,7 @@ const emit = defineEmits(['update:modelValue', 'hide'])
 
 watch(() => props.post, () => {
     form.body = props.post.body.replace(/<br\s*\/?>/gi, '\n') || ''
+    onInputChange()
 })
 
 function closeModal() {
@@ -185,9 +189,59 @@ function GenerateAIContent() {
         aiButtonLoading.value = false;
     })
     .catch(error => {
-        console.error('Error generating content:', error);
         aiButtonLoading.value = false;
     });
+}
+
+function fetchPreview(url) {
+    if (url === form.preview_url) return;
+
+    form.preview_url = url;
+    form.preview = {};
+    if (url) {
+        axiosClient.post(route('post.url-preview'), { url })
+            .then(({ data }) => {
+                form.preview = {
+                    title: data['og:title'],
+                    description: data['og:description'],
+                    image: data['og:image'],
+                }
+            })
+            .catch(error => {
+            })
+    }
+}
+
+function onInputChange(){
+    let url = matchHref();
+    if (!url) {
+        url = matchLink();
+    }
+    fetchPreview(url)
+}
+
+function matchHref(){
+    // Regular expression to match URLs
+    const urlRegex = /<a.+href="((https?):\/\/[^"]+)"/;
+    // match the first URL in the HTML content
+    const match = form.body.match(urlRegex)
+    // check if a match is found
+    if (match && match.length > 0) {
+        return match[1];
+    }
+    return null;
+}
+
+function matchLink(){
+    // Regular expression to match URLs
+    const urlRegex = /(?:https?):\/\/[^\s<]+/;
+    // match the first URL in the HTML content
+    const match = form.body.match(urlRegex)
+    // check if a match is found
+    if (match && match.length > 0) {
+        return match[0];
+    }
+    return null;
 }
 </script>
 
@@ -242,7 +296,9 @@ function GenerateAIContent() {
                                     </div>
 
                                     <div class="relative group">
-                                        <InputTextArea v-model="form.body" class="mb-3 w-full"/>
+                                        <InputTextArea v-model="form.body" @input="onInputChange" class="mb-3 w-full"/>
+
+                                        <UrlPreview :preview="form.preview" :url="form.preview_url"/>
 
                                         <button class="absolute h-8 w-8 right-1 top-5 p-1 rounded bg-indigo-500 hover:bg-indigo-600 text-white flex justify-center items-center opacity-0 group-hover:opacity-100 transition disabled:cursor-not-allowed disabled:bg-indigo-400 disabled:hover:bg-indigo-400"
                                         :disabled="aiButtonLoading"

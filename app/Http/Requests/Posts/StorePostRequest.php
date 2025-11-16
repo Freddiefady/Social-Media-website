@@ -11,6 +11,7 @@ use Illuminate\Validation\Rules\File;
 
 /**
  * @property string $body
+ * @property string $preview_url
  */
 class StorePostRequest extends FormRequest
 {
@@ -44,6 +45,8 @@ class StorePostRequest extends FormRequest
             'attachments' => ['array', 'max:50', new TotalSizeFiles()],
             'attachments.*' => ['file', File::types(...self::$extensions)],
             'group_id' => ['nullable', 'exists:groups,id', new UserExists()],
+            'preview' => ['nullable', 'array'],
+            'preview_url' => ['nullable', 'string'],
         ];
     }
 

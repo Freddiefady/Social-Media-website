@@ -9,6 +9,7 @@ import EditDeleteDropdown from "@/Components/app/EditDeleteDropdown.vue";
 import CommentList from "@/Components/app/CommentList.vue";
 import PostAttachments from "@/Components/app/PostAttachments.vue";
 import { computed } from "vue";
+import UrlPreview from "@/Components/app/UrlPreview.vue";
 
 const props = defineProps({
     post: Object,
@@ -16,12 +17,14 @@ const props = defineProps({
 
 const emit = defineEmits(['editClick', 'attachmentClick']);
 
-const postBody = computed(() => props.post.body.replace(
-    /(#\w+)(?![^<]*<\/a>)/g,
-    (group) => {
-        const encode = encodeURIComponent(group);
-        return `<a href="/search/${encode}" class="hashtag">${group}</a>`;
-    })
+const postBody = computed(() => {
+    return props.post.body.replace(
+        /(?:(\s+)|<p>)((#\w+)(?![^<]*<\/a>))/g,
+        (match, group1, group2) => {
+            const encode = encodeURIComponent(group2);
+            return `${group1 || ''}<a href="/search/${encode}" class="hashtag">${group2}</a>`;
+        });
+    }
 );
 
 function openEditModal() {
@@ -59,6 +62,7 @@ function deletePost() {
         </div>
         <div class="mb-3">
             <ReadMoreReadLess :content="postBody" />
+            <UrlPreview :preview="post.preview" :url="post.preview_url" />
         </div>
         <div class="grid gap-3 mb-3" :class="[
                 post.attachments.length === 1 ? 'grid-cols-1' : 'grid-cols-2'

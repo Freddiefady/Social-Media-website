@@ -11,6 +11,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Comment;
 use App\Models\PostAttachment;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -28,6 +29,8 @@ use Illuminate\Support\Carbon;
  * @property-read int $comments_count
  * @property-read mixed $reactions
  * @property-read Collection<int, Comment> $comments
+ * @property Json $preview
+ * @property string $preview_url
  */
 final class PostResource extends JsonResource
 {
@@ -47,6 +50,8 @@ final class PostResource extends JsonResource
         return [
             'id' => $this->id,
             'body' => $this->body,
+            'preview' => $this->preview,
+            'preview_url' => $this->preview_url,
             'created_at' => $this->created_at->format('y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('y-m-d H:i:s'),
             'user' => new UserResource($this->user),
