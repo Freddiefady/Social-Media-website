@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Policies\PostPolicy;
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +24,8 @@ use Illuminate\Support\Carbon;
  * @property-read string $user_id
  * @property-read string $group_id
  * @property-read string $deleted_by
+ * @property Json $preview
+ * @property string $preview_url
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read User $user
@@ -44,12 +47,13 @@ final class Post extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'body',
-        'image',
-        'user_id',
-        'group_id',
-        'deleted_by',
+        'body', 'image', 'user_id', 'group_id', 'deleted_by', 'preview', 'preview_url',
     ];
+
+    /**
+     * @var array<string, string>
+     */
+    protected $casts = ['preview' => 'json'];
 
     /**
      * @return BelongsTo<User, $this>

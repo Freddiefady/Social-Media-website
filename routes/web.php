@@ -13,6 +13,7 @@ use App\Http\Controllers\Group\GroupController;
 use App\Http\Controllers\Group\InviteController;
 use App\Http\Controllers\Group\JoinController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Post\UrlPreviewController;
 use App\Http\Controllers\Posts\GeneratePostController;
 use App\Http\Controllers\Posts\PostAttachmentController;
 use App\Http\Controllers\Posts\PostController;
@@ -49,6 +50,7 @@ Route::middleware('auth')->group(function (): void {
             Route::get('/download/{attachment}', PostAttachmentController::class)->name('download');
             Route::post('/{post}/reaction', PostReactionController::class)->name('reaction');
             Route::post('/generate-post', GeneratePostController::class)->name('generate.ai');
+            Route::post('/url-preview', UrlPreviewController::class)->name('url-preview');
         });
 
         Route::controller(CommentController::class)->name('comment.')->group(function (): void {
