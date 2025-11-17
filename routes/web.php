@@ -14,6 +14,7 @@ use App\Http\Controllers\Group\InviteController;
 use App\Http\Controllers\Group\JoinController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Posts\GeneratePostController;
+use App\Http\Controllers\Posts\PinPostController;
 use App\Http\Controllers\Posts\PostAttachmentController;
 use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\PostReactionController;
@@ -51,6 +52,7 @@ Route::middleware('auth')->group(function (): void {
             Route::post('/{post}/reaction', PostReactionController::class)->name('reaction');
             Route::post('/generate-post', GeneratePostController::class)->name('generate.ai');
             Route::post('/url-preview', UrlPreviewController::class)->name('url-preview');
+            Route::post('/{post}/pin', PinPostController::class)->name('pin');
         });
 
         Route::controller(CommentController::class)->name('comment.')->group(function (): void {
