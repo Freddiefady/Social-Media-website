@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Spatie\Sluggable\HasSlug;
@@ -28,6 +27,7 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read string $cover_path
  * @property-read string $thumbnail_path
  * @property-read bool $auto_approval
+ * @property-read int $pinned_post_id
  * @property-read int $user_id
  * @property-read int $deleted_by
  * @property-read Carbon $deleted_at
@@ -46,7 +46,7 @@ final class Group extends Model
     use HasFactory, HasSlug, SoftDeletes;
 
     protected $fillable = [
-        'name', 'slug', 'about', 'cover_path', 'thumbnail_path', 'user_id', 'auto_approval', 'deleted_by', 'deleted_at',
+        'name', 'slug', 'about', 'cover_path', 'thumbnail_path', 'user_id', 'auto_approval', 'deleted_by', 'deleted_at', 'pinned_post_id',
     ];
 
     /**

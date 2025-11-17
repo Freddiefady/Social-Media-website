@@ -24,6 +24,7 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read string|null $cover_path
  * @property-read string|null $avatar_path
  * @property-read string $password
+ * @property-read int $pinned_post_id
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Collection<int, Post> $posts
@@ -50,6 +51,7 @@ final class User extends Authenticatable implements MustVerifyEmail
         'cover_path',
         'avatar_path',
         'password',
+        'pinned_post_id',
     ];
 
     /**
