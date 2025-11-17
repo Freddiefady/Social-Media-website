@@ -25,8 +25,10 @@ final readonly class showGroup
         // Check if current user is an approved member
         $this->membershipService->isApprovedMember($group, (int) $userId);
 
-        $posts = $this->query->builder()
+        $posts = $this->query->builder(latest: false)
             ->where('group_id', $group->id)
+            ->leftJoin('groups AS g', 'g.pinned_post_id', 'posts.id')
+            ->orderByDesc('g.pinned_post_id')
             ->paginate(10);
 
         return [
