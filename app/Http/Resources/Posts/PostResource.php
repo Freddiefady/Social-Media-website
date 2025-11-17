@@ -29,8 +29,8 @@ use Illuminate\Support\Carbon;
  * @property-read int $comments_count
  * @property-read mixed $reactions
  * @property-read Collection<int, Comment> $comments
- * @property Json $preview
- * @property string $preview_url
+ * @property-read Json $preview
+ * @property-read string $preview_url
  */
 final class PostResource extends JsonResource
 {

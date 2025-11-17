@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
  * @property-read string $avatar_path
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
+ * @property-read int $pinned_post_id
  */
 final class UserResource extends JsonResource
 {
@@ -33,10 +34,11 @@ final class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'username' => $this->username,
-            'cover_url' => $this->cover_path ? Storage::url($this->cover_path) : null,
-            'avatar_url' => $this->avatar_path ? Storage::url($this->avatar_path) : asset('img/avatar.png'),
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
+            'pinned' => $this->pinned_post_id,
+            'cover_url' => $this->cover_path ? Storage::url($this->cover_path) : null,
+            'avatar_url' => $this->avatar_path ? Storage::url($this->avatar_path) : asset('img/avatar.png'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
