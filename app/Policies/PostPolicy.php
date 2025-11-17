@@ -29,4 +29,16 @@ final readonly class PostPolicy
             ? Response::allow()
             : Response::deny("You don't have permission to delete this post.", 403);
     }
+
+    /**
+     * Determine if the user can pin the post to a group.
+     */
+    public function pinToGroup(User $user, Post $post): bool|Response
+    {
+        if (! $post->group) {
+            return Response::deny('you are not allowed to perform this action.', 403);
+        }
+
+        return $this->membershipService->isAdmin($post->group, $user->id);
+    }
 }
