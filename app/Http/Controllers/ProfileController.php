@@ -37,8 +37,10 @@ final class ProfileController extends Controller
         PostRelatedReactionAndComments $query,
         GetPhotos $getPhotos
     ): AnonymousResourceCollection|Response {
-        $posts = PostResource::collection($query->builder()
+        $posts = PostResource::collection($query->builder(latest: false)
             ->where('user_id', $user->id)
+            ->leftJoin('users AS u', 'u.pinned_post_id', 'posts.id')
+            ->orderByDesc('u.pinned_post_id')
             ->paginate(10)
         );
 
