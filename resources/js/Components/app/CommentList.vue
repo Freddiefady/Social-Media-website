@@ -130,7 +130,7 @@ function onDeleteComment(comment) {
                     </Link>
                     <div>
                         <h4 class="font-bold">
-                            <Link :href="route('profile', comment.user.name)" class="hover:underline">
+                            <Link :href="route('profile', comment.user.name)" class="hover:underline dark:text-gray-200">
                                 {{ comment.user?.name || 'Unknown User' }}
                             </Link>
                         </h4>
@@ -150,7 +150,7 @@ function onDeleteComment(comment) {
                         <IndigoButton @click="updateComment" class="w-[100px]">update</IndigoButton>
                     </div>
                 </div>
-                <ReadMoreReadLess v-else :content="comment.comment" content-class="text-sm flex flex-1"/>
+                <ReadMoreReadLess v-else :content="comment.comment" content-class="text-sm flex flex-1 dark:text-gray-100"/>
                 <Disclosure>
                     <div class="flex gap-2 mt-1">
                         <button @click="sendCommentReaction(comment)"

@@ -19,12 +19,12 @@ function onGroupCreate(data){
 <template>
     <div class="flex gap-2 mt-4">
         <TextInput :model-value="searchKeyword" placeholder="Type to search" class="w-full" />
-        <button @click="showNewGroupModal = true" class="text-xs bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-2 rounded">
+        <button @click="showNewGroupModal = true" class="text-xs bg-indigo-500 hover:bg-indigo-600 text-white dark:text-gray-100 py-1 px-2 rounded">
             New Group
         </button>
     </div>
     <div class="mt-3 h-[200px] lg:flex-1 overflow-auto">
-        <div v-if="false" class="text-gray-400 flex justify-center p-3">
+        <div v-if="false" class="text-gray-400 dark:text-gray-100 flex justify-center p-3">
             you are not a member of any groups.
         </div>
         <div v-else>

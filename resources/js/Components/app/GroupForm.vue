@@ -24,6 +24,6 @@ defineProps({
   </div>
   <div class="mt-3">
     <label>About Group</label>
-    <textarea v-model="form.about" class="w-full"></textarea>
+    <textarea v-model="form.about" class="w-full dark:text-gray-100 dark:bg-slate-900"></textarea>
   </div>
 </template>

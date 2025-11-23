@@ -184,7 +184,7 @@ function updateAbout(){
                     {{ errors.cover }}
                 </div>
 
-                <div class="group relative bg-white">
+                <div class="group relative bg-white dark:bg-slate-950 dark:text-gray-100">
                     <img :src="coverImageScr || group.cover_url || '/img/Desktop-BG726.webp'"
                          class="w-full h-[200px] object-cover" :alt="group.name"/>
                     <div v-if="isCurrentUserAdmin" class="absolute top-2 right-2">
@@ -268,9 +268,9 @@ function updateAbout(){
                 </div>
             </div>
 
-            <div class="border-t p-4 pt-0">
+            <div class="border-t m-4 mt-0">
                 <TabGroup>
-                    <TabList class="pl-lg-[200px] flex bg-white">
+                    <TabList class="pl-lg-[200px] flex bg-white dark:bg-slate-900">
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Posts" :selected="selected"/>
                         </Tab>
@@ -327,10 +327,10 @@ function updateAbout(){
                                 There are no pending requests.
                             </div>
                         </TabPanel>
-                        <TabPanel class='bg-white p-3 shadow'>
+                        <TabPanel class='bg-white p-3 shadow dark:bg-slate-900'>
                             <TabPhoto :photos="photos"/>
                         </TabPanel>
-                        <TabPanel class='bg-white p-3 shadow'>
+                        <TabPanel class='bg-white p-3 shadow text-slate-900 dark:text-slate-100 dark:bg-slate-900'>
                             <template v-if="isCurrentUserAdmin">
                                 <GroupForm :form="aboutForm" />
                                 <primary-button @click="updateAbout">Submit</primary-button>

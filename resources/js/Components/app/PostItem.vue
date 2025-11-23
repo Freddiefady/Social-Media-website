@@ -90,7 +90,7 @@ function pinUnpinPost() {
 </script>
 
 <template>
-    <div class="bg-white p-4 rounded mb-4">
+    <div class="bg-white dark:bg-slate-950 p-4 rounded mb-4">
         <div class="flex items-center justify-between gap-2 mb-3">
             <PostUserHeader :post="post"/>
             <div class="flex items-center gap-1">
@@ -102,7 +102,7 @@ function pinUnpinPost() {
                                 @edit="openEditModal" @delete="deletePost" @pin="pinUnpinPost" />
             </div>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 dark:text-gray-100">
             <ReadMoreReadLess :content="postBody" />
             <UrlPreview :preview="post.preview" :url="post.preview_url" />
         </div>
@@ -116,15 +116,16 @@ function pinUnpinPost() {
             <div class="flex gap-2">
                 <button
                     @click="sendReaction"
-                    class="flex gap-1 items-center justify-center px-4 py-2 flex-1 text-gray-800 rounded-lg"
-                    :class="post.current_user_has_reaction ? 'bg-sky-100 hover:bg-sky-200' : 'bg-gray-100 hover:bg-gray-200'"
+                    class="flex gap-1 items-center justify-center px-4 py-2 flex-1 text-gray-800 dark:text-slate-100 rounded-lg"
+                    :class="post.current_user_has_reaction
+                     ? 'bg-sky-100 hover:bg-sky-200 dark:bg-sky-900 dark:hover:bg-sky-800' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-900'"
                 >
                     <HandThumbUpIcon class="w-5 h-5"/>
                     <span class="mr-2">{{post.num_of_reactions}}</span>
                     {{post.current_user_has_reaction ? 'Unlike' : 'Like'}}
                 </button>
                 <DisclosureButton
-                    class="flex gap-1 items-center justify-center px-4 py-2 flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg"
+                    class="flex gap-1 items-center justify-center px-4 py-2 flex-1 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-lg"
                 >
                     <ChatBubbleLeftRightIcon class="w-5 h-5 mr-2"/>
                     <span class="mr-2">{{post.num_of_comments}}</span>

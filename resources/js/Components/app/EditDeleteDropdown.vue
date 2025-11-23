@@ -60,10 +60,10 @@ function copyToClipboard() {
 </script>
 
 <template>
-    <Menu as="div" class="relative inline-block text-left">
+    <Menu as="div" class="relative inline-block text-left dark:text-gray-100">
         <div>
             <MenuButton
-                class="w-8 h-8 rounded-full z-20 hover:bg-black/5 transition flex items-center justify-center"
+                class="w-8 h-8 rounded-full z-20 hover:bg-black/5 dark:hover:text-slate-600 transition flex items-center justify-center"
             >
                 <EllipsisVerticalIcon
                     class="h-5 w-5"
@@ -81,13 +81,13 @@ function copyToClipboard() {
             leave-to-class="transform scale-95 opacity-0"
         >
             <MenuItems
-                class="absolute z-20 right-0 mt-2 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+                class="absolute z-20 right-0 mt-2 w-48 origin-top-right divide-y divide-gray-100 dark:divide-stone-800 rounded-md bg-white dark:bg-slate-900 shadow-lg ring-1 ring-black/5 dark:ring-slate-800 focus:outline-none"
             >
                 <div class="px-1 py-1">
                     <MenuItem v-slot="{ active }">
                         <Link :href="route('post.show', props.post.id)"
                               :class="[
-                                          active ? 'bg-indigo-500 text-white' : 'text-gray-900',
+                                          active ? 'bg-indigo-500 text-white' : 'text-gray-900 dark:text-slate-100',
                                           'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                                     ]"
                         >
@@ -102,7 +102,7 @@ function copyToClipboard() {
                         <button
                             @click="copyToClipboard"
                             :class="[
-                                          active ? 'bg-indigo-500 text-white' : 'text-gray-900',
+                                          active ? 'bg-indigo-500 text-white' : 'text-gray-900 dark:text-slate-100',
                                           'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                                     ]"
                         >
@@ -117,7 +117,7 @@ function copyToClipboard() {
                         <button
                             @click="$emit('pin')"
                             :class="[
-                                  active ? 'bg-indigo-500 text-white' : 'text-gray-900',
+                                  active ? 'bg-indigo-500 text-white' : 'text-gray-900 dark:text-slate-100',
                                   'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                             ]"
                         >
@@ -131,7 +131,7 @@ function copyToClipboard() {
                         <button
                             @click="$emit('edit')"
                             :class="[
-                                          active ? 'bg-indigo-500 text-white' : 'text-gray-900',
+                                          active ? 'bg-indigo-500 text-white' : 'text-gray-900 dark:text-slate-100',
                                           'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                                     ]"
                         >
@@ -148,7 +148,7 @@ function copyToClipboard() {
                         <button
                             @click="$emit('delete')"
                             :class="[
-                                      active ? 'bg-indigo-500 text-white' : 'text-gray-900',
+                                      active ? 'bg-indigo-500 text-white' : 'text-gray-900 dark:text-slate-100',
                                       'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                                     ]"
                         >

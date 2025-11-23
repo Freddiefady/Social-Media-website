@@ -7,18 +7,33 @@
 }
 
 /* Webkit browsers (Chrome, Safari) */
-.comment-list::-webkit-scrollbar {
+::-webkit-scrollbar {
     background-color: transparent;
     width: 8px;
 }
 
-.comment-list::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background-color: transparent; /* Thumb Color */
     border-radius: 6px;
 }
 
-.comment-list::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background-color: transparent; /* Track Color */
+}
+
+/* Webkit browsers (Chrome, Safari) */
+html.dark ::-webkit-scrollbar {
+    background-color: transparent;
+    width: 8px;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+    background-color: #031a25; /* Thumb Color */
+    border-radius: 6px;
+}
+
+html.dark ::-webkit-scrollbar-track {
+    background-color: #0a2d3e; /* Track Color */
 }
 
 .comment-list:hover::-webkit-scrollbar-thumb {

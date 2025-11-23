@@ -128,7 +128,7 @@ function followerUser(){
                 >
                     {{ errors.cover }}
                 </div>
-                <div class="group relative bg-white">
+                <div class="group relative bg-white dark:bg-slate-950 dark:text-gray-100">
                     <img :src="coverImageScr || user.cover_url || '/img/Desktop-BG726.webp'"
                          class="w-full h-[200px] object-cover" :alt="user.name"/>
                     <div class="absolute top-2 right-2">
@@ -209,9 +209,9 @@ function followerUser(){
                 </div>
             </div>
 
-            <div class="border-t p-4 pt-0">
+            <div class="border-t m-4 mt-0">
                 <TabGroup>
-                    <TabList class="pl-[200px] flex bg-white">
+                    <TabList class="pl-[200px] flex bg-white dark:bg-slate-950 dark:text-slate-100">
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Posts" :selected="selected"/>
                         </Tab>

@@ -21,14 +21,14 @@ defineEmits(['approve', 'rejected', 'roleChange', 'delete']);
 </script>
 
 <template>
-    <div class="mb-3 cursor-pointer border-2 border-transparent hover:border-indigo-500 bg-white transition-all">
+    <div class="mb-3 cursor-pointer border-2 border-transparent hover:border-indigo-500 bg-white dark:bg-slate-800 transition-all">
         <div class="flex items-center gap-2 py-2 px-3">
             <Link :href="route('profile', user.username)">
                 <img :src="user.avatar_url" class="w-[32px] rounded-full"  :alt="user.name"/>
             </Link>
             <div class="flex justify-between flex-1">
                 <Link :href="route('profile', user.username)">
-                    <h3 class="font-black hover:underline">{{ user.name }}</h3>
+                    <h3 class="font-black dark:text-slate-100 hover:underline">{{ user.name }}</h3>
                 </Link>
                 <div v-if="forApprove" class="flex gap-1">
                     <button class="text-xs py-1 px-2 rounded bg-emerald-500 hover:bg-emerald-600 text-white"
@@ -43,7 +43,7 @@ defineEmits(['approve', 'rejected', 'roleChange', 'delete']);
                 <div v-if="showRoleDropDown">
                     <select @change="$emit('roleChange', user, $event.target.value)"
                             :disabled="disableRoleDropDown"
-                            class="rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 max-w-sm text-sm leading-6">
+                            class="rounded-md border-0 py-1 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-800 focus:ring-2 focus:ring-inset focus:ring-indigo-600 max-w-sm text-sm leading-6">
                         <option :selected="user.role === 'admin'">admin</option>
                         <option :selected="user.role === 'user'">user</option>
                     </select>

@@ -26,6 +26,7 @@ final class HomeController extends Controller
         }
 
         $groups = auth()->user()?->groups()
+            ->with('currentUserGroup')
             ->orderByPivot('role')
             ->latest('name')
             ->get();

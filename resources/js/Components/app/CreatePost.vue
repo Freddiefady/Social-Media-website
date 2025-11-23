@@ -25,9 +25,9 @@ function showCreatePostModal() {
 </script>
 
 <template>
-    <div class="p-4 bg-white rounded-lg border mb-3">
+    <div class="p-4 bg-white dark:bg-slate-950 rounded-lg border dark:border-slate-800 mb-3">
         <div @click="showCreatePostModal"
-             class="py-2 px-3 rounded-md border-gray-200 text-gray-500 shadow-md mb-3 w-full">
+             class="py-2 px-3 rounded-md border-gray-200 dark:border-slate-800 text-gray-500 dark:text-slate-100 shadow-md mb-3 w-full">
             Click here to create a new post ...
         </div>
 

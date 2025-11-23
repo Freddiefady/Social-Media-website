@@ -22,7 +22,7 @@ defineProps({
         </Link>
         <div>
             <h4 class="flex items-center text-lg font-bold">
-                <Link :href="route('profile', post.user.username)" class="hover:underline">
+                <Link :href="route('profile', post.user.username)" class="hover:underline dark:text-slate-100">
                     {{ post.user.name }}
                 </Link>
                 <template v-if="post.group">
@@ -32,7 +32,7 @@ defineProps({
                     </Link>
                 </template>
             </h4>
-            <small v-if="showTime" class="text-gray-400">{{ post.updated_at }}</small>
+            <small v-if="showTime" class="text-gray-400 dark:text-slate-100">{{ post.updated_at }}</small>
         </div>
     </div>
 </template>

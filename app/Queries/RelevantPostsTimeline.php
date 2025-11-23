@@ -29,7 +29,7 @@ final readonly class RelevantPostsTimeline
                     // OR posts from groups where user is approved member
                     ->orWhereHas('group.users', function ($q): void {
                         $q->where('group_users.user_id', auth()->id())
-                            ->where('group_users.status', GroupUserStatusEnum::APPROVED);
+                            ->where('group_users.status', GroupUserStatusEnum::APPROVED->value);
                     })
                     // OR posts by themselves
                     ->orWhere('posts.user_id', auth()->id());
