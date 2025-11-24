@@ -18,7 +18,7 @@ final class DestroyUserController extends Controller
      */
     public function __invoke(DeleteUserRequest $request, Group $group, DeleteUser $action): Response|RedirectResponse
     {
-        if ($request->user()?->can('change-role', $request['user_id'])) {
+        if ($request->user()?->can('is-owner', $group)) {
             return response('You cannot remove yourself from the group.', 403);
         }
         $action->handle($group, $request->validated());
