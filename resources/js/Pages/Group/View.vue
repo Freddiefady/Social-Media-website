@@ -13,6 +13,12 @@ import TextInput from "@/Components/TextInput.vue";
 import GroupForm from "@/Components/app/GroupForm.vue";
 import PostList from "@/Components/app/PostList.vue";
 import CreatePost from "@/Components/app/CreatePost.vue";
+import Modal from "@/Components/Modal.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import InputError from "@/Components/InputError.vue";
+import DeleteUserForm from "@/Pages/Profile/Partials/DeleteUserForm.vue";
 
 const imagesForm = useForm({
     thumbnail: null,
@@ -162,6 +168,16 @@ function onRoleChange(user, role){
 
 function updateAbout(){
     aboutForm.put(route('group.update', props.group.slug), {
+        preserveScroll: true,
+    })
+}
+
+function confirmGroupDeletion(){
+    if (! window.confirm(`Are you sure you want to delete "${props.group.name}" this group?`)) return false;
+
+    const form = useForm()
+
+    form.delete(route('group.destroy', props.group.slug), {
         preserveScroll: true,
     })
 }
@@ -334,7 +350,24 @@ function updateAbout(){
                             <template v-if="isCurrentUserAdmin">
                                 <GroupForm :form="aboutForm" />
                                 <primary-button @click="updateAbout">Submit</primary-button>
+                                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800 mt-3">
+                                    <section class="space-y-6">
+                                        <header>
+                                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                                Delete Group
+                                            </h2>
+
+                                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                                Once your group is deleted, all of its resources and data will
+                                                be permanently deleted.
+                                            </p>
+                                        </header>
+
+                                        <DangerButton @click="confirmGroupDeletion">Delete Group</DangerButton>
+                                    </section>
+                                </div>
                             </template>
+
                             <div v-else v-html="group.about">
 
                             </div>

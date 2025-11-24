@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Group;
 
 use App\Actions\Group\CreateGroup;
+use App\Actions\Group\DeleteGroup;
 use App\Actions\Group\showGroup;
 use App\Actions\Group\UpdateGroup;
 use App\Actions\GroupUser\CreateGroupUser;
@@ -79,9 +80,15 @@ final class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Group $group): void
+    public function destroy(Group $group, DeleteGroup $action): RedirectResponse|\Illuminate\Http\Response
     {
-        //
+        if (request()->user()?->can('is-owner', $group)) {
+            return response('You cannot remove the group. You not owner for the group', 403);
+        }
+
+        $action->handle($group);
+
+        return to_route('dashboard')->with('success', 'Group deleted');
     }
 
     public function updateImages(
