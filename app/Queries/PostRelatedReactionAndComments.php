@@ -6,6 +6,7 @@ namespace App\Queries;
 
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 final readonly class PostRelatedReactionAndComments
 {
@@ -19,9 +20,12 @@ final readonly class PostRelatedReactionAndComments
             ->with([
                 'user',
                 'group',
-                'comments' => fn ($query) => $query->latest()
+                'group.currentUserGroup',
+                'attachments',
+                'comments' => fn (Relation $query) => $query->latest()
+                    ->with(['user', 'reactions'])
                     ->withCount('reactions'),
-                'reactions' => fn ($query) => $query->whereUserId(auth()->id()),
+                'reactions' => fn (Relation $query) => $query->whereUserId(auth()->id()),
             ]);
 
         if ($latest) {
