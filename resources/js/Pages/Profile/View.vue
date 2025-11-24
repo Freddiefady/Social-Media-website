@@ -196,7 +196,7 @@ function followerUser(){
                                 <h2 class="text-bold text-lg" v-if="authUser">{{ props.user.name }}</h2>
                                 <div class="text-xs text-gray-500">{{ followerCount }} follower(s)</div>
                             </div>
-                           <div v-if="authUser.id !== props.user.id">
+                           <div v-if="! isMyProfile">
                                <primary-button v-if="! isCurrentUserFollower" @click="followerUser">
                                    Follow User
                                </primary-button>
