@@ -6,6 +6,8 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import TextInput from "@/Components/TextInput.vue";
+import { MoonIcon } from '@heroicons/vue/24/outline'
+
 
 const showingNavigationDropdown = ref(false);
 const keywords = ref(usePage().props.search);
@@ -14,6 +16,11 @@ const authUser = usePage().props.auth.user;
 
 function search() {
     router.get(route('search', encodeURIComponent(keywords.value)))
+}
+
+function toggleDarkMode(){
+    window.document.documentElement.classList.toggle('dark');
+    localStorage.setItem('darkMode', 'dark');
 }
 </script>
 
@@ -24,7 +31,7 @@ function search() {
         >
             <!-- Primary Navigation Menu -->
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center gap-4 h-16 justify-between">
+                <div class="flex items-center gap-2 h-16 justify-between">
                     <div class="flex">
                         <!-- Logo -->
                         <div class="flex shrink-0 items-center">
@@ -37,10 +44,14 @@ function search() {
 
                     </div>
 
-                    <div class="flex-1">
+                    <div class="flex-1 flex items-center gap-3">
                         <TextInput @keyup.enter="search"
                                    v-model="keywords"
                                    placeholder="Search on the website" class="w-full"/>
+
+                        <button @click="toggleDarkMode" class="dark:text-white">
+                            <MoonIcon class="h-5 w-5" />
+                        </button>
                     </div>
 
                     <div class="hidden sm:flex sm:items-center">
