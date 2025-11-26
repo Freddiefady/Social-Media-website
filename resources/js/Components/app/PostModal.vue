@@ -9,6 +9,8 @@ import IndigoButton from "@/Components/app/IndigoButton.vue";
 import axiosClient from "@/axiosClient.js";
 import UrlPreview from "@/Components/app/UrlPreview.vue";
 import BaseModal from "@/Components/app/BaseModal.vue";
+import UrlPreviewController from "@/actions/App/Http/Controllers/Posts/UrlPreviewController.js";
+import { store, update } from "@/actions/App/Http/Controllers/Posts/PostController.js";
 
 const props = defineProps({
     post: {
@@ -100,7 +102,7 @@ function submit() {
     form.attachments = attachmentFiles.value.map(myFile => myFile.file)
     if (props.post.id) {
         form._method = "PUT"
-        form.post(route('post.update', props.post.id), {
+        form.submit(update(props.post.id), {
             preserveScroll: true,
             onSuccess: () => {
                 closeModal()
@@ -110,7 +112,7 @@ function submit() {
             }
         })
     } else {
-        form.post(route('post.store'), {
+        form.submit(store(), {
             preserveScroll: true,
             onSuccess: () => {
                 closeModal()
@@ -193,7 +195,7 @@ function fetchPreview(url) {
     form.preview_url = url;
     form.preview = {};
     if (url) {
-        axiosClient.post(route('post.url-preview'), { url })
+        axiosClient.submit(UrlPreviewController(), { url })
             .then(({ data }) => {
                 form.preview = {
                     title: data['og:title'],

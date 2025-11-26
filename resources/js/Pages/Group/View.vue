@@ -13,12 +13,11 @@ import TextInput from "@/Components/TextInput.vue";
 import GroupForm from "@/Components/app/GroupForm.vue";
 import PostList from "@/Components/app/PostList.vue";
 import CreatePost from "@/Components/app/CreatePost.vue";
-import Modal from "@/Components/Modal.vue";
-import InputLabel from "@/Components/InputLabel.vue";
 import DangerButton from "@/Components/DangerButton.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import InputError from "@/Components/InputError.vue";
-import DeleteUserForm from "@/Pages/Profile/Partials/DeleteUserForm.vue";
+import ChangeRoleController from "@/actions/App/Http/Controllers/Group/ChangeRoleController.js";
+import { destroy, update, updateImages } from "@/actions/App/Http/Controllers/Group/GroupController.js";
+import JoinController from "@/actions/App/Http/Controllers/Group/JoinController.js";
+import DestroyUserController from "@/actions/App/Http/Controllers/Group/DestroyUserController.js";
 
 const imagesForm = useForm({
     thumbnail: null,
@@ -89,7 +88,7 @@ function cancelThumbnailImage() {
 }
 
 function submitCoverImage() {
-    imagesForm.post(route('group.update-images', props.group.slug), {
+    imagesForm.submit(updateImages(props.group.slug), {
         preserveScroll: true,
         onSuccess: () => {
             showNotification.value = true;
@@ -102,7 +101,7 @@ function submitCoverImage() {
 }
 
 function submitThumbnailImage() {
-    imagesForm.post(route('group.update-images', props.group.slug), {
+    imagesForm.submit(updateImages(props.group.slug), {
         preserveScroll: true,
         onSuccess: () => {
             showNotification.value = true;
@@ -117,7 +116,7 @@ function submitThumbnailImage() {
 function joinToGroup() {
     const form = useForm({})
 
-    form.post(route('group.join', props.group.slug), {
+    form.submit(JoinController({ slug: props.group.slug }), {
         preserveScroll: true,
     })
 }
@@ -144,40 +143,40 @@ function rejectedUser(user) {
     })
 }
 
-function deleteUser(user){
+function deleteUser(user) {
     if (! window.confirm(`Are you sure you want to delete "${user.name}" this group?`)) return false;
 
     const form = useForm({
         user_id: user.id,
     })
 
-    form.delete(route('group.destroy-user', props.group.slug), {
+    form.submit(DestroyUserController({ slug: props.group.slug }), {
         preserveScroll: true,
     })
 }
 
-function onRoleChange(user, role){
+function onRoleChange(user, role) {
     const form = useForm({
         user_id: user.id,
         role,
     })
-    form.post(route('group.change-role', props.group.slug), {
+    form.submit(ChangeRoleController({ slug: props.group.slug }), {
         preserveScroll: true,
     })
 }
 
-function updateAbout(){
-    aboutForm.put(route('group.update', props.group.slug), {
+function updateAbout() {
+    aboutForm.submit(update({ slug: props.group.slug }), {
         preserveScroll: true,
     })
 }
 
-function confirmGroupDeletion(){
+function confirmGroupDeletion() {
     if (! window.confirm(`Are you sure you want to delete "${props.group.name}" this group?`)) return false;
 
     const form = useForm()
 
-    form.delete(route('group.destroy', props.group.slug), {
+    form.submit(destroy({ slug: props.group.slug }), {
         preserveScroll: true,
     })
 }
