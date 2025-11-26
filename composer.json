@@ -10,17 +10,18 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
+        "ext-dom": "*",
+        "ext-libxml": "*",
         "guzzlehttp/guzzle": "^7.9",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
+        "laravel/wayfinder": "^0.1.11",
         "openai-php/client": "^0.18.0",
         "openai-php/laravel": "^0.18.0",
         "spatie/laravel-sluggable": "^3.7",
-        "tightenco/ziggy": "^2.0",
-        "ext-dom": "*",
-        "ext-libxml": "*"
+        "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.1",
