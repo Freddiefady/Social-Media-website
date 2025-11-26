@@ -26,8 +26,8 @@ final readonly class GroupPolicy
             : Response::deny('you don\'t have permission to perform this action', 403);
     }
 
-    public function isOwner(Group $group, int $userId): bool
+    public function isOwner(User $user, Group $group): bool
     {
-        return $this->membershipService->isOwner($group, $userId);
+        return $this->membershipService->isOwner($group, $user->id);
     }
 }

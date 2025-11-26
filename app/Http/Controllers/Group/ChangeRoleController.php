@@ -21,7 +21,7 @@ final class ChangeRoleController extends Controller
         Group $group,
         ChangeRole $action
     ): Response|RedirectResponse {
-        if ($request->user()?->can('is-owner', $group)) {
+        if (! $request->user()?->can('is-owner', $group)) {
             return response('You cannot change the role of yourself', 403);
         }
 
