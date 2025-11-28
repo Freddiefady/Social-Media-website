@@ -17,6 +17,7 @@ final readonly class AcceptInvitation
     public function handle(string $token): GroupUser
     {
         $groupUser = GroupUser::query()
+            ->with('group:id,name')
             ->where('token', $token)
             ->first();
 
