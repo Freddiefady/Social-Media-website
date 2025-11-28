@@ -5,13 +5,14 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import { show } from "@/actions/App/Http/Controllers/Auth/ConfirmablePasswordController.js";
 
 const form = useForm({
     password: '',
 });
 
 const submit = () => {
-    form.post(route('password.confirm'), {
+    form.submit(show(), {
         onFinish: () => form.reset(),
     });
 };

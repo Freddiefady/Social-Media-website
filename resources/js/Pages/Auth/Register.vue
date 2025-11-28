@@ -5,6 +5,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { store } from "@/actions/App/Http/Controllers/Auth/RegisteredUserController.js";
 
 const form = useForm({
     name: '',
@@ -14,7 +15,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('register'), {
+    form.submit(store(), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };

@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { store } from "@/actions/App/Http/Controllers/Auth/EmailVerificationNotificationController.js";
 
 const props = defineProps({
     status: {
@@ -13,7 +14,7 @@ const props = defineProps({
 const form = useForm({});
 
 const submit = () => {
-    form.post(route('verification.send'));
+    form.submit(store());
 };
 
 const verificationLinkSent = computed(
