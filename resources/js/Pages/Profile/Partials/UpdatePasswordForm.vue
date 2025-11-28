@@ -5,6 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { update } from "@/actions/App/Http/Controllers/ProfileController.js";
 
 const passwordInput = ref(null);
 const currentPasswordInput = ref(null);
@@ -16,7 +17,7 @@ const form = useForm({
 });
 
 const updatePassword = () => {
-    form.put(route('password.update'), {
+    form.submit(update(), {
         preserveScroll: true,
         onSuccess: () => form.reset(),
         onError: () => {

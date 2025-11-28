@@ -13,6 +13,8 @@ import PostList from "@/Components/app/PostList.vue";
 import CreatePost from "@/Components/app/CreatePost.vue";
 import TextInput from "@/Components/TextInput.vue";
 import UserListItem from "@/Components/app/UserListItem.vue";
+import FollowerController from "@/actions/App/Http/Controllers/FollowerController.js";
+import { updateImages } from "@/actions/App/Http/Controllers/ProfileController.js";
 
 const imagesForm = useForm({
     avatar: null,
@@ -82,7 +84,7 @@ function cancelAvatarImage() {
 }
 
 function submitCoverImage() {
-    imagesForm.post(route('profile.updateImages'), {
+    imagesForm.submit(updateImages(), {
         onSuccess: () => {
             showNotification.value = true;
             cancelCoverImage()
@@ -94,7 +96,7 @@ function submitCoverImage() {
 }
 
 function submitAvatarImage() {
-    imagesForm.post(route('profile.updateImages'), {
+    imagesForm.submit(updateImages(), {
         onSuccess: () => {
             showNotification.value = true;
             cancelAvatarImage()
@@ -104,9 +106,9 @@ function submitAvatarImage() {
         },
     });
 }
-function followerUser(){
+function followerUser() {
    const form = useForm({})
-   form.post(route('user.follower', props.user.id), {
+   form.submit(FollowerController(props.user.id), {
        preserveScroll: true,
    })
 }
