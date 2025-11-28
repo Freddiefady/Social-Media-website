@@ -1,4 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
 /**
 * @see \Laravel\Sanctum\Http\Controllers\CsrfCookieController::show
 * @see vendor/laravel/sanctum/src/Http/Controllers/CsrfCookieController.php:17

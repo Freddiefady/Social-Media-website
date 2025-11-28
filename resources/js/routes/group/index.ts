@@ -228,8 +228,8 @@ destroy.delete = (args: { group: string | { slug: string } } | [group: string | 
 })
 
 /**
-* @see \App\Http\Controllers\Group\ApprovedRequestController::__invoke
-* @see app/Http/Controllers/Group/ApprovedRequestController.php:18
+* @see \App\Http\Controllers\Group\AcceptInviteController::__invoke
+* @see app/Http/Controllers/Group/AcceptInviteController.php:20
 * @route '/group/approve-invitation/{token}'
 */
 export const approve = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -243,8 +243,8 @@ approve.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\Group\ApprovedRequestController::__invoke
-* @see app/Http/Controllers/Group/ApprovedRequestController.php:18
+* @see \App\Http\Controllers\Group\AcceptInviteController::__invoke
+* @see app/Http/Controllers/Group/AcceptInviteController.php:20
 * @route '/group/approve-invitation/{token}'
 */
 approve.url = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -270,8 +270,8 @@ approve.url = (args: { token: string | number } | [token: string | number ] | st
 }
 
 /**
-* @see \App\Http\Controllers\Group\ApprovedRequestController::__invoke
-* @see app/Http/Controllers/Group/ApprovedRequestController.php:18
+* @see \App\Http\Controllers\Group\AcceptInviteController::__invoke
+* @see app/Http/Controllers/Group/AcceptInviteController.php:20
 * @route '/group/approve-invitation/{token}'
 */
 approve.get = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -280,8 +280,8 @@ approve.get = (args: { token: string | number } | [token: string | number ] | st
 })
 
 /**
-* @see \App\Http\Controllers\Group\ApprovedRequestController::__invoke
-* @see app/Http/Controllers/Group/ApprovedRequestController.php:18
+* @see \App\Http\Controllers\Group\AcceptInviteController::__invoke
+* @see app/Http/Controllers/Group/AcceptInviteController.php:20
 * @route '/group/approve-invitation/{token}'
 */
 approve.head = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
