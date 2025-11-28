@@ -6,6 +6,7 @@ use App\Http\Controllers\Comments\CommentController;
 use App\Http\Controllers\Comments\CommentReactionController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\Global\SearchController;
+use App\Http\Controllers\Group\AcceptInviteController;
 use App\Http\Controllers\Group\ApprovedRequestController;
 use App\Http\Controllers\Group\ChangeRoleController;
 use App\Http\Controllers\Group\DestroyUserController;
@@ -32,7 +33,7 @@ Route::get('/u/{user:username}', [ProfileController::class, 'index'])
 
 Route::apiResource('group', GroupController::class)->except('index');
 
-Route::get('/group/approve-invitation/{token}', ApprovedRequestController::class)
+Route::get('/group/approve-invitation/{token}', AcceptInviteController::class)
     ->name('group.approve');
 
 Route::middleware('auth')->group(function (): void {
