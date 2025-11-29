@@ -18,6 +18,7 @@ import ChangeRoleController from "@/actions/App/Http/Controllers/Group/ChangeRol
 import { destroy, update, updateImages } from "@/actions/App/Http/Controllers/Group/GroupController.js";
 import JoinController from "@/actions/App/Http/Controllers/Group/JoinController.js";
 import DestroyUserController from "@/actions/App/Http/Controllers/Group/DestroyUserController.js";
+import ApprovedRequestController from "@/actions/App/Http/Controllers/Group/ApprovedRequestController.js";
 
 const imagesForm = useForm({
     thumbnail: null,
@@ -88,7 +89,7 @@ function cancelThumbnailImage() {
 }
 
 function submitCoverImage() {
-    imagesForm.submit(updateImages(props.group.slug), {
+    imagesForm.submit(updateImages({ slug: props.group.slug }), {
         preserveScroll: true,
         onSuccess: () => {
             showNotification.value = true;
@@ -101,7 +102,7 @@ function submitCoverImage() {
 }
 
 function submitThumbnailImage() {
-    imagesForm.submit(updateImages(props.group.slug), {
+    imagesForm.submit(updateImages({ slug: props.group.slug }), {
         preserveScroll: true,
         onSuccess: () => {
             showNotification.value = true;
@@ -127,7 +128,7 @@ function approveUser(user) {
         action: 'approved',
     })
 
-    form.post(route('group.approve-request', props.group.slug), {
+    form.submit(ApprovedRequestController({ slug: props.group.slug }), {
         preserveScroll: true,
     })
 }
@@ -138,7 +139,7 @@ function rejectedUser(user) {
         action: 'rejected',
     })
 
-    form.post(route('group.approve-request', props.group.slug), {
+    form.submit(ApprovedRequestController({ slug: props.group.slug }), {
         preserveScroll: true,
     })
 }
