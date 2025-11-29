@@ -232,7 +232,7 @@ destroy.delete = (args: { group: string | { slug: string } } | [group: string | 
 * @see app/Http/Controllers/Group/GroupController.php:94
 * @route '/group/update-images/{group}'
 */
-export const updateImages = (args: { group: string | number } | [group: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const updateImages = (args: { group: string | { slug: string } } | [group: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: updateImages.url(args, options),
     method: 'post',
 })
@@ -247,9 +247,13 @@ updateImages.definition = {
 * @see app/Http/Controllers/Group/GroupController.php:94
 * @route '/group/update-images/{group}'
 */
-updateImages.url = (args: { group: string | number } | [group: string | number ] | string | number, options?: RouteQueryOptions) => {
+updateImages.url = (args: { group: string | { slug: string } } | [group: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { group: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
+        args = { group: args.slug }
     }
 
     if (Array.isArray(args)) {
@@ -261,7 +265,9 @@ updateImages.url = (args: { group: string | number } | [group: string | number ]
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        group: args.group,
+        group: typeof args.group === 'object'
+        ? args.group.slug
+        : args.group,
     }
 
     return updateImages.definition.url
@@ -274,7 +280,7 @@ updateImages.url = (args: { group: string | number } | [group: string | number ]
 * @see app/Http/Controllers/Group/GroupController.php:94
 * @route '/group/update-images/{group}'
 */
-updateImages.post = (args: { group: string | number } | [group: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+updateImages.post = (args: { group: string | { slug: string } } | [group: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: updateImages.url(args, options),
     method: 'post',
 })
