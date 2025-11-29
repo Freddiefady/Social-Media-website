@@ -93,13 +93,13 @@ final class GroupController extends Controller
 
     public function updateImages(
         MediaRequest $request,
-        #[CurrentUser] User $user,
+        Group $group,
         CreateCover $actionCover,
         CreateThumbnail $actionThumbnail
     ): RedirectResponse {
         $success = match (true) {
-            $actionCover->handle($user, $request->validated()) => 'Your cover image has been updated successfully.',
-            $actionThumbnail->handle($user, $request->validated()) => 'Your thumbnail image has been updated successfully.',
+            $actionCover->handle($group, $request->validated()) => 'Your cover image has been updated successfully.',
+            $actionThumbnail->handle($group, $request->validated()) => 'Your thumbnail image has been updated successfully.',
             default => 'Your thumbnail image was not updated.',
         };
 
