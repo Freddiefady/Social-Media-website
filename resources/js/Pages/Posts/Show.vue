@@ -36,8 +36,6 @@ function onModalHide() {
         user: authUser
     }
 }
-
-
 </script>
 
 <template>
