@@ -2,7 +2,7 @@
 import PostItem from "@/Components/app/PostItem.vue";
 import PostModal from "@/Components/app/PostModal.vue";
 import AttachmentPreviewModal from "@/Components/app/AttachmentPreviewModal.vue";
-import { usePage } from "@inertiajs/vue3";
+import {Head, usePage} from "@inertiajs/vue3";
 import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
@@ -39,6 +39,8 @@ function onModalHide() {
 </script>
 
 <template>
+    <Head :title="`Social Media - ${post.name}`" />
+
     <AuthenticatedLayout>
         <div class="p-8 w-[600px] mx-auto h-full overflow-auto">
             <PostItem :post="post"  @editClick="openEditModal" @attachmentClick="openAttachmentPreviewModal"/>

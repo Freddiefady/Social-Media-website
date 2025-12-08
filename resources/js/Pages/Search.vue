@@ -3,6 +3,7 @@ import UserListItem from "@/Components/app/UserListItem.vue";
 import GroupItem from "@/Components/app/GroupItem.vue";
 import PostList from "@/Components/app/PostList.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import {Head} from "@inertiajs/vue3";
 
 defineProps({
     search: String,
@@ -13,6 +14,7 @@ defineProps({
 </script>
 
 <template>
+    <Head :title="`Social Media - ${search}`" />
     <AuthenticatedLayout>
         <div class="p-4 overflow-auto h-full">
             <div v-if="!search.startsWith('#')" class="grid grid-cols-1 sm:grid-cols-2 gap-3">

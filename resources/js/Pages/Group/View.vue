@@ -1,6 +1,6 @@
 <script setup>
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/vue'
-import { useForm, usePage } from '@inertiajs/vue3';
+import {Head, useForm, usePage} from '@inertiajs/vue3';
 import { CameraIcon, CheckCircleIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "@/Pages/Profile/Partials/TabItem.vue";
@@ -184,6 +184,8 @@ function confirmGroupDeletion() {
 </script>
 
 <template>
+    <Head :title="`Social Media - ${group.name}`" />
+    
     <AuthenticatedLayout>
         <div class="max-w-[768px] mx-auto h-full overflow-auto">
             <div class="px-4">
